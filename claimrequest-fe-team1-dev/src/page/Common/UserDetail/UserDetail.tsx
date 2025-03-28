@@ -126,7 +126,7 @@ function UserDetail() {
 
           {/* Modal for Image Upload */}
           {isModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded shadow-lg">
                 <h4 className="text-lg font-semibold">Change Avatar</h4>
                 <input

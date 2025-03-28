@@ -240,7 +240,11 @@ const Header: React.FC = () => {
             className="flex items-center gap-2"
             style={{ color: theme === "light" ? "gray" : "white" }}
           >
-            <Avatar icon={<UserOutlined />} />
+            {user?.avatarUrl ? (
+              <Avatar src={user.avatarUrl} />
+            ) : (
+              <Avatar icon={<UserOutlined />} />
+            )}
             <span className="font-medium hidden md:block">{user?.name}</span>
             <DownOutlined
               className={`arrow ${isProfileMenuOpen ? "flipped" : ""}`}

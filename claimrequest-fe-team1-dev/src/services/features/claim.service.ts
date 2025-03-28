@@ -104,7 +104,7 @@ export const claimService = {
     try {
       const response = await axiosInstance.get<
         ApiResponse<ClaimDetailResponse>
-      >(`${this.claimEndpoint}/${claimId}`);
+        >(`${this.claimEndpoint}/${claimId}`);
       return response.data;
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
