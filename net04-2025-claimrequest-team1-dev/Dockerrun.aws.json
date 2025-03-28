@@ -1,0 +1,31 @@
+{
+  "AWSEBDockerrunVersion": 1,
+  "containerDefinitions": [
+    {
+      "name": "claimrequest.api",
+      "image": "588738611446.dkr.ecr.ap-southeast-1.amazonaws.com/claimrequest:latest",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 5000
+        },
+        {
+          "hostPort": 81,
+          "containerPort": 5001
+        }
+      ],
+      "environment": [
+        {
+          "name": "ASPNETCORE_ENVIRONMENT",
+          "value": "Production"
+        },
+        {
+          "name": "ConnectionStrings__SupabaseConnection",
+          "value": "User Id=postgres.ceazsqmwbxytiiqnidgq;Password=Iloveyou3000!;Server=aws-0-ap-southeast-1.pooler.supabase.com;Port=5432;Database=postgres"
+        }
+      ]
+    }
+  ]
+}

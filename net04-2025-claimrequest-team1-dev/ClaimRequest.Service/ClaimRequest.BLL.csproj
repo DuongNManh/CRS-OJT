@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Services\Templates\ClaimApprovedEmailTemplate.html" />
+	  <None Remove="Services\Templates\ClaimReturnedEmailTemplate.html" />
+	  <None Remove="Services\Templates\ClaimSubmittedEmailTemplate.html" />
+	  <None Remove="Services\Templates\TemplateSendMailReminder.html" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Services\Templates\ClaimApprovedEmailTemplate.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Services\Templates\ClaimSubmittedEmailTemplate.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Services\Templates\ManagerApprovedEmailTemplate.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Services\Templates\ClaimReturnedEmailTemplate.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Services\Templates\TemplateSendMailReminder.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ClaimRequest.Data\ClaimRequest.DAL.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="AutoMapper.Collection" Version="10.0.0" />
+		<PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.2.0" />
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="CloudinaryDotNet" Version="1.27.4" />
+		<PackageReference Include="MailKit" Version="4.11.0" />
+		<PackageReference Include="EPPlus" Version="7.6.0" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
+		<PackageReference Include="Google.Apis.Gmail.v1" Version="1.68.0.3427" />
+		<PackageReference Include="MailKit" Version="4.11.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+		<PackageReference Include="MimeKit" Version="4.11.0" />
+		<PackageReference Include="OAuth2" Version="0.10.3" />
+		<PackageReference Include="Otp.NET" Version="1.4.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+	</ItemGroup>
+
+</Project>

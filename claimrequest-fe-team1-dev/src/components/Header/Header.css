@@ -1,0 +1,45 @@
+.dropdown-light .ant-dropdown-menu {
+  background-color: #ffffff;
+}
+
+.dropdown-dark .ant-dropdown-menu {
+  background-color: #555555; /* Lighter gray for dark mode */
+  color: #ffffff;
+}
+
+.dropdown-dark .ant-dropdown-menu-item {
+  color: #ffffff;
+}
+
+.dropdown-dark .ant-dropdown-menu-item:hover {
+  background-color: #666666; /* Slightly lighter gray for hover */
+}
+
+.menu-item {
+  transition: color 0.3s;
+}
+
+.menu-item:hover {
+  color: #1e90ff; /* DodgerBlue */
+}
+
+.text-light {
+  color: gray;
+}
+
+.text-dark {
+  color: white;
+}
+
+.hover-blue:hover {
+  color: #1e90ff; /* DodgerBlue */
+}
+
+/* Arrow flip animation */
+.arrow {
+  transition: transform 0.3s;
+}
+
+.arrow.flipped {
+  transform: rotate(180deg);
+}

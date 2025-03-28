@@ -1,0 +1,57 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  IMAGE_TAG: $CI_COMMIT_SHA
+
+services:
+  - docker:dind
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - echo "Building Docker image..."
+    - docker build -t $ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REPOSITORY:latest -f ClaimRequest.API/Dockerfile .
+    - echo "Logging in to ECR..."
+    - apk add --no-cache curl python3 py3-pip
+    - pip3 install awscli
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
+    - echo "Pushing image to ECR..."
+    - docker push $ECR_REPOSITORY:$IMAGE_TAG
+    - docker push $ECR_REPOSITORY:latest
+  only:
+    - dev
+
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    - echo "Running unit tests..."
+    - dotnet restore
+    - dotnet test ClaimRequest.UnitTest/ClaimRequest.UnitTest.csproj
+  only:
+    - dev
+
+deploy:
+  stage: deploy
+  image: python:3.9-alpine
+  script:
+    - echo "Deploying to Elastic Beanstalk..."
+    - pip install awscli
+    - pip install awsebcli
+    - mkdir -p ~/.aws
+    - echo "[profile eb-cli]" > ~/.aws/config
+    - echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/config
+    - echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/config
+    - echo "region = $AWS_REGION" >> ~/.aws/config
+    - eb init $EB_APPLICATION_NAME --region $AWS_REGION --platform docker
+    - echo "Updating Dockerrun.aws.json with the latest image tag..."
+    - sed -i "s|:latest|:$IMAGE_TAG|g" Dockerrun.aws.json
+    - eb deploy $EB_ENVIRONMENT_NAME --label $CI_COMMIT_SHA
+  only:
+    - dev

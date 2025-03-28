@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>93b39423-3d9e-46d3-ba96-29cb074fb841</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CloudinaryDotNet" Version="1.27.4" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
+		<PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
+		<PackageReference Include="MailKit" Version="4.11.0" />
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
+		<PackageReference Include="Google.Apis.Gmail.v1" Version="1.68.0.3427" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
+		<PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.2" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageReference Include="MimeKit" Version="4.11.0" />
+		<PackageReference Include="Npgsql" Version="8.0.6" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
+		<PackageReference Include="OAuth2" Version="0.10.3" />
+		<PackageReference Include="Otp.NET" Version="1.4.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ClaimRequest.Service\ClaimRequest.BLL.csproj" />
+		<ProjectReference Include="..\ClaimRequest.Data\ClaimRequest.DAL.csproj" />
+	</ItemGroup>
+
+</Project>

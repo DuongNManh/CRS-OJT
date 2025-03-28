@@ -1,0 +1,48 @@
+﻿using AutoMapper;
+using ClaimRequest.DAL.Data.Entities;
+using ClaimRequest.DAL.Data.Exceptions;
+using ClaimRequest.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+
+namespace ClaimRequest.BLL.Services
+{
+    public abstract class BaseService<T> where T : class
+    {
+        protected IUnitOfWork<ClaimRequestDbContext> _unitOfWork;
+        protected ILogger<T> _logger;
+        protected IMapper _mapper;
+        protected IHttpContextAccessor _httpContextAccessor;
+
+        public BaseService(IUnitOfWork<ClaimRequestDbContext> unitOfWork, ILogger<T> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        protected Guid GetCurrentUserId()
+        {
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out Guid userId))
+            {
+                throw new UnauthorizedException("User ID not found in token");
+            }
+            return userId;
+        }
+
+        protected string GetCurrentUserEmail()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value
+                ?? throw new UnauthorizedException("User email not found in token");
+        }
+
+        protected string GetCurrentUserRole()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value
+                ?? throw new UnauthorizedException("User role not found in token");
+        }
+    }
+}
