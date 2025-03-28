@@ -2,8 +2,8 @@ name: FE Vercel CD
 on:
   push:
     branches: ["main"]
-    paths:
-      - "claimrequest-fe-team1-dev/**"
+    # paths:
+    #   - "claimrequest-fe-team1-dev/**"
 
 jobs:
   build:
@@ -61,7 +61,7 @@ jobs:
 
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-          git clone git@github.com:lcaohoanq/mvm.git production-repo
+          git clone git@github.com:lcaohoanq/crs.git production-repo
           rm -rf production-repo/dist
           cp -r claimrequest-fe-team1-dev/dist production-repo/
 
