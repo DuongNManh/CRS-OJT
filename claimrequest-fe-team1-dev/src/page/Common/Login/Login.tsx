@@ -35,7 +35,6 @@ export default function Login() {
         };
 
         dispatch(setUser(userData)); // Dispatching setUser action
-        console.log("User data saved in Redux:", userData); // Log the userData object
         navigate("/");
         toast.success(response.message || "Login successful!");
       } else {
@@ -44,7 +43,7 @@ export default function Login() {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      console.error(error);
+      
     }
   };
 

@@ -38,7 +38,6 @@ const CreateClaim: React.FC = () => {
             const resp = await claimService.getClaimTypes();
             setClaimTypes(resp.data ?? []);
         } catch (error) {
-            console.error("Error fetching claim types:", error);
         }
     };
 
@@ -50,7 +49,7 @@ const CreateClaim: React.FC = () => {
             setProjects(resp.data || []);
           }
       } catch (error) {
-          console.error("Error fetching projects:", error);
+          toast.error("Failed to fetch projects");
       }
     };
 
@@ -70,7 +69,6 @@ const CreateClaim: React.FC = () => {
     e.preventDefault();
     try {
         const response = await claimService.submitClaimV2({...formData});
-        console.log(response);
         if (response.is_success) {
             cacheService.invalidateByTags([
                 CACHE_TAGS.CLAIMS,
@@ -83,7 +81,6 @@ const CreateClaim: React.FC = () => {
             toast.error(response.message || "Failed to submit claim");
         }
     } catch (error) {
-        console.error("Submit claim error:", error);
         toast.error("Failed to submit claim. Please try again.");
     }
   };
@@ -111,7 +108,6 @@ const CreateClaim: React.FC = () => {
         toast.error(response.message || "Failed to save draft");
       }
     } catch (error) {
-      console.error("Save draft error:", error);
       toast.error("Failed to save draft. Please try again.");
     }
   };

@@ -101,7 +101,7 @@ const ViewClaims: React.FC = () => {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      console.error(error);
+      
     }
   };
 

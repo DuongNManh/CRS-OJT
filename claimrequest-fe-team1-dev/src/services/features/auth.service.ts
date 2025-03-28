@@ -12,13 +12,12 @@ export const authService = {
   async login(credentials: ILoginRequest): Promise<ApiResponse<ILoginResponse>> {
     try {
       const response = await axiosInstance.post<ApiResponse<ILoginResponse>>(this.authEndpoint+'/login', credentials);
-      console.log(response.data);
       this.otpVerified = false; // Reset the flag on login
       this.passwordReset = false; // Reset the password reset flag on login
       return response.data;
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
-      console.log(apiError);
+      
       if (apiError) {
         throw new Error(apiError.reason || 'Login failed');
       }
@@ -34,7 +33,7 @@ export const authService = {
       await axiosInstance.post('/auth/requestrevcode', request);
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
-      console.log(apiError);
+      
       if (apiError) {
         throw new Error(apiError.reason || 'Failed to request OTP');
       }
@@ -49,7 +48,7 @@ export const authService = {
       this.passwordReset = true; // Set the password reset flag
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
-      console.log(apiError);
+      
       if (apiError) {
         throw new Error(apiError.reason || 'Failed to reset password');
       }
@@ -66,7 +65,6 @@ export const authService = {
       // Clear all cache data on logout
       cacheService.clear();
     } catch (error) {
-      console.error('Logout failed:', error);
       localStorage.removeItem('token');
       this.otpVerified = false;
       this.passwordReset = false;

@@ -21,7 +21,7 @@ export const staffService = {
       return response.data;
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>;
-      console.log(apiError);
+      
       if (apiError) {
         throw new Error(apiError.reason || "Get staff list failed");
       }
@@ -44,7 +44,7 @@ export const staffService = {
       return response.data.data;
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>;
-      console.log(apiError);
+      
       if (apiError) {
         throw new Error(apiError.reason || "Get staff list failed");
       }
@@ -71,7 +71,6 @@ export const staffService = {
   // Create - Add new staff
   async createStaff(staffData: any): Promise<ApiResponse<any>> {
     try {
-      console.log("Staff service sending:", staffData);
 
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.staffEndpoint}/create`,
@@ -79,12 +78,10 @@ export const staffService = {
       );
       return response.data;
     } catch (error: any) {
-      console.error("Create staff API error:", error.response?.data);
 
       // Extract more detailed error information if available
       const apiError = error.response?.data;
       if (apiError && apiError.errors) {
-        console.error("Validation errors:", apiError.errors);
         throw new Error(Object.values(apiError.errors).flat().join(", "));
       } else if (apiError && apiError.reason) {
         throw new Error(apiError.reason);
@@ -141,7 +138,6 @@ export const staffService = {
         (staff) => staff.email.toLowerCase() === email.toLowerCase()
       );
     } catch (error: unknown) {
-      console.error("Check email error:", error);
       throw new Error("Failed to check email existence");
     }
   },

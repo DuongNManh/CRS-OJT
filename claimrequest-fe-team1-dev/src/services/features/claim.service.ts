@@ -25,13 +25,11 @@ export const claimService = {
       const response = await axiosInstance.get<ApiResponse<string[]>>(
         `${this.claimsEndpoint}/types`
       );
-      console.log(response.data.data);
 
       // Ensure we return a valid PagingResponse structure
       return response.data;
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
-      console.log(apiError);
       if (apiError) {
         throw new Error(apiError.reason || "Get claims failed");
       }
@@ -79,15 +77,11 @@ export const claimService = {
     endDate: string
   ): Promise<PagingResponse<GetClaimResponse>> {
     try {
-      console.log(
-        `${this.claimsEndpoint}?viewMode=${viewMode}&claimStatus=${claimStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`
-      );
       const response = await axiosInstance.get<
         ApiResponse<PagingResponse<GetClaimResponse>>
       >(
         `${this.claimsEndpoint}?viewMode=${viewMode}&claimStatus=${claimStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`
       );
-      console.log(response.data);
 
       // Ensure we return a valid PagingResponse structure
       return {
@@ -101,7 +95,6 @@ export const claimService = {
       };
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
-      console.log(apiError);
       if (apiError) {
         throw new Error(apiError.reason || "Get claims failed");
       }
@@ -131,7 +124,6 @@ export const claimService = {
       const response = await axiosInstance.put<ApiResponse<boolean>>(
         `${this.claimEndpoint}/approve?claimId=${claimId}`
       );
-      console.log(response);
       return response.data;
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
@@ -177,15 +169,11 @@ export const claimService = {
     endDate: string
   ): Promise<ApiResponse<ClaimStatusCountResponse>> {
     try {
-      console.log(
-        `${this.claimsEndpoint}/status-count?viewMode=${viewMode}&startDate=${startDate}&endDate=${endDate}`
-      );
       const response = await axiosInstance.get<
         ApiResponse<ClaimStatusCountResponse>
       >(
         `${this.claimsEndpoint}/status-count?viewMode=${viewMode}&startDate=${startDate}&endDate=${endDate}`
       );
-      console.log(response.data);
       return response.data;
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
@@ -222,7 +210,6 @@ export const claimService = {
       const response = await axiosInstance.put<ApiResponse<boolean>>(
         `${this.claimEndpoint}/reject?claimId=${claimId}`
       );
-      console.log(response);
       return response.data;
     } catch (error: any) {
       const apiError = error.response?.data as ApiResponse<any>;
@@ -251,7 +238,6 @@ export const claimService = {
       await axiosInstance.put(`claim/paid?id=${id}`);
       return { success: true, message: "Claim cancelled successfully!" };
     } catch (error) {
-      console.error("Error cancelling claim:", error);
       throw error;
     }
   },
@@ -266,7 +252,6 @@ export const claimService = {
       );
       return response.data;
     } catch (error: any) {
-      console.error("Export error:", error);
       throw new Error("Failed to export claims");
     }
   },
@@ -285,15 +270,12 @@ export const claimService = {
       );
       return response.data;
     } catch (error: any) {
-      console.error("Export error:", error);
       throw new Error("Failed to export claims");
     }
   },
 
   async submitClaimV2(claim: any): Promise<ApiResponse<any>> {
     try {
-      console.log(claim);
-      console.log(`${this.claimsEndpoint}/submit-v2`);
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.claimsEndpoint}/submit-v2`,
         claim

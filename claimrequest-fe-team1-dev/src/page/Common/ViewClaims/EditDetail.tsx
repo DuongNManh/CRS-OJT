@@ -87,7 +87,6 @@ const EditDetail: React.FC = () => {
           }
         }
       } catch (error: any) {
-        console.error("Error fetching data:", error);
         toast.error(error.message || "Failed to fetch data");
       } finally {
         setIsLoading(false);
@@ -129,7 +128,6 @@ const EditDetail: React.FC = () => {
         toast.error(response.message || "Failed to save draft");
       }
     } catch (error: any) {
-      console.error("Save draft error:", error);
       toast.error(error.message || "Failed to save draft. Please try again.");
     } finally {
       setIsLoading(false);
@@ -155,7 +153,6 @@ const EditDetail: React.FC = () => {
         toast.error(response.message || "Failed to submit claim");
       }
     } catch (error: any) {
-      console.error("Submit error:", error);
       toast.error(error.message || "Failed to submit claim. Please try again.");
     } finally {
       setIsLoading(false);

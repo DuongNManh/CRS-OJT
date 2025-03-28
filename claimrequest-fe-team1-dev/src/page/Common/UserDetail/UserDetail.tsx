@@ -35,7 +35,6 @@ function UserDetail() {
         }
       } catch (error) {
         toast.error("Error uploading avatar");
-        console.error("Error uploading avatar:", error);
       }
     }
   };

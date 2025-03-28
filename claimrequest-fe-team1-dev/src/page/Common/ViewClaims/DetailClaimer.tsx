@@ -39,7 +39,6 @@ const DetailClaimer: React.FC = () => {
       const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
 
       if (cachedData) {
-        console.log("Using cached claim data for:", cacheKey);
         if (isMounted) {
           setClaim(cachedData);
           setLoading(false);
@@ -47,12 +46,10 @@ const DetailClaimer: React.FC = () => {
         return;
       }
 
-      console.log("Fetching claim detail:", id);
       try {
         const response = await withLoading(
           claimService.getClaimById(id as string)
         );
-        console.log("API detail:", response);
 
         if (isMounted && response.is_success && response.data) {
           setClaim(response.data);
@@ -66,7 +63,7 @@ const DetailClaimer: React.FC = () => {
         if (isMounted) {
           const errorMessage = (error as Error).message || "An error occurred";
           toast.error(errorMessage);
-          console.error(error);
+          
         }
       } finally {
         if (isMounted) {
@@ -157,7 +154,6 @@ const DetailClaimer: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Submit claim error:", error);
       toast.error("Failed to submit claim. Please try again.");
     }
   };

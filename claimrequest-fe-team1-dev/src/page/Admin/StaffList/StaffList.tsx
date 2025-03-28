@@ -110,7 +110,6 @@ const StaffList: React.FC = () => {
       });
     } catch (error) {
       setError("Failed to fetch staff list. Please try again later.");
-      console.error("Failed to fetch staff list:", error);
     } finally {
       setLoading(false);
     }
@@ -304,7 +303,6 @@ const StaffList: React.FC = () => {
             return;
           }
         } catch (error) {
-          console.error("Email check error:", error);
           setError("Failed to verify email availability");
           setLoading(false);
           return;
@@ -365,10 +363,6 @@ const StaffList: React.FC = () => {
           department: formData.department,
           salary: Number(cleanedSalary),
         };
-
-        // Log the request to verify it matches the expected format
-        console.log("Creating staff with:", createStaffRequest);
-
         const response = await withLoading(
           staffService.createStaff(createStaffRequest)
         );
@@ -380,7 +374,6 @@ const StaffList: React.FC = () => {
         }
       }
     } catch (error: any) {
-      console.error("Save staff error:", error);
       setError(error.message || "An error occurred while saving staff");
       message.error(error.message || "An error occurred while saving staff");
     } finally {

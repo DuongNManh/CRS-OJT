@@ -31,16 +31,13 @@ const ApproveRequestDetail: React.FC = () => {
       const cacheKey = cacheService.generateClaimDetailCacheKey(id);
       const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
       if (cachedData) {
-        console.log("Using cached claim data for:", id);
         setClaim(cachedData);
         setLoading(false);
         return;
       }
 
       try {
-        console.log("Fetching claim detail:", id);
         const response = await withLoading(claimService.getClaimById(id as string));
-        console.log("API detail:", response);
         if (response && response.is_success && response.data) {
           setClaim(response.data);
           // Store in cache for future use
@@ -53,7 +50,6 @@ const ApproveRequestDetail: React.FC = () => {
       } catch (error: unknown) {
         const errorMessage = (error as Error).message || "An error occurred";
         toast.error(errorMessage);
-        console.error(error);
       } finally {
         setLoading(false); 
       }
@@ -97,7 +93,6 @@ const ApproveRequestDetail: React.FC = () => {
       const errorMessage =
         (error as Error).message || "Failed to approve claim";
       toast.error(errorMessage);
-      console.error(error);
     }
   };
 
@@ -121,7 +116,6 @@ const ApproveRequestDetail: React.FC = () => {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "Failed to reject claim";
       toast.error(errorMessage);
-      console.error(error);
     }
   };
 
@@ -136,7 +130,7 @@ const ApproveRequestDetail: React.FC = () => {
     } catch (error) {
       const errorMessage = (error as Error).message || "Failed to return claim";
       toast.error(errorMessage);
-      console.error(error);
+      
     }
   };
 

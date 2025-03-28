@@ -87,11 +87,10 @@ export const projectService = {
   async getProjectByMemberId(memberId: string): Promise<ApiResponse<GetProjectResponse[]>> {
     try {
         const response = await axiosInstance.get<ApiResponse<GetProjectResponse[]>>(`${this.projectEndpoint}/member-id/${memberId}`);
-        console.log(response.data.data);
         return response.data;
     } catch (error: unknown) {
         const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
-        console.log(apiError);
+        
         if (apiError) {
             throw new Error(apiError.reason || 'Get claims failed');
         }

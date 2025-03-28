@@ -132,7 +132,6 @@ const ProjectList: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
-    console.log("Debug: useEffect");
     fetchStaffs();
     fetchProjects();
   }, []);
@@ -153,7 +152,6 @@ const ProjectList: React.FC = () => {
     } catch (error) {
       setProjectList([]);
       message.error("Failed to fetch projects");
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -170,7 +168,7 @@ const ProjectList: React.FC = () => {
       }
     } catch (error) {
       message.error("Failed to fetch staffs");
-      console.error(error);
+      
       setStaffsList([]);
     }
   };
@@ -206,8 +204,6 @@ const ProjectList: React.FC = () => {
         businessUnitLeaderId: formData.businessUnitLeader.id,
       };
 
-      console.table(processedData);
-
       let response;
       if (viewMode === "update") {
         response = await projectService.updateProject(
@@ -216,7 +212,6 @@ const ProjectList: React.FC = () => {
         );
       } else {
         const { ...createData } = processedData;
-        console.log("Create Data: ", createData);
         response = await projectService.createProject(createData);
         response = await projectService.createProject(createData);
       }
@@ -230,7 +225,7 @@ const ProjectList: React.FC = () => {
       }
     } catch (error: any) {
       message.error(error.message);
-      console.error(error);
+      
     }
   };
 
@@ -293,7 +288,7 @@ const ProjectList: React.FC = () => {
       }
     } catch (error) {
       message.error("Failed to delete project");
-      console.error(error);
+      
     }
   };
 

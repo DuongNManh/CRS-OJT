@@ -26,7 +26,7 @@ export default function VerifyOTP() {
         } catch (error: unknown) {
             const errorMessage = (error as Error).message || 'An error occurred';
             toast.error(errorMessage);
-            console.error(error);
+            
         }
     };
 
@@ -38,7 +38,7 @@ export default function VerifyOTP() {
         } catch (error: unknown) {
             const errorMessage = (error as Error).message || 'An error occurred';
             toast.error(errorMessage);
-            console.error(error);
+            
         }
     };
 

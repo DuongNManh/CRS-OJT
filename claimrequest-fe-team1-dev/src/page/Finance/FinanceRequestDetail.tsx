@@ -23,21 +23,17 @@ const FinanceRequestDetail: React.FC = () => {
     setLoading(true);
     const fetchClaimDetail = async () => {
       if (!id) return;
-
       // Check cache first
       const cacheKey = cacheService.generateClaimDetailCacheKey(id);
       const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
       if (cachedData) {
-        console.log("Using cached claim data for:", id);
         setClaim(cachedData);
         setLoading(false);
         return;
       }
 
       try {
-        console.log("Fetching claim detail:", id);
         const response = await withLoading(claimService.getClaimById(id as string));
-        console.log("API detail:", response);
         if (response && response.is_success && response.data) {
           setClaim(response.data);
           // Store in cache for future use
@@ -50,7 +46,7 @@ const FinanceRequestDetail: React.FC = () => {
       } catch (error: unknown) {
         const errorMessage = (error as Error).message || "An error occurred";
         toast.error(errorMessage);
-        console.error(error);
+        
       } finally {
         setLoading(false); 
       }
@@ -71,9 +67,19 @@ const FinanceRequestDetail: React.FC = () => {
     return <NotFound />;
   }
   
-  const handleDownload = (): void => {
-    console.log("Download clicked");
-  };
+    const handleExport = async () => {
+      if (id === undefined) return;
+      try {
+        const blob = await claimService.getClaimExportByList({
+          selectedClaimIds: [id],
+        });
+  
+        saveAs(blob, "claims-export.xlsx");
+        toast.success("Claims exported successfully");
+      } catch (error) {
+        toast.error((error as Error).message || "Failed to export claims");
+      }
+    };
 
   const handlePay = async () => {
     try {
@@ -94,7 +100,7 @@ const FinanceRequestDetail: React.FC = () => {
       }
     } catch (error) {
       toast.error("Failed to process payment");
-      console.error(error);
+      
     }
   };
 

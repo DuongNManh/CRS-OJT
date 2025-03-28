@@ -28,7 +28,7 @@ export default function ForgotPassword({ setIsForgotPassword }: Props) {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      console.error(error);
+      
     } finally {
       setIsSending(false);
     }
@@ -47,7 +47,7 @@ export default function ForgotPassword({ setIsForgotPassword }: Props) {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      console.error(error);
+      
     }
   };
 
@@ -59,7 +59,7 @@ export default function ForgotPassword({ setIsForgotPassword }: Props) {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      console.error(error);
+      
     }
   };
 

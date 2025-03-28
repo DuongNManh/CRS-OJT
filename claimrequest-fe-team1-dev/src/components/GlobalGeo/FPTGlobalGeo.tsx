@@ -32,7 +32,7 @@ const FPTGlobalGeo = () => {
         const arcs = generateArcsData(enhancedData);
         setArcsData(arcs);
       })
-      .catch((err) => console.error("Error loading geo data:", err));
+      .catch((err) => toast.error("Failed to fetch GeoJSON data"));
   }, []);
 
   const getRandomColor = () => {

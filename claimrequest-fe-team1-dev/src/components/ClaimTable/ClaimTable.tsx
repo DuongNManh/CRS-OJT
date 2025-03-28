@@ -64,15 +64,6 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(
-        "Fetching data: ",
-        mode,
-        claimStatus,
-        pageNumber,
-        pageSize,
-        startDate,
-        endDate
-      );
       try {
         const cacheKey = `claims_${mode}_${claimStatus}_${pageNumber}_${pageSize}_${startDate}_${endDate}`;
         const cachedData = cacheService.get(cacheKey);
@@ -107,7 +98,6 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
         }
       } catch (error) {
         toast.error((error as Error).message || "Failed to fetch claims");
-        console.error(error);
       }
     };
 
