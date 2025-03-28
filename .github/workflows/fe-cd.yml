@@ -1,9 +1,8 @@
 name: FE Vercel CD
+
 on:
   push:
     branches: ["main"]
-    # paths:
-    #   - "claimrequest-fe-team1-dev/**"
 
 jobs:
   build:
@@ -19,20 +18,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: "npm"
+          cache: 'npm'
           cache-dependency-path: claimrequest-fe-team1-dev/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci # Faster and more reliable than npm install for CI environments
 
       - name: Build the project
         run: npm run build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096' # Increase memory for build process
+
+      - name: Compress build artifacts
+        run: tar -czvf dist.tar.gz dist
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: claimrequest-fe-team1-dev/dist
+          path: claimrequest-fe-team1-dev/dist.tar.gz
+          compression-level: 9
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
@@ -44,33 +50,32 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: claimrequest-fe-team1-dev/dist
+          path: claimrequest-fe-team1-dev
+
+      - name: Extract build artifacts
+        run: |
+          cd claimrequest-fe-team1-dev
+          tar -xzvf dist.tar.gz
 
       - name: Deploy to Production Repo
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          git config --global user.name "lcaohoanq"
-          git config --global user.email "hoangclw@gmail.com"
-
+          # Setup SSH
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_ed25519
-
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-          git clone git@github.com:lcaohoanq/crs.git production-repo
+          # Clone and update repo
+          git clone --depth 1 git@github.com:lcaohoanq/crs.git production-repo
           rm -rf production-repo/dist
           cp -r claimrequest-fe-team1-dev/dist production-repo/
 
+          # Commit and push
           cd production-repo
-          git pull
+          git config user.name "lcaohoanq"
+          git config user.email "hoangclw@gmail.com"
           git add .
-          if git diff --staged --quiet; then
-            git commit --allow-empty -m "Trigger CD"
-          else
-            git commit -m "Deploy new build from ${{ github.ref_name }} branch"
-          fi
+          git diff --staged --quiet || git commit -m "Deploy new build from ${{ github.ref_name }} branch"
           git push origin main
