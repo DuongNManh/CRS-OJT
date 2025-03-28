@@ -1,7 +1,6 @@
 import { chatbotService } from "@/services/features/chatbot.service";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, SetStateAction } from "react";
-import { FaFacebookMessenger } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "/icon.png"
 

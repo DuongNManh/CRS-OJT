@@ -43,3 +43,22 @@ export interface IStaffDetails {
   isActive: boolean;
   avatarUrl: string;
 }
+
+export interface ProfileResponse {
+  name: string;
+  email: string;
+  systemRole: SystemRole;
+  department: string;
+  avatarUrl: string | null;
+  project: Array<{
+      id: string;
+      name: string;
+      description: string;
+      status: string;
+      startDate: string;
+      endDate: string;
+      budget: number;
+      projectManager: string | null;
+      businessUnitLeader: string | null;
+  }>;
+}
