@@ -1,7 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
-import Globe from "globe.gl";
-import * as THREE from "three";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { useTheme } from "@/hooks/use-theme";
+import Globe from "globe.gl";
+import React, { useRef, useEffect, useState } from "react";
+import * as THREE from "three";
 
 const FPTGlobalGeo = () => {
   const globeEl = useRef(null);

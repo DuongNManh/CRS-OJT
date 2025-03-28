@@ -3,13 +3,12 @@ import { claimService } from "@/services/features/claim.service";
 import { projectService } from "@/services/features/project.service";
 import { useAppSelector } from "@/services/store/store";
 import {
-  MailOutlined,
+  LoadingOutlined,
   RollbackOutlined,
   SaveOutlined,
-  LoadingOutlined
 } from "@ant-design/icons";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 interface FormDataState {
@@ -26,7 +25,6 @@ interface FormDataState {
 
 const EditDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
   const user = useAppSelector((state) => state.auth.user);
@@ -42,7 +40,7 @@ const EditDetail: React.FC = () => {
     startDate: "",
     endDate: "",
     projectId: "",
-    status: "Draft"
+    status: "Draft",
   });
 
   // Fetch claim data và các data cần thiết khác
@@ -61,10 +59,14 @@ const EditDetail: React.FC = () => {
               remark: claim.remark || "",
               amount: claim.amount || 0,
               totalWorkingHours: claim.totalWorkingHours || 0,
-              startDate: claim.startDate ? new Date(claim.startDate).toISOString().split('T')[0] : "",
-              endDate: claim.endDate ? new Date(claim.endDate).toISOString().split('T')[0] : "",
+              startDate: claim.startDate
+                ? new Date(claim.startDate).toISOString().split("T")[0]
+                : "",
+              endDate: claim.endDate
+                ? new Date(claim.endDate).toISOString().split("T")[0]
+                : "",
               projectId: claim.project?.id || "",
-              status: claim.status || "Draft"
+              status: claim.status || "Draft",
             });
           }
         }
@@ -77,7 +79,9 @@ const EditDetail: React.FC = () => {
 
         // Fetch projects
         if (user?.id) {
-          const projectsResponse = await projectService.getProjectByMemberId(user.id);
+          const projectsResponse = await projectService.getProjectByMemberId(
+            user.id
+          );
           if (projectsResponse.data) {
             setProjects(projectsResponse.data);
           }
@@ -93,11 +97,16 @@ const EditDetail: React.FC = () => {
     fetchData();
   }, [id, user?.id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'amount' || name === 'totalWorkingHours' ? Number(value) : value,
+      [name]:
+        name === "amount" || name === "totalWorkingHours"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -108,7 +117,7 @@ const EditDetail: React.FC = () => {
       const updateData = {
         ...formData,
         id: id,
-        status: "Draft"
+        status: "Draft",
       };
 
       const response = await claimService.updateClaim(updateData);
@@ -127,8 +136,6 @@ const EditDetail: React.FC = () => {
     }
   };
 
-  
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setIsLoading(true);
@@ -136,7 +143,7 @@ const EditDetail: React.FC = () => {
       const updateData = {
         ...formData,
         id: id,
-        status: "Pending" // Change status to Pending when submitting
+        status: "Pending", // Change status to Pending when submitting
       };
 
       const response = await claimService.updateClaim(updateData);
@@ -178,7 +185,10 @@ const EditDetail: React.FC = () => {
           Update Claim
         </h2>
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="claimType" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="claimType"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             Claim Type:
           </label>
           <select
@@ -189,9 +199,13 @@ const EditDetail: React.FC = () => {
             value={formData.claimType}
             onChange={handleChange}
           >
-            <option value="" disabled>Please select a claim type</option>
-            {claimTypes.map(type => (
-              <option key={type} value={type}>{type}</option>
+            <option value="" disabled>
+              Please select a claim type
+            </option>
+            {claimTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
             ))}
           </select>
         </div>
@@ -213,7 +227,10 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="remark" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="remark"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             Remark:
           </label>
           <input
@@ -229,7 +246,10 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="amount" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="amount"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             Amount:
           </label>
           <input
@@ -245,7 +265,10 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="totalWorkingHours" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="totalWorkingHours"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             Working Hours:
           </label>
           <input
@@ -261,7 +284,10 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="startDate" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="startDate"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             Start Date:
           </label>
           <input
@@ -276,7 +302,10 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="endDate" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="endDate"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             End Date:
           </label>
           <input
@@ -291,7 +320,10 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="projectId" className="block mr-2.5 w-[150px] text-[18px]">
+          <label
+            htmlFor="projectId"
+            className="block mr-2.5 w-[150px] text-[18px]"
+          >
             Project:
           </label>
           <select
@@ -302,8 +334,10 @@ const EditDetail: React.FC = () => {
             onChange={handleChange}
           >
             <option value="">No project selected</option>
-            {projects.map(project => (
-              <option key={project.id} value={project.id}>{project.name}</option>
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name}
+              </option>
             ))}
           </select>
         </div>

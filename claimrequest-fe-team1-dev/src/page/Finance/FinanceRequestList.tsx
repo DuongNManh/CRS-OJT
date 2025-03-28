@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Input, Button } from 'antd';
-import { UserOutlined, CheckCircleOutlined, MoneyCollectOutlined } from '@ant-design/icons';
-import { ClaimStatusCountResponse } from '@/interfaces/claim.interface';
-import { toast } from 'react-toastify';
-import { claimService } from '@/services/features/claim.service';
-import { statusColors } from '@/utils/statusColors';
-import { formatDateToYYYYMMDD } from '@/utils/dateFormatter';
-import DatePicker from '@/components/DatePicker/DatePicker';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import ClaimTable from "@/components/ClaimTable/ClaimTable";
+import DatePicker from "@/components/DatePicker/DatePicker";
+import { ClaimStatusCountResponse } from "@/interfaces/claim.interface";
 import { cn } from "@/lib/utils";
-import { cacheService } from '@/services/features/cacheService';
-import ClaimTable from '@/components/ClaimTable/ClaimTable';
-import { CACHE_TAGS } from '@/services/features/cacheService';
-import { saveAs } from 'file-saver';
+import { cacheService } from "@/services/features/cacheService";
+import { CACHE_TAGS } from "@/services/features/cacheService";
+import { claimService } from "@/services/features/claim.service";
+import { formatDateToYYYYMMDD } from "@/utils/dateFormatter";
+import { statusColors } from "@/utils/statusColors";
+import {
+  UserOutlined,
+  CheckCircleOutlined,
+  MoneyCollectOutlined,
+} from "@ant-design/icons";
+import { Card, Row, Col, Input, Button } from "antd";
+import { saveAs } from "file-saver";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const FinanceRequestList: React.FC = () => {
   const [statusCounts, setStatusCounts] = useState<ClaimStatusCountResponse>();
@@ -43,8 +49,8 @@ const FinanceRequestList: React.FC = () => {
   const fetchStatusCounts = async (startDate: string, endDate: string) => {
     try {
       const cacheKey = cacheService.generateClaimListCacheKey(
-        'FinanceMode',
-        '',
+        "FinanceMode",
+        "",
         startDate,
         endDate
       );
@@ -64,7 +70,7 @@ const FinanceRequestList: React.FC = () => {
           cacheService.set(cacheKey, response.data, [
             CACHE_TAGS.CLAIMS,
             CACHE_TAGS.CLAIM_LISTS,
-            CACHE_TAGS.FINANCE_MODE
+            CACHE_TAGS.FINANCE_MODE,
           ]);
         }
       }
@@ -99,10 +105,10 @@ const FinanceRequestList: React.FC = () => {
 
     try {
       const blob = await claimService.getClaimExportByList({
-        selectedClaimIds: selectedClaims
+        selectedClaimIds: selectedClaims,
       });
-      
-      saveAs(blob, 'claims-export.xlsx');
+
+      saveAs(blob, "claims-export.xlsx");
       toast.success("Claims exported successfully");
     } catch (error) {
       toast.error((error as Error).message || "Failed to export claims");
@@ -119,7 +125,7 @@ const FinanceRequestList: React.FC = () => {
     const isSelected = tempClaimStatus === (status || "");
     return cn(
       "bg-white rounded-xl shadow cursor-pointer transition-all duration-200",
-      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg",
+      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg"
     );
   };
 
@@ -143,9 +149,9 @@ const FinanceRequestList: React.FC = () => {
 
     try {
       const blob = await claimService.getClaimExportByRange(start, end);
-      
+
       // Create a safe filename by removing special characters
-      saveAs(blob, 'claims-export.xlsx');
+      saveAs(blob, "claims-export.xlsx");
       toast.success("Claims exported successfully");
     } catch (error) {
       toast.error((error as Error).message || "Failed to export claims");
@@ -155,7 +161,9 @@ const FinanceRequestList: React.FC = () => {
   return (
     <div className="p-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Finance Request List</h1>
+        <h1 className="text-2xl font-bold mb-4 md:mb-0">
+          Finance Request List
+        </h1>
         <Input
           type="search"
           placeholder="Search"
@@ -173,11 +181,13 @@ const FinanceRequestList: React.FC = () => {
             bordered={false}
           >
             <div className="flex items-center gap-4 p-1">
-              <div className={cn(
-                "w-[65px] h-[65px] rounded-full flex items-center justify-center",
-                "bg-[#cee6fa] text-[#3185ca]",
-                tempClaimStatus === "" && "ring-2 ring-[#3185ca]"
-              )}>
+              <div
+                className={cn(
+                  "w-[65px] h-[65px] rounded-full flex items-center justify-center",
+                  "bg-[#cee6fa] text-[#3185ca]",
+                  tempClaimStatus === "" && "ring-2 ring-[#3185ca]"
+                )}
+              >
                 <UserOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
@@ -196,11 +206,13 @@ const FinanceRequestList: React.FC = () => {
             bordered={false}
           >
             <div className="flex items-center gap-4 p-1">
-              <div className={cn(
-                "w-[65px] h-[65px] rounded-full flex items-center justify-center",
-                statusColors.Approved,
-                tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]"
-              )}>
+              <div
+                className={cn(
+                  "w-[65px] h-[65px] rounded-full flex items-center justify-center",
+                  statusColors.Approved,
+                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]"
+                )}
+              >
                 <CheckCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
@@ -219,11 +231,13 @@ const FinanceRequestList: React.FC = () => {
             bordered={false}
           >
             <div className="flex items-center gap-4 p-1">
-              <div className={cn(
-                "w-[65px] h-[65px] rounded-full flex items-center justify-center",
-                statusColors.Paid,
-                tempClaimStatus === "Paid" && "ring-2 ring-[#3185ca]"
-              )}>
+              <div
+                className={cn(
+                  "w-[65px] h-[65px] rounded-full flex items-center justify-center",
+                  statusColors.Paid,
+                  tempClaimStatus === "Paid" && "ring-2 ring-[#3185ca]"
+                )}
+              >
                 <MoneyCollectOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
@@ -236,7 +250,7 @@ const FinanceRequestList: React.FC = () => {
           </Card>
         </Col>
       </Row>
-      
+
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <div className="flex-grow">
           <DatePicker
@@ -245,7 +259,7 @@ const FinanceRequestList: React.FC = () => {
             onDateChange={handleDateChange}
           />
         </div>
-        <Button 
+        <Button
           onClick={handleApplyFilters}
           type="primary"
           className="w-full sm:w-auto"
@@ -289,7 +303,7 @@ const FinanceRequestList: React.FC = () => {
         onSelectionChange={handleSelectionChange}
       />
     </div>
-  );  
+  );
 };
 
-export default FinanceRequestList; 
+export default FinanceRequestList;

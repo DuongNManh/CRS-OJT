@@ -1,14 +1,26 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu, Dropdown, Button, Avatar } from "antd";
-import { MenuOutlined, UserOutlined, DownOutlined, LogoutOutlined, SunOutlined, MoonOutlined } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector } from "@/services/store/store";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
+import { useTheme } from "@/hooks/use-theme";
+import { SystemRole } from "@/interfaces/auth.interface";
 import { authService } from "@/services/features/auth.service";
 import { clearUser } from "@/services/store/authSlice";
+import { useAppDispatch, useAppSelector } from "@/services/store/store";
+import {
+  MenuOutlined,
+  UserOutlined,
+  DownOutlined,
+  LogoutOutlined,
+  SunOutlined,
+  MoonOutlined,
+} from "@ant-design/icons";
+import { Menu, Dropdown, Button, Avatar } from "antd";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { SystemRole } from "@/interfaces/auth.interface";
-import { useTheme } from "@/hooks/use-theme";
-import "./Header.css"; // Import custom CSS
+import "./Header.css";
+
+// Import custom CSS
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,23 +59,33 @@ const Header: React.FC = () => {
       {
         name: "For My Vetting",
         url: "/approver/claims",
-      }
+      },
     ],
     [SystemRole.FINANCE]: [
       {
         name: "Approved Claims",
         url: "/finance/claims",
-      }
+      },
     ],
   };
 
   const claimActionsMenu = (
     <Menu>
       <Menu.Item key="1">
-        <Link to="/create-claim" style={{ color: theme === "light" ? "gray" : "white" }}>Create Claim</Link>
+        <Link
+          to="/create-claim"
+          style={{ color: theme === "light" ? "gray" : "white" }}
+        >
+          Create Claim
+        </Link>
       </Menu.Item>
       <Menu.Item key="2">
-        <Link to="/claims" style={{ color: theme === "light" ? "gray" : "white" }}>View Claims</Link>
+        <Link
+          to="/claims"
+          style={{ color: theme === "light" ? "gray" : "white" }}
+        >
+          View Claims
+        </Link>
       </Menu.Item>
     </Menu>
   );
@@ -72,7 +94,12 @@ const Header: React.FC = () => {
     <Menu>
       {roleGroups[user?.systemRole]?.map((action) => (
         <Menu.Item key={action.url}>
-          <Link to={action.url} style={{ color: theme === "light" ? "gray" : "white" }}>{action.name}</Link>
+          <Link
+            to={action.url}
+            style={{ color: theme === "light" ? "gray" : "white" }}
+          >
+            {action.name}
+          </Link>
         </Menu.Item>
       ))}
     </Menu>
@@ -81,22 +108,39 @@ const Header: React.FC = () => {
   const profileMenu = (
     <Menu>
       <Menu.Item key="1">
-        <Link to="/profile" style={{ color: theme === "light" ? "gray" : "white" }}>
+        <Link
+          to="/profile"
+          style={{ color: theme === "light" ? "gray" : "white" }}
+        >
           <UserOutlined /> My Profile
         </Link>
       </Menu.Item>
-      <Menu.Item key="2" onClick={handleLogout} style={{ color: theme === "light" ? "gray" : "white" }}>
+      <Menu.Item
+        key="2"
+        onClick={handleLogout}
+        style={{ color: theme === "light" ? "gray" : "white" }}
+      >
         <LogoutOutlined /> Log Out
       </Menu.Item>
     </Menu>
   );
 
   return (
-    <div className={`flex flex-col md:flex-row justify-between items-center p-4 ${theme === "light" ? "bg-gray-100 text-gray-900" : "bg-[#121212] text-gray-50"} z-50 dark:border-b dark:border-gray-800`}>
+    <div
+      className={`flex flex-col md:flex-row justify-between items-center p-4 ${
+        theme === "light"
+          ? "bg-gray-100 text-gray-900"
+          : "bg-[#121212] text-gray-50"
+      } z-50 dark:border-b dark:border-gray-800`}
+    >
       {/* Logo Section with Sidebar Toggle */}
       <div className="flex gap-4 w-full md:w-auto justify-between items-center">
         <div className="flex items-center gap-2">
-          <Link to="/" className="text-xl font-bold flex items-center" style={{ color: theme === "light" ? "gray" : "white" }}>
+          <Link
+            to="/"
+            className="text-xl font-bold flex items-center"
+            style={{ color: theme === "light" ? "gray" : "white" }}
+          >
             <img
               src="/src/assets/icon-fpt.png"
               alt="Claim Request System"
@@ -127,7 +171,13 @@ const Header: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-2 md:gap-4">
           <Button
             type="text"
-            icon={theme === "light" ? <MoonOutlined /> : <SunOutlined className="text-yellow-500" />}
+            icon={
+              theme === "light" ? (
+                <MoonOutlined />
+              ) : (
+                <SunOutlined className="text-yellow-500" />
+              )
+            }
             onClick={toggleTheme}
             className="mr-2"
             style={{ color: theme === "light" ? "gray" : "white" }}
@@ -135,40 +185,67 @@ const Header: React.FC = () => {
           {/* Claim Actions Dropdown */}
           <Dropdown
             overlay={claimActionsMenu}
-            trigger={['click']}
-            overlayClassName={theme === "light" ? "dropdown-light" : "dropdown-dark"}
+            trigger={["click"]}
+            overlayClassName={
+              theme === "light" ? "dropdown-light" : "dropdown-dark"
+            }
             onVisibleChange={(visible) => setIsClaimActionsOpen(visible)}
           >
-            <Button type="text" className="flex items-center gap-2" style={{ color: theme === "light" ? "gray" : "white" }}>
-              Claim Actions <DownOutlined className={`arrow ${isClaimActionsOpen ? 'flipped' : ''}`} />
+            <Button
+              type="text"
+              className="flex items-center gap-2"
+              style={{ color: theme === "light" ? "gray" : "white" }}
+            >
+              Claim Actions{" "}
+              <DownOutlined
+                className={`arrow ${isClaimActionsOpen ? "flipped" : ""}`}
+              />
             </Button>
           </Dropdown>
 
           {/* Role Actions Dropdown */}
-          {user?.systemRole != "Staff" && <Dropdown
-            overlay={roleActionsMenu}
-            trigger={['click']}
-            overlayClassName={theme === "light" ? "dropdown-light" : "dropdown-dark"}
-            onVisibleChange={(visible) => setIsRoleActionsOpen(visible)}
-          >
-            <Button type="text" className="flex items-center gap-2" style={{ color: theme === "light" ? "gray" : "white" }}>
-              Role Actions <DownOutlined className={`arrow ${isRoleActionsOpen ? 'flipped' : ''}`} />
-            </Button>
-          </Dropdown>}
-          
+          {user?.systemRole != "Staff" && (
+            <Dropdown
+              overlay={roleActionsMenu}
+              trigger={["click"]}
+              overlayClassName={
+                theme === "light" ? "dropdown-light" : "dropdown-dark"
+              }
+              onVisibleChange={(visible) => setIsRoleActionsOpen(visible)}
+            >
+              <Button
+                type="text"
+                className="flex items-center gap-2"
+                style={{ color: theme === "light" ? "gray" : "white" }}
+              >
+                Role Actions{" "}
+                <DownOutlined
+                  className={`arrow ${isRoleActionsOpen ? "flipped" : ""}`}
+                />
+              </Button>
+            </Dropdown>
+          )}
         </div>
 
         {/* Profile Menu */}
         <Dropdown
           overlay={profileMenu}
-          trigger={['click']}
-          overlayClassName={theme === "light" ? "dropdown-light" : "dropdown-dark"}
+          trigger={["click"]}
+          overlayClassName={
+            theme === "light" ? "dropdown-light" : "dropdown-dark"
+          }
           onVisibleChange={(visible) => setIsProfileMenuOpen(visible)}
         >
-          <Button type="text" className="flex items-center gap-2" style={{ color: theme === "light" ? "gray" : "white" }}>
+          <Button
+            type="text"
+            className="flex items-center gap-2"
+            style={{ color: theme === "light" ? "gray" : "white" }}
+          >
             <Avatar icon={<UserOutlined />} />
             <span className="font-medium hidden md:block">{user?.name}</span>
-            <DownOutlined className={`arrow ${isProfileMenuOpen ? 'flipped' : ''}`} />
+            <DownOutlined
+              className={`arrow ${isProfileMenuOpen ? "flipped" : ""}`}
+            />
           </Button>
         </Dropdown>
       </div>

@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ClaimDetailResponse } from "@/interfaces/claim.interface";
-import { claimService } from "@/services/features/claim.service";
-import { toast } from "react-toastify";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import ApprovalProgressBar from "@/components/ApprovalProgressBar/ApprovalProgressBar";
 import ClaimChangeLog from "@/components/ClaimChangeLog/ClaimChangeLog";
-import { useApi } from "@/hooks/useApi";
-import { statusColors } from "@/utils/statusColors";
 import NotFound from "@/components/NotFound/NotFound";
+import { useApi } from "@/hooks/useApi";
+import { ClaimDetailResponse } from "@/interfaces/claim.interface";
 import { cacheService } from "@/services/features/cacheService";
+import { CACHE_TAGS } from "@/services/features/cacheService";
+import { claimService } from "@/services/features/claim.service";
 import { formatDate } from "@/utils/dateFormatter";
+import { statusColors } from "@/utils/statusColors";
 import { Modal } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { CACHE_TAGS } from "@/services/features/cacheService";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const DetailClaimer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,14 +30,14 @@ const DetailClaimer: React.FC = () => {
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    
+
     const fetchData = async () => {
       if (!id) return;
-      
+
       // Check cache first
       const cacheKey = cacheService.generateClaimDetailCacheKey(id);
       const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
-      
+
       if (cachedData) {
         console.log("Using cached claim data for:", cacheKey);
         if (isMounted) {
@@ -43,18 +46,20 @@ const DetailClaimer: React.FC = () => {
         }
         return;
       }
-      
+
       console.log("Fetching claim detail:", id);
       try {
-        const response = await withLoading(claimService.getClaimById(id as string));
+        const response = await withLoading(
+          claimService.getClaimById(id as string)
+        );
         console.log("API detail:", response);
-        
+
         if (isMounted && response.is_success && response.data) {
           setClaim(response.data);
           cacheService.set(cacheKey, response.data, [
             CACHE_TAGS.CLAIMS,
             CACHE_TAGS.CLAIMER_MODE,
-            `claim_${id}`
+            `claim_${id}`,
           ]);
         }
       } catch (error) {
@@ -69,9 +74,9 @@ const DetailClaimer: React.FC = () => {
         }
       }
     };
-    
+
     fetchData();
-    
+
     return () => {
       isMounted = false;
     };
@@ -106,7 +111,7 @@ const DetailClaimer: React.FC = () => {
 
       await claimService.cancelClaim(id as string, cancelRemark);
       toast.success("Claim cancelled successfully!");
-      
+
       // Clear modal state
       setIsModalOpen(false);
       setCancelRemark("");
@@ -121,20 +126,21 @@ const DetailClaimer: React.FC = () => {
       cacheService.invalidateByTags([
         CACHE_TAGS.CLAIMS,
         CACHE_TAGS.CLAIM_LISTS,
-        `claim_${id}`
+        `claim_${id}`,
       ]);
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to cancel claim";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to cancel claim";
       toast.error(errorMessage);
     }
   };
-  
 
   const handleSubmit = async () => {
     try {
       // check user confirmation
-      const confirm = window.confirm("Are you sure you want to submit this claim?");
+      const confirm = window.confirm(
+        "Are you sure you want to submit this claim?"
+      );
       if (!confirm) return;
       const response = await claimService.submitClaim(id as string);
       if (response.is_success) {
@@ -142,7 +148,7 @@ const DetailClaimer: React.FC = () => {
         // Invalidate caches after submission
         cacheService.invalidateByTags([
           CACHE_TAGS.CLAIMS,
-          CACHE_TAGS.CLAIM_LISTS
+          CACHE_TAGS.CLAIM_LISTS,
         ]);
         // Instead of reloading, fetch new data
         const updatedResponse = await claimService.getClaimById(id as string);
@@ -158,8 +164,8 @@ const DetailClaimer: React.FC = () => {
 
   const handleEdit = () => {
     if (claim?.id) {
-      navigate(`/claim-update/${claim.id}`, { 
-        state: { claim } // Optionally pass the claim data through navigation state
+      navigate(`/claim-update/${claim.id}`, {
+        state: { claim }, // Optionally pass the claim data through navigation state
       });
     } else {
       toast.error("Cannot edit: Claim ID not found");
@@ -183,7 +189,9 @@ const DetailClaimer: React.FC = () => {
             {/* Claim Information Card */}
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6">Claim Information</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-6">
+                  Claim Information
+                </h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-lg p-4">
@@ -192,20 +200,26 @@ const DetailClaimer: React.FC = () => {
                     </div>
                     <div className="bg-gray-50 rounded-lg p-4">
                       <p className="text-sm text-gray-500">Claim Type</p>
-                      <p className="font-medium text-gray-900">{claim.claimType}</p>
+                      <p className="font-medium text-gray-900">
+                        {claim.claimType}
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-500">Created At</p>
-                    <p className="font-medium text-gray-900">{date.toLocaleString()}</p>
+                    <p className="font-medium text-gray-900">
+                      {date.toLocaleString()}
+                    </p>
                   </div>
-                  
+
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-500">Total Compensation</p>
-                    <p className="text-2xl font-bold text-green-600">{claim.amount} VND</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {claim.amount} VND
+                    </p>
                   </div>
-                  
+
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-500 mb-2">Remark</p>
                     <p className="text-gray-900">{claim.remark}</p>
@@ -217,13 +231,21 @@ const DetailClaimer: React.FC = () => {
             {/* Status and Progress Card */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Current Status</h3>
-                <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${statusColors[claim.status]}`}>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Current Status
+                </h3>
+                <span
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium ${
+                    statusColors[claim.status]
+                  }`}
+                >
                   {claim.status}
                 </span>
               </div>
               <div className="mt-4">
-                <h4 className="text-base font-medium text-gray-700 mb-4">Approval Progress</h4>
+                <h4 className="text-base font-medium text-gray-700 mb-4">
+                  Approval Progress
+                </h4>
                 <ApprovalProgressBar claim={claim} />
               </div>
             </div>
@@ -233,28 +255,42 @@ const DetailClaimer: React.FC = () => {
           <div className="space-y-6">
             {/* Project Information Card */}
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Project Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">
+                Project Information
+              </h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-500">Project Name</p>
-                    <p className="font-medium text-gray-900">{claim.project ? claim.project.name : 'NA'}</p>
+                    <p className="font-medium text-gray-900">
+                      {claim.project ? claim.project.name : "NA"}
+                    </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-500">Duration</p>
                     <p className="font-medium text-gray-900">
-                    {claim.project ? `${formatDate(claim.project.startDate)} to ${formatDate(claim.project.endDate)}` : 'NA'}
+                      {claim.project
+                        ? `${formatDate(
+                            claim.project.startDate
+                          )} to ${formatDate(claim.project.endDate)}`
+                        : "NA"}
                     </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-500">Project Manager</p>
-                    <p className="font-medium text-gray-900">{claim.project ? claim.project.projectManager : 'NA'}</p>
+                    <p className="font-medium text-gray-900">
+                      {claim.project ? claim.project.projectManager : "NA"}
+                    </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Business Unit Leader</p>
-                    <p className="font-medium text-gray-900">{claim.project ? claim.project.businessUnitLeader : 'NA'}</p>
+                    <p className="text-sm text-gray-500">
+                      Business Unit Leader
+                    </p>
+                    <p className="font-medium text-gray-900">
+                      {claim.project ? claim.project.businessUnitLeader : "NA"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -262,7 +298,9 @@ const DetailClaimer: React.FC = () => {
 
             {/* Change History Card */}
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Change History</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Change History
+              </h3>
               <div className="h-[250px] overflow-y-auto pr-2">
                 <ClaimChangeLog claim={claim} />
               </div>

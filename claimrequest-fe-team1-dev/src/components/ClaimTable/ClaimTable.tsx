@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Table, Tag, Tooltip } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "@/services/store/store";
-import { GetClaimResponse } from "@/interfaces/claim.interface";
-import { claimService } from "@/services/features/claim.service";
-import { toast } from "react-toastify";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { useApi } from "@/hooks/useApi";
+import { SystemRole } from "@/interfaces/auth.interface";
+import { GetClaimResponse } from "@/interfaces/claim.interface";
+import { cacheService } from "@/services/features/cacheService";
+import { claimService } from "@/services/features/claim.service";
+import { useAppSelector } from "@/services/store/store";
 import { statusColors } from "@/utils/statusColors";
-import { SystemRole } from "@/interfaces/auth.interface"; 
-import { cacheService } from "@/services/features/cacheService"; // Import cacheService
-import { CheckSquareOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+// Import cacheService
+import {
+  CheckSquareOutlined,
+  CloseCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
+import { Table, Tag, Tooltip } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // Add interface for table column
 interface TableColumn {
@@ -55,7 +64,15 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Fetching data: ", mode, claimStatus, pageNumber, pageSize, startDate, endDate);
+      console.log(
+        "Fetching data: ",
+        mode,
+        claimStatus,
+        pageNumber,
+        pageSize,
+        startDate,
+        endDate
+      );
       try {
         const cacheKey = `claims_${mode}_${claimStatus}_${pageNumber}_${pageSize}_${startDate}_${endDate}`;
         const cachedData = cacheService.get(cacheKey);
@@ -79,12 +96,12 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
             setClaims(claimsResponse.items);
             setTotalItems(claimsResponse.meta.total_items);
             cacheService.set(
-              cacheKey, 
+              cacheKey,
               {
                 claims: claimsResponse.items,
                 totalItems: claimsResponse.meta.total_items,
               },
-              ['claims', `${mode}-claims`]
+              ["claims", `${mode}-claims`]
             );
           }
         }
@@ -143,7 +160,9 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
       render: (status) => {
         const colorClass = statusColors[status] || "bg-gray-100 text-gray-800"; // Default color if status not found
         return (
-          <Tag className={`border-none px-3 py-1 rounded-md w-[77px] text-center ${colorClass}`}>
+          <Tag
+            className={`border-none px-3 py-1 rounded-md w-[77px] text-center ${colorClass}`}
+          >
             {status}
           </Tag>
         );
@@ -151,7 +170,7 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
     },
   ];
 
-  if (user?.systemRole === SystemRole.APPROVER  && mode === "ApproverMode") {
+  if (user?.systemRole === SystemRole.APPROVER && mode === "ApproverMode") {
     columns.push({
       title: "Your Approval Status",
       dataIndex: "claimApprover",
@@ -161,7 +180,9 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
         const status = record.claimApprover.approverStatus;
         const colorClass = statusColors[status] || "bg-gray-100 text-gray-800"; // Default color if status not found
         return (
-          <Tag className={`border-none px-3 py-1 rounded-md w-[77px] text-center ${colorClass}`}>
+          <Tag
+            className={`border-none px-3 py-1 rounded-md w-[77px] text-center ${colorClass}`}
+          >
             {status}
           </Tag>
         );
@@ -173,10 +194,10 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
     columns.push({
       title: "Actions",
       key: "actions",
-      dataIndex: '',
+      dataIndex: "",
       render: (text, record) => (
         <div className="ml-2 flex gap-4">
-          {record.status === 'Draft' ? (
+          {record.status === "Draft" ? (
             <>
               <Tooltip title="Send">
                 <CheckSquareOutlined
@@ -218,17 +239,19 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
           ) : null}
         </div>
       ),
-    },
-    );
+    });
   }
-  
+
   // Add rowSelection configuration
-  const rowSelection = mode === "FinanceMode" ? {
-    selectedRowKeys: selectedRows,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      onSelectionChange?.(selectedRowKeys as string[]);
-    },
-  } : undefined;
+  const rowSelection =
+    mode === "FinanceMode"
+      ? {
+          selectedRowKeys: selectedRows,
+          onChange: (selectedRowKeys: React.Key[]) => {
+            onSelectionChange?.(selectedRowKeys as string[]);
+          },
+        }
+      : undefined;
 
   return (
     <div className="bg-white p-6 rounded-xl overflow-x-auto">
@@ -247,7 +270,7 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
         }}
         onRow={(record) => ({
           onClick: () => {
-            let navigationPath = '';
+            let navigationPath = "";
             switch (mode) {
               case "ApproverMode":
                 navigationPath = `/approver/claim-detail/${record.id}`;

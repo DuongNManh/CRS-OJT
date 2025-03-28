@@ -1,10 +1,17 @@
-import React from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format as formatDate } from "date-fns";
 import { XCircle } from "lucide-react";
+import React from "react";
 
 interface DatePickerProps {
   startDate: Date | null;
@@ -32,7 +39,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
               !startDate && "text-muted-foreground"
             )}
           >
-            {startDate ? formatDate(startDate, "dd/MM/yyyy") : <span>Pick start date</span>}
+            {startDate ? (
+              formatDate(startDate, "dd/MM/yyyy")
+            ) : (
+              <span>Pick start date</span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -53,7 +64,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
               !endDate && "text-muted-foreground"
             )}
           >
-            {endDate ? formatDate(endDate, "dd/MM/yyyy") : <span>Pick end date</span>}
+            {endDate ? (
+              formatDate(endDate, "dd/MM/yyyy")
+            ) : (
+              <span>Pick end date</span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

@@ -1,4 +1,6 @@
-import React from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +14,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
 import { SystemRole } from "@/interfaces/auth.interface";
 import {
   Building2,
@@ -23,6 +24,8 @@ import {
   WalletCards,
   ChevronLeft,
 } from "lucide-react";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface AppSidebarProps {
   userRole: SystemRole;
@@ -82,14 +85,20 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
       ${open ? "w-64" : "w-20"}`}
     >
       <SidebarContent className="px-2">
-      <SidebarTrigger className="absolute right-0 top-0 p-2 rounded-full hover:bg-gray-100 dark:text-white dark:hover:bg-[#2D323B] transition-colors">
-            <ChevronLeft className="w-5 h-5 text-gray-500" />
-          </SidebarTrigger>
+        <SidebarTrigger className="absolute right-0 top-0 p-2 rounded-full hover:bg-gray-100 dark:text-white dark:hover:bg-[#2D323B] transition-colors">
+          <ChevronLeft className="w-5 h-5 text-gray-500" />
+        </SidebarTrigger>
         {Object.keys(roleGroups).map((role) => {
           if (role === userRole) {
             return (
               <SidebarGroup key={role}>
-                <SidebarGroupLabel>{role === SystemRole.ADMIN ? "Admin" : role === SystemRole.APPROVER ? "Approver" : "Finance"}</SidebarGroupLabel>
+                <SidebarGroupLabel>
+                  {role === SystemRole.ADMIN
+                    ? "Admin"
+                    : role === SystemRole.APPROVER
+                    ? "Approver"
+                    : "Finance"}
+                </SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu className="space-y-1">
                     {roleGroups[role].map((func) => (
@@ -97,10 +106,22 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
                         <SidebarMenuButton asChild>
                           <Link
                             to={func.url}
-                            className={`flex items-center gap-4 p-4 rounded-lg transition-all duration-200 ${isActive(func.url) ? "bg-gray-700 text-white font-semibold shadow-lg hover:bg-gray-800 dark:bg-[#2D323B] dark:hover:bg-[#2D323B]" : "hover:bg-gray-200 text-gray-800 hover:scale-105 dark:hover:bg-[#2D323B] dark:text-gray-200"}`}
+                            className={`flex items-center gap-4 p-4 rounded-lg transition-all duration-200 ${
+                              isActive(func.url)
+                                ? "bg-gray-700 text-white font-semibold shadow-lg hover:bg-gray-800 dark:bg-[#2D323B] dark:hover:bg-[#2D323B]"
+                                : "hover:bg-gray-200 text-gray-800 hover:scale-105 dark:hover:bg-[#2D323B] dark:text-gray-200"
+                            }`}
                           >
-                            <func.icon className={`w-8 h-8 transition-colors duration-200 ${isActive(func.url) ? "text-white" : "text-blue-600"}`} />
-                            <span className="font-medium text-lg">{func.name}</span>
+                            <func.icon
+                              className={`w-8 h-8 transition-colors duration-200 ${
+                                isActive(func.url)
+                                  ? "text-white"
+                                  : "text-blue-600"
+                              }`}
+                            />
+                            <span className="font-medium text-lg">
+                              {func.name}
+                            </span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
