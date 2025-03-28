@@ -105,7 +105,7 @@ export default function Login() {
       <div className="flex flex-col items-center justify-center w-[80%] md:w-1/2 p-5">
         <div className="flex items-center justify-center gap-2">
           <img
-            src="/icon-fpt.png"
+            src="/icon.png"
             alt="Claim Request System"
             className="h-12 w-24 md:h-24 md:w-36"
           />

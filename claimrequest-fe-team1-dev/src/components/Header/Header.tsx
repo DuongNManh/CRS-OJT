@@ -142,7 +142,7 @@ const Header: React.FC = () => {
             style={{ color: theme === "light" ? "gray" : "white" }}
           >
             <img
-              src="/src/assets/icon-fpt.png"
+              src="/icon.png"
               alt="Claim Request System"
               className="h-14 w-30 mr-1"
             />

@@ -16,7 +16,7 @@ const FPTGlobalGeo = () => {
 
   useEffect(() => {
     // Fetch GeoJSON data
-    fetch("/src/assets/FPTGeo.json")
+    fetch("/Geo.json")
       .then((res) => res.json())
       .then((data) => {
         // Add size and color properties to each point
