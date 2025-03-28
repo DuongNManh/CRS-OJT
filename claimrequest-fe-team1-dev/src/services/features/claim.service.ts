@@ -233,8 +233,12 @@ export const claimService = {
     try {
       await axiosInstance.put(`claim/paid?id=${id}`);
       return { success: true, message: "Claim cancelled successfully!" };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      const apiError = error.response?.data as ApiResponse<any>;
+      if (apiError) {
+        throw new Error(apiError.reason || "Cancel claim failed");
+      }
+      throw new Error("Network error occurred");
     }
   },
   async getClaimExportByList(request: ClaimExportRequest): Promise<Blob> {
