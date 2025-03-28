@@ -25,6 +25,7 @@ import Loading from "@/components/Loading/Loading";
 import CommonLayout from "@/layouts/CommonLayout";
 import PageTransition from "@/components/ui/PageTransition";
 import EditDetail from "@/page/Common/ViewClaims/EditDetail";
+import Chatbot from "@/components/Chatbot/Chatbot";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   // const user = useAppSelector((state) => state.auth.user);
@@ -36,6 +37,7 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
       <main className="w-full">
         <Header />
         <PageTransition>{children}</PageTransition>
+        <Chatbot />
         <Footer />
       </main>
       {/* </SidebarProvider> */}

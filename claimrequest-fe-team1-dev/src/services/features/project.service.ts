@@ -96,7 +96,7 @@ export const projectService = {
     try {
       const response = await axiosInstance.get<
         ApiResponse<GetProjectResponse[]>
-      >(`${this.projectEndpoint}/member-id/${memberId}`);
+      >(`${this.projectsEndpoint}/member-id/${memberId}`);
       return response.data;
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
