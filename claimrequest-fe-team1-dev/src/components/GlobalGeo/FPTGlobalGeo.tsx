@@ -113,7 +113,7 @@ const FPTGlobalGeo = () => {
           <div>Lat: ${lat.toFixed(2)}°</div>
           <div>Lng: ${lng.toFixed(2)}°</div>
         </div>
-      `
+      `,
       )
 
       // Ring effect for points
@@ -122,7 +122,7 @@ const FPTGlobalGeo = () => {
         const geometry = new THREE.RingGeometry(
           d.radius * 1.2,
           d.radius * 1.4,
-          32
+          32,
         );
         const material = new THREE.MeshBasicMaterial({
           color: d.ringColor,

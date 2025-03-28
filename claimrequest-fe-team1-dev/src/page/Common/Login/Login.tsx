@@ -43,7 +43,6 @@ export default function Login() {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      
     }
   };
 

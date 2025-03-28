@@ -32,12 +32,12 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthGuard>
       {/* <SidebarProvider> */}
-        {/* {userRole !== SystemRole.STAFF && <AppSidebar userRole={userRole} />} */}
-        <main className="w-full">
-          <Header />
-          <PageTransition>{children}</PageTransition>
-          <Footer />
-        </main>
+      {/* {userRole !== SystemRole.STAFF && <AppSidebar userRole={userRole} />} */}
+      <main className="w-full">
+        <Header />
+        <PageTransition>{children}</PageTransition>
+        <Footer />
+      </main>
       {/* </SidebarProvider> */}
     </AuthGuard>
   );
@@ -156,19 +156,10 @@ const AppRouter = () => {
           />
         </>
       )}
-    
-        
-            <Route
-                path="/forgotpassword"
-                element={
-                    <ForgotPassword />
-                }
-            />
-            <Route
-                path="/resetpassword"
-                element={<VerifyOTP />}
-            />
-           
+
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
+      <Route path="/resetpassword" element={<VerifyOTP />} />
+
       {userRole === SystemRole.ADMIN && (
         <>
           <Route

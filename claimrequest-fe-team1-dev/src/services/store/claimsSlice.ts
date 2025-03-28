@@ -1,5 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ClaimStatusCountResponse, GetClaimResponse } from '@/interfaces/claim.interface';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  ClaimStatusCountResponse,
+  GetClaimResponse,
+} from "@/interfaces/claim.interface";
 
 interface ClaimsState {
   currentPageClaims: GetClaimResponse[];
@@ -20,7 +23,7 @@ const initialState: ClaimsState = {
   pageSize: 20,
   filterStatus: null,
   lastViewedPage: 1,
-  searchQuery: '',
+  searchQuery: "",
   preserveState: false,
   statusCounts: {
     total: 0,
@@ -29,25 +32,28 @@ const initialState: ClaimsState = {
     rejected: 0,
     draft: 0,
     paid: 0,
-    cancelled: 0
-  }
+    cancelled: 0,
+  },
 };
 
 const claimsSlice = createSlice({
-  name: 'claims',
+  name: "claims",
   initialState,
   reducers: {
-    setCurrentPageClaims(state, action: PayloadAction<{ 
-      claims: GetClaimResponse[]; 
-      total: number;
-      statusCounts: ClaimStatusCountResponse & { total: number };
-    }>) {
+    setCurrentPageClaims(
+      state,
+      action: PayloadAction<{
+        claims: GetClaimResponse[];
+        total: number;
+        statusCounts: ClaimStatusCountResponse & { total: number };
+      }>,
+    ) {
       state.currentPageClaims = action.payload.claims;
       state.totalClaims = action.payload.total;
       state.statusCounts = action.payload.statusCounts;
     },
-  }
-})
+  },
+});
 
-export const { setCurrentPageClaims} = claimsSlice.actions;
+export const { setCurrentPageClaims } = claimsSlice.actions;
 export default claimsSlice.reducer;

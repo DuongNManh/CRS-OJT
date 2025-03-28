@@ -1,10 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 
-interface AdminLayoutProps {
+interface Props {
   children: React.ReactNode;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+const AdminLayoutInner: React.FC<Props> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <div className="flex flex-row">
@@ -13,5 +13,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     </div>
   );
 };
+
+const AdminLayout = memo(AdminLayoutInner);
 
 export default AdminLayout;

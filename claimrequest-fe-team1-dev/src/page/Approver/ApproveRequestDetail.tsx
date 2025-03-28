@@ -20,7 +20,7 @@ const ApproveRequestDetail: React.FC = () => {
   const date = new Date(claim?.createAt || "");
   const user = useAppSelector((state) => state.auth.user); // Import useAppSelect
   const [loading, setLoading] = useState<boolean>(true);
-  const {withLoading} = useApi();
+  const { withLoading } = useApi();
 
   useEffect(() => {
     setLoading(true);
@@ -37,21 +37,23 @@ const ApproveRequestDetail: React.FC = () => {
       }
 
       try {
-        const response = await withLoading(claimService.getClaimById(id as string));
+        const response = await withLoading(
+          claimService.getClaimById(id as string),
+        );
         if (response && response.is_success && response.data) {
           setClaim(response.data);
           // Store in cache for future use
           cacheService.set(cacheKey, response.data, [
             CACHE_TAGS.CLAIMS,
             CACHE_TAGS.APPROVER_MODE,
-            `claim_${id}`
+            `claim_${id}`,
           ]);
         }
       } catch (error: unknown) {
         const errorMessage = (error as Error).message || "An error occurred";
         toast.error(errorMessage);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -74,7 +76,9 @@ const ApproveRequestDetail: React.FC = () => {
     try {
       if (!id) return;
       // Check if user wants to approve claim
-      const confirmApprove = window.confirm("Are you sure you want to approve this claim?");
+      const confirmApprove = window.confirm(
+        "Are you sure you want to approve this claim?",
+      );
       if (!confirmApprove) return;
       await claimService.approveClaim(id);
       toast.success("Claim approved successfully");
@@ -82,7 +86,7 @@ const ApproveRequestDetail: React.FC = () => {
       cacheService.invalidateByTags([
         CACHE_TAGS.CLAIMS,
         CACHE_TAGS.CLAIM_LISTS,
-        CACHE_TAGS.APPROVER_MODE
+        CACHE_TAGS.APPROVER_MODE,
       ]);
       // Instead of reloading, fetch new data
       const updatedResponse = await claimService.getClaimById(id as string);
@@ -99,9 +103,11 @@ const ApproveRequestDetail: React.FC = () => {
   const handleReject = async () => {
     try {
       if (!id) return;
-      
+
       // check if user wants to reject claim
-      const confirmReject = window.confirm("Are you sure you want to reject this claim?");
+      const confirmReject = window.confirm(
+        "Are you sure you want to reject this claim?",
+      );
       if (!confirmReject) return;
 
       await claimService.rejectClaim(id);
@@ -110,7 +116,7 @@ const ApproveRequestDetail: React.FC = () => {
       cacheService.invalidateByTags([
         CACHE_TAGS.CLAIMS,
         CACHE_TAGS.CLAIM_LISTS,
-        CACHE_TAGS.APPROVER_MODE
+        CACHE_TAGS.APPROVER_MODE,
       ]);
       window.location.reload();
     } catch (error: unknown) {
@@ -130,7 +136,6 @@ const ApproveRequestDetail: React.FC = () => {
     } catch (error) {
       const errorMessage = (error as Error).message || "Failed to return claim";
       toast.error(errorMessage);
-      
     }
   };
 
@@ -140,7 +145,9 @@ const ApproveRequestDetail: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section - Made more compact */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Claim Request Details</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Claim Request Details
+            </h1>
             <p className="mt-1 text-sm text-gray-600">
               Review and process claim request information
             </p>
@@ -162,9 +169,15 @@ const ApproveRequestDetail: React.FC = () => {
                 </div>
                 <div className="pt-12 pb-4 px-4">
                   <div className="text-center">
-                    <h2 className="text-lg font-bold text-gray-900">{claim.claimer.name}</h2>
-                    <p className="text-sm text-gray-500">{claim.claimer.email}</p>
-                    <p className="text-sm font-medium text-blue-600">{claim.claimer.department}</p>
+                    <h2 className="text-lg font-bold text-gray-900">
+                      {claim.claimer.name}
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                      {claim.claimer.email}
+                    </p>
+                    <p className="text-sm font-medium text-blue-600">
+                      {claim.claimer.department}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -172,8 +185,18 @@ const ApproveRequestDetail: React.FC = () => {
               {/* Project Information Card - More compact spacing */}
               <div className="bg-white rounded-xl shadow-sm p-4">
                 <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center">
-                  <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                  <svg
+                    className="w-4 h-4 mr-2 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
                   </svg>
                   Project Details
                 </h3>
@@ -183,12 +206,15 @@ const ApproveRequestDetail: React.FC = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <p className="text-sm text-gray-500">Project Name</p>
-                        <p className="font-medium text-gray-900">{claim.project?.name}</p>
+                        <p className="font-medium text-gray-900">
+                          {claim.project?.name}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">Duration</p>
                         <p className="font-medium text-gray-900">
-                          {formatDate(claim.project?.startDate)} - {formatDate(claim.project?.endDate)}
+                          {formatDate(claim.project?.startDate)} -{" "}
+                          {formatDate(claim.project?.endDate)}
                         </p>
                       </div>
                     </div>
@@ -197,11 +223,17 @@ const ApproveRequestDetail: React.FC = () => {
                     <div className="space-y-2">
                       <div>
                         <p className="text-sm text-gray-500">Project Manager</p>
-                        <p className="font-medium text-gray-900">{claim.project?.projectManager}</p>
+                        <p className="font-medium text-gray-900">
+                          {claim.project?.projectManager}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Business Unit Leader</p>
-                        <p className="font-medium text-gray-900">{claim.project?.businessUnitLeader}</p>
+                        <p className="text-sm text-gray-500">
+                          Business Unit Leader
+                        </p>
+                        <p className="font-medium text-gray-900">
+                          {claim.project?.businessUnitLeader}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -214,7 +246,9 @@ const ApproveRequestDetail: React.FC = () => {
               {/* Claim Status Card */}
               <div className="bg-white rounded-xl shadow-sm p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-semibold text-gray-900">Claim Status</h3>
+                  <h3 className="text-base font-semibold text-gray-900">
+                    Claim Status
+                  </h3>
                   <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-700">
                     {claim.status}
                   </span>
@@ -224,25 +258,33 @@ const ApproveRequestDetail: React.FC = () => {
 
               {/* Claim Information Card */}
               <div className="bg-white rounded-xl shadow-sm p-4">
-                <h3 className="text-base font-semibold text-gray-900 mb-3">Claim Information</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-3">
+                  Claim Information
+                </h3>
                 <div className="space-y-3">
-                <div className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-sm text-gray-500">Claim Name</p>
-                      <p className="font-medium text-gray-900">{claim.name}</p>
-                    </div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-sm text-gray-500">Claim Name</p>
+                    <p className="font-medium text-gray-900">{claim.name}</p>
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm text-gray-500">Claim Type</p>
-                      <p className="font-medium text-gray-900">{claim.claimType}</p>
+                      <p className="font-medium text-gray-900">
+                        {claim.claimType}
+                      </p>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm text-gray-500">Created At</p>
-                      <p className="font-medium text-gray-900">{date.toLocaleString()}</p>
+                      <p className="font-medium text-gray-900">
+                        {date.toLocaleString()}
+                      </p>
                     </div>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-sm text-gray-500">Total Compensation</p>
-                    <p className="text-xl font-bold text-green-600">{claim.amount} VND</p>
+                    <p className="text-xl font-bold text-green-600">
+                      {claim.amount} VND
+                    </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-sm text-gray-500 mb-1">Remark</p>
@@ -253,36 +295,40 @@ const ApproveRequestDetail: React.FC = () => {
 
               {/* Change History Card - Fixed height */}
               <div className="bg-white rounded-xl shadow-sm p-4">
-                <h3 className="text-base font-semibold text-gray-900">Change History</h3>
+                <h3 className="text-base font-semibold text-gray-900">
+                  Change History
+                </h3>
                 <div className="h-[200px] overflow-y-auto pr-2">
                   <ClaimChangeLog claim={claim} />
                 </div>
               </div>
 
               <div className="bg-white rounded-xl shadow-sm p-6">
-              {claim.claimApprovers.find(approver => approver.approverId === user?.id)?.approverStatus === "Pending" && (
-                <div className="flex items-center justify-end gap-4">
-                  <button
-                    onClick={handleApprove}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={handleReturn}
-                    className="flex-1 px-4 py-2 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors"
-                  >
-                    Return
-                  </button>
-                  <button
-                    onClick={handleReject}
-                    className="flex-1 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
-                  >
-                    Reject
-                  </button>
-                </div>
+                {claim.claimApprovers.find(
+                  (approver) => approver.approverId === user?.id,
+                )?.approverStatus === "Pending" && (
+                  <div className="flex items-center justify-end gap-4">
+                    <button
+                      onClick={handleApprove}
+                      className="flex-1 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={handleReturn}
+                      className="flex-1 px-4 py-2 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors"
+                    >
+                      Return
+                    </button>
+                    <button
+                      onClick={handleReject}
+                      className="flex-1 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Reject
+                    </button>
+                  </div>
                 )}
-                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -292,4 +338,3 @@ const ApproveRequestDetail: React.FC = () => {
 };
 
 export default ApproveRequestDetail;
-

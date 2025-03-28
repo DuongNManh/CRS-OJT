@@ -1,8 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 
-const FinanceLayout: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const FinanceLayoutInner: React.FC<Props> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#121212]">
       <div className="flex flex-row">
@@ -11,5 +13,7 @@ const FinanceLayout: React.FC<{ children: React.ReactNode }> = ({
     </div>
   );
 };
+
+const FinanceLayout = memo(FinanceLayoutInner);
 
 export default FinanceLayout;

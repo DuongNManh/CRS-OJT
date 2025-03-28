@@ -168,7 +168,7 @@ const ProjectList: React.FC = () => {
       }
     } catch (error) {
       message.error("Failed to fetch staffs");
-      
+
       setStaffsList([]);
     }
   };
@@ -208,7 +208,7 @@ const ProjectList: React.FC = () => {
       if (viewMode === "update") {
         response = await projectService.updateProject(
           formData.id,
-          processedData
+          processedData,
         );
       } else {
         const { ...createData } = processedData;
@@ -225,7 +225,6 @@ const ProjectList: React.FC = () => {
       }
     } catch (error: any) {
       message.error(error.message);
-      
     }
   };
 
@@ -288,7 +287,6 @@ const ProjectList: React.FC = () => {
       }
     } catch (error) {
       message.error("Failed to delete project");
-      
     }
   };
 
@@ -424,7 +422,7 @@ const ProjectList: React.FC = () => {
               .includes(searchText.toLowerCase()) ||
             project.projectManager.name
               .toLowerCase()
-              .includes(searchText.toLowerCase())
+              .includes(searchText.toLowerCase()),
         )}
         rowKey="id"
         onRow={(record: Project) => ({
@@ -442,8 +440,8 @@ const ProjectList: React.FC = () => {
           viewMode === "update"
             ? "Edit Project"
             : viewMode === "add"
-            ? "Add Project"
-            : "View Project"
+              ? "Add Project"
+              : "View Project"
         }
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
@@ -571,7 +569,7 @@ const ProjectList: React.FC = () => {
               value={formData.projectManager.id}
               onChange={(value) => {
                 const selectedStaff = staffsList.find(
-                  (staff) => staff.id === value
+                  (staff) => staff.id === value,
                 );
                 if (selectedStaff) {
                   setFormData({
@@ -601,7 +599,7 @@ const ProjectList: React.FC = () => {
               value={formData.businessUnitLeader.id}
               onChange={(value) => {
                 const selectedStaff = staffsList.find(
-                  (staff) => staff.id === value
+                  (staff) => staff.id === value,
                 );
                 if (selectedStaff) {
                   setFormData({

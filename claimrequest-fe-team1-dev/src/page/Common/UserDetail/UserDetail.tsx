@@ -5,7 +5,9 @@ import { toast } from "react-toastify";
 
 function UserDetail() {
   const user = useAppSelector((state) => state.auth.user);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl || null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    user?.avatarUrl || null,
+  );
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   // Handle image selection and preview
@@ -39,7 +41,6 @@ function UserDetail() {
     }
   };
 
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-1 flex items-center justify-center">
@@ -56,7 +57,8 @@ function UserDetail() {
                   Role: <span className="font-medium">{user.systemRole}</span>
                 </p>
                 <p className="text-gray-600">
-                  Department: <span className="font-medium">{user.department}</span>
+                  Department:{" "}
+                  <span className="font-medium">{user.department}</span>
                 </p>
               </div>
 

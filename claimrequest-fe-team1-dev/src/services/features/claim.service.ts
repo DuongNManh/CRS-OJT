@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import axiosInstance from "../constant/axiosInstance";
 import {
   ApiResponse,
   PagingResponse,
@@ -23,7 +22,7 @@ export const claimService = {
   async getClaimTypes(): Promise<ApiResponse<string[]>> {
     try {
       const response = await axiosInstance.get<ApiResponse<string[]>>(
-        `${this.claimsEndpoint}/types`
+        `${this.claimsEndpoint}/types`,
       );
 
       // Ensure we return a valid PagingResponse structure
@@ -41,7 +40,7 @@ export const claimService = {
     try {
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.claimsEndpoint}`,
-        claim
+        claim,
       );
       return response.data;
     } catch (error: any) {
@@ -56,7 +55,7 @@ export const claimService = {
   async submitClaim(claimId: string): Promise<ApiResponse<any>> {
     try {
       const response = await axiosInstance.post<ApiResponse<any>>(
-        `${this.claimEndpoint}/submit?id=${claimId}`
+        `${this.claimEndpoint}/submit?id=${claimId}`,
       );
       return response.data;
     } catch (error: any) {
@@ -74,13 +73,13 @@ export const claimService = {
     pageSize: number,
     viewMode: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ): Promise<PagingResponse<GetClaimResponse>> {
     try {
       const response = await axiosInstance.get<
         ApiResponse<PagingResponse<GetClaimResponse>>
       >(
-        `${this.claimsEndpoint}?viewMode=${viewMode}&claimStatus=${claimStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`
+        `${this.claimsEndpoint}?viewMode=${viewMode}&claimStatus=${claimStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`,
       );
 
       // Ensure we return a valid PagingResponse structure
@@ -103,7 +102,7 @@ export const claimService = {
   },
 
   async getClaimById(
-    claimId: string
+    claimId: string,
   ): Promise<ApiResponse<ClaimDetailResponse>> {
     try {
       const response = await axiosInstance.get<
@@ -122,7 +121,7 @@ export const claimService = {
   async approveClaim(claimId: string): Promise<ApiResponse<boolean>> {
     try {
       const response = await axiosInstance.put<ApiResponse<boolean>>(
-        `${this.claimEndpoint}/approve?claimId=${claimId}`
+        `${this.claimEndpoint}/approve?claimId=${claimId}`,
       );
       return response.data;
     } catch (error: any) {
@@ -138,7 +137,7 @@ export const claimService = {
     try {
       const response = await axiosInstance.put<ApiResponse<any>>(
         `${this.claimEndpoint}/update?id=${claim.id}`,
-        claim
+        claim,
       );
       return response.data;
     } catch (error: any) {
@@ -166,13 +165,13 @@ export const claimService = {
   async getClaimStatusCount(
     viewMode: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ): Promise<ApiResponse<ClaimStatusCountResponse>> {
     try {
       const response = await axiosInstance.get<
         ApiResponse<ClaimStatusCountResponse>
       >(
-        `${this.claimsEndpoint}/status-count?viewMode=${viewMode}&startDate=${startDate}&endDate=${endDate}`
+        `${this.claimsEndpoint}/status-count?viewMode=${viewMode}&startDate=${startDate}&endDate=${endDate}`,
       );
       return response.data;
     } catch (error: any) {
@@ -186,7 +185,7 @@ export const claimService = {
 
   async returnClaim(
     claimId: string,
-    remark: string
+    remark: string,
   ): Promise<ApiResponse<ReturnClaimResponse>> {
     try {
       const response = await axiosInstance.post<
@@ -208,7 +207,7 @@ export const claimService = {
   async rejectClaim(claimId: string): Promise<ApiResponse<boolean>> {
     try {
       const response = await axiosInstance.put<ApiResponse<boolean>>(
-        `${this.claimEndpoint}/reject?claimId=${claimId}`
+        `${this.claimEndpoint}/reject?claimId=${claimId}`,
       );
       return response.data;
     } catch (error: any) {
@@ -222,7 +221,7 @@ export const claimService = {
   async cancelClaim(id: string, remark: string): Promise<ApiResponse<boolean>> {
     try {
       const response = await axiosInstance.put<ApiResponse<boolean>>(
-        `${this.claimEndpoint}/cancel?id=${id}&remark=${remark}`
+        `${this.claimEndpoint}/cancel?id=${id}&remark=${remark}`,
       );
       return response.data;
     } catch (error: any) {
@@ -248,7 +247,7 @@ export const claimService = {
         request,
         {
           responseType: "blob",
-        }
+        },
       );
       return response.data;
     } catch (error: any) {
@@ -258,7 +257,7 @@ export const claimService = {
 
   async getClaimExportByRange(
     startDate: string,
-    endDate: string
+    endDate: string,
   ): Promise<Blob> {
     try {
       const response = await axiosInstance.post(
@@ -266,7 +265,7 @@ export const claimService = {
         {}, // Empty body object
         {
           responseType: "blob", // Move responseType to the config object (third parameter)
-        }
+        },
       );
       return response.data;
     } catch (error: any) {
@@ -278,7 +277,7 @@ export const claimService = {
     try {
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.claimsEndpoint}/submit-v2`,
-        claim
+        claim,
       );
       return response.data;
     } catch (error: any) {

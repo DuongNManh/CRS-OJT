@@ -80,7 +80,7 @@ const EditDetail: React.FC = () => {
         // Fetch projects
         if (user?.id) {
           const projectsResponse = await projectService.getProjectByMemberId(
-            user.id
+            user.id,
           );
           if (projectsResponse.data) {
             setProjects(projectsResponse.data);
@@ -97,7 +97,7 @@ const EditDetail: React.FC = () => {
   }, [id, user?.id]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({

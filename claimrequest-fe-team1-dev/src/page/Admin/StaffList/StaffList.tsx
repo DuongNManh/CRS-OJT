@@ -81,7 +81,7 @@ const StaffList: React.FC = () => {
 
   const fetchStaffList = async (
     page: number = pagination.current,
-    pageSize: number = pagination.pageSize
+    pageSize: number = pagination.pageSize,
   ) => {
     try {
       setLoading(true);
@@ -92,8 +92,8 @@ const StaffList: React.FC = () => {
           page,
           pageSize,
           selectedRole,
-          selectedDepartment
-        )
+          selectedDepartment,
+        ),
       );
 
       const staffWithKeys = response.items.map((staff) => ({
@@ -170,7 +170,7 @@ const StaffList: React.FC = () => {
                 record,
                 setSelectedStaff,
                 setIsDeleteModalVisible,
-                setError
+                setError,
               );
             }}
           />
@@ -234,7 +234,7 @@ const StaffList: React.FC = () => {
   // Add validation function
   const validateRoleAndDepartment = (
     role: SystemRole,
-    department: string
+    department: string,
   ): string | null => {
     switch (role) {
       case SystemRole.FINANCE:
@@ -295,7 +295,7 @@ const StaffList: React.FC = () => {
       if (!isEditing) {
         try {
           const emailExists = await staffService.checkEmailExists(
-            formData.email
+            formData.email,
           );
           if (emailExists) {
             setError("This email address is already in use");
@@ -320,7 +320,7 @@ const StaffList: React.FC = () => {
       // Add role-department validation
       const validationError = validateRoleAndDepartment(
         formData.role as SystemRole,
-        formData.department
+        formData.department,
       );
       if (validationError) {
         setError(validationError);
@@ -339,7 +339,7 @@ const StaffList: React.FC = () => {
         };
 
         const response = await withLoading(
-          staffService.updateStaff(selectedStaff.id, staffData)
+          staffService.updateStaff(selectedStaff.id, staffData),
         );
 
         if (response.data) {
@@ -364,7 +364,7 @@ const StaffList: React.FC = () => {
           salary: Number(cleanedSalary),
         };
         const response = await withLoading(
-          staffService.createStaff(createStaffRequest)
+          staffService.createStaff(createStaffRequest),
         );
 
         if (response.data) {
@@ -405,7 +405,7 @@ const StaffList: React.FC = () => {
     staff: StaffMember,
     setSelectedStaff: React.Dispatch<React.SetStateAction<StaffMember | null>>,
     setIsDeleteModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
-    setError: React.Dispatch<React.SetStateAction<string | null>>
+    setError: React.Dispatch<React.SetStateAction<string | null>>,
   ) => {
     setSelectedStaff(staff);
     setIsDeleteModalVisible(true);
@@ -472,7 +472,7 @@ const StaffList: React.FC = () => {
         staff.name.toLowerCase().includes(value.toLowerCase()) ||
         staff.email.toLowerCase().includes(value.toLowerCase()) ||
         staff.department.toLowerCase().includes(value.toLowerCase()) ||
-        staff.role.toLowerCase().includes(value.toLowerCase())
+        staff.role.toLowerCase().includes(value.toLowerCase()),
     );
 
     setFilteredStaffList(filtered);

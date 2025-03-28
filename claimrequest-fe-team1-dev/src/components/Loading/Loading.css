@@ -1,47 +1,47 @@
 .scoverview__wrap .ovcenter__model-inner {
-    perspective: 500px;
+  perspective: 500px;
 }
 
 .scoverview__wrap .ovcenter__model-inner .logolist {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .scoverview__wrap .ovcenter__model-inner .logolist .item {
-    width: 45px;
-    border-radius: 30% 0% 30% 0%;
-    transform: skewX(-15deg);
-    transform-style: preserve-3d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background: linear-gradient(135deg, #ff7f00, #ffbf00); Gradient for 3D shading */
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3); /* Adds depth */
-    animation: spin 0.5s linear infinite;
+  width: 45px;
+  border-radius: 30% 0% 30% 0%;
+  transform: skewX(-15deg);
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background: linear-gradient(135deg, #ff7f00, #ffbf00); Gradient for 3D shading */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3); /* Adds depth */
+  animation: spin 0.5s linear infinite;
 }
 
 .scoverview__wrap .ovcenter__model-inner .logolist .item:nth-child(1) {
-    height: 60px;
-    animation-delay: 0s;
+  height: 60px;
+  animation-delay: 0s;
 }
 
 .scoverview__wrap .ovcenter__model-inner .logolist .item:nth-child(2) {
-    height: 80px;
-    animation-delay: 0.15s;
+  height: 80px;
+  animation-delay: 0.15s;
 }
 
 .scoverview__wrap .ovcenter__model-inner .logolist .item:nth-child(3) {
-    height: 60px;
-    animation-delay: 0.35s;
+  height: 60px;
+  animation-delay: 0.35s;
 }
 
 @keyframes spin {
-    from {
-        transform: skewX(-15deg) rotateY(0deg);
-    }
-    to {
-        transform: skewX(-15deg) rotateY(360deg);
-    }
+  from {
+    transform: skewX(-15deg) rotateY(0deg);
+  }
+  to {
+    transform: skewX(-15deg) rotateY(360deg);
+  }
 }

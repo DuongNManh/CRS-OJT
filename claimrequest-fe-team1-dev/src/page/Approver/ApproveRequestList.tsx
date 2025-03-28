@@ -48,7 +48,7 @@ const ApproveRequestList: React.FC = () => {
         "ApproverMode",
         "",
         startDate,
-        endDate
+        endDate,
       );
 
       const cachedCounts = cacheService.get<ClaimStatusCountResponse>(cacheKey);
@@ -59,7 +59,7 @@ const ApproveRequestList: React.FC = () => {
         const response = await claimService.getClaimStatusCount(
           "ApproverMode",
           startDate,
-          endDate
+          endDate,
         );
         if (response) {
           setStatusCounts(response.data);
@@ -74,7 +74,6 @@ const ApproveRequestList: React.FC = () => {
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "An error occurred";
       toast.error(errorMessage);
-      
     }
   };
 
@@ -84,7 +83,7 @@ const ApproveRequestList: React.FC = () => {
     setEndDate(tempEndDate);
     fetchStatusCounts(
       tempStartDate ? formatDateToYYYYMMDD(tempStartDate) : "",
-      tempEndDate ? formatDateToYYYYMMDD(tempEndDate) : ""
+      tempEndDate ? formatDateToYYYYMMDD(tempEndDate) : "",
     );
   };
 
@@ -98,7 +97,7 @@ const ApproveRequestList: React.FC = () => {
     const isSelected = tempClaimStatus === (status || "");
     return cn(
       "bg-white rounded-xl shadow cursor-pointer transition-all duration-200",
-      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg"
+      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg",
     );
   };
 
@@ -127,7 +126,7 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   "bg-[#cee6fa] text-[#3185ca]",
-                  tempClaimStatus === "" && "ring-2 ring-[#3185ca]"
+                  tempClaimStatus === "" && "ring-2 ring-[#3185ca]",
                 )}
               >
                 <UserOutlined className="text-[35px]" />
@@ -152,7 +151,7 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Pending,
-                  tempClaimStatus === "Pending" && "ring-2 ring-[#3185ca]"
+                  tempClaimStatus === "Pending" && "ring-2 ring-[#3185ca]",
                 )}
               >
                 <ClockCircleOutlined className="text-[35px]" />
@@ -177,7 +176,7 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Approved,
-                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]"
+                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]",
                 )}
               >
                 <CheckCircleOutlined className="text-[35px]" />
@@ -202,7 +201,7 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Rejected,
-                  tempClaimStatus === "Rejected" && "ring-2 ring-[#3185ca]"
+                  tempClaimStatus === "Rejected" && "ring-2 ring-[#3185ca]",
                 )}
               >
                 <CloseCircleOutlined className="text-[35px]" />

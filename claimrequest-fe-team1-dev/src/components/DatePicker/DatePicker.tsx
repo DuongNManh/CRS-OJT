@@ -36,7 +36,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             variant={"outline"}
             className={cn(
               "w-[240px] justify-start text-left font-normal",
-              !startDate && "text-muted-foreground"
+              !startDate && "text-muted-foreground",
             )}
           >
             {startDate ? (
@@ -61,7 +61,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             variant={"outline"}
             className={cn(
               "w-[240px] justify-start text-left font-normal",
-              !endDate && "text-muted-foreground"
+              !endDate && "text-muted-foreground",
             )}
           >
             {endDate ? (

@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAppSelector } from '@/services/store/store';
-import { clearUser } from '@/services/store/authSlice';
-import { isTokenExpired } from '@/utils/tokenUtils';
-import { toast } from 'react-toastify';
-import { cacheService } from '@/services/features/cacheService';
+import { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
+import { useAppSelector } from "@/services/store/store";
+import { clearUser } from "@/services/store/authSlice";
+import { isTokenExpired } from "@/utils/tokenUtils";
+import { toast } from "react-toastify";
+import { cacheService } from "@/services/features/cacheService";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     clearUser();
     cacheService.clear(); // Clear all cache data when session expires
     toast.dismiss();
-    toast.error('Session expired. Please login again.');
+    toast.error("Session expired. Please login again.");
     return <Navigate to="/login" />;
   }
 

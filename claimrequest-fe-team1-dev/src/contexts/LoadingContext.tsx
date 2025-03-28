@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
-import Loading from '@/components/Loading/Loading';
+import React, { createContext, useContext, useState } from "react";
+import Loading from "@/components/Loading/Loading";
 
 interface LoadingContextType {
   isLoading: boolean;
@@ -9,7 +9,11 @@ interface LoadingContextType {
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-export const LoadingProvider = ({ children }: { children: React.ReactNode }) => {
+export const LoadingProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const showLoading = () => setIsLoading(true);
@@ -30,7 +34,7 @@ export const LoadingProvider = ({ children }: { children: React.ReactNode }) => 
 export const useLoading = () => {
   const context = useContext(LoadingContext);
   if (!context) {
-    throw new Error('useLoading must be used within a LoadingProvider');
+    throw new Error("useLoading must be used within a LoadingProvider");
   }
   return context;
 };

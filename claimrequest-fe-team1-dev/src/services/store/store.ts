@@ -2,8 +2,8 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import authReducer from './authSlice';
-import claimsSlice from './claimsSlice';
+import authReducer from "./authSlice";
+import claimsSlice from "./claimsSlice";
 
 const presistConfig = {
   key: "root",
@@ -14,7 +14,7 @@ const presistConfig = {
 // Create a hook for using TypedUseSelectorHook
 const rootReducer = combineReducers({
   auth: authReducer,
-  claims: claimsSlice,  // Add claims reducer
+  claims: claimsSlice, // Add claims reducer
 });
 
 const persistedReducer = persistReducer(presistConfig, rootReducer);

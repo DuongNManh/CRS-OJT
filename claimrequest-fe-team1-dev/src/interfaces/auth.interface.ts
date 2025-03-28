@@ -33,9 +33,8 @@ export interface IResetPasswordRequest {
 }
 
 export enum SystemRole {
-  ADMIN = 'Admin',
-  APPROVER = 'Approver',
-  STAFF = 'Staff',
-  FINANCE = 'Finance'
+  ADMIN = "Admin",
+  APPROVER = "Approver",
+  STAFF = "Staff",
+  FINANCE = "Finance",
 }
-

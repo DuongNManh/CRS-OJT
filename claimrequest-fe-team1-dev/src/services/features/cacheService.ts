@@ -1,16 +1,16 @@
 type CacheEntry<T> = {
   data: T;
   timestamp: number;
-  tags?: string[];  // Add tags for better cache invalidation
+  tags?: string[]; // Add tags for better cache invalidation
 };
 
 // Add specific tag constants for better consistency
 export const CACHE_TAGS = {
-  CLAIMS: 'claims',
-  CLAIM_LISTS: 'claim_lists',
-  FINANCE_MODE: 'finance_mode',
-  APPROVER_MODE: 'approver_mode',
-  CLAIMER_MODE: 'claimer_mode'
+  CLAIMS: "claims",
+  CLAIM_LISTS: "claim_lists",
+  FINANCE_MODE: "finance_mode",
+  APPROVER_MODE: "approver_mode",
+  CLAIMER_MODE: "claimer_mode",
 } as const;
 
 class CacheService {
@@ -18,12 +18,13 @@ class CacheService {
   private ttl: number;
   private tags: Map<string, Set<string>> = new Map(); // Track keys by tags
 
-  constructor(ttl: number = 300000) { // Increase default TTL to 5 minutes
+  constructor(ttl: number = 300000) {
+    // Increase default TTL to 5 minutes
     this.ttl = ttl;
   }
 
   private isExpired(entry: CacheEntry<any>): boolean {
-    return (Date.now() - entry.timestamp) > this.ttl;
+    return Date.now() - entry.timestamp > this.ttl;
   }
 
   get<T>(key: string): T | null {
@@ -40,13 +41,13 @@ class CacheService {
     const entry: CacheEntry<T> = {
       data,
       timestamp: Date.now(),
-      tags
+      tags,
     };
 
     this.cache.set(key, entry);
-    
+
     // Add key to each tag's set
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       if (!this.tags.has(tag)) {
         this.tags.set(tag, new Set());
       }
@@ -57,7 +58,7 @@ class CacheService {
   private invalidateKey(key: string): void {
     const entry = this.cache.get(key);
     if (entry?.tags) {
-      entry.tags.forEach(tag => {
+      entry.tags.forEach((tag) => {
         const tagSet = this.tags.get(tag);
         if (tagSet) {
           tagSet.delete(key);
@@ -73,13 +74,13 @@ class CacheService {
   invalidateByTag(tag: string): void {
     const keys = this.tags.get(tag);
     if (keys) {
-      keys.forEach(key => this.invalidateKey(key));
+      keys.forEach((key) => this.invalidateKey(key));
       this.tags.delete(tag);
     }
   }
 
   invalidateByTags(tags: string[]): void {
-    tags.forEach(tag => this.invalidateByTag(tag));
+    tags.forEach((tag) => this.invalidateByTag(tag));
   }
 
   clear(): void {
@@ -96,12 +97,17 @@ class CacheService {
   getStats(): { size: number; tagCount: number } {
     return {
       size: this.cache.size,
-      tagCount: this.tags.size
+      tagCount: this.tags.size,
     };
   }
 
   // Add helper method for claim list cache key generation
-  generateClaimListCacheKey(mode: string, status: string = '', startDate: string = '', endDate: string = ''): string {
+  generateClaimListCacheKey(
+    mode: string,
+    status: string = "",
+    startDate: string = "",
+    endDate: string = "",
+  ): string {
     return `claim_list_${mode}_${status}_${startDate}_${endDate}`.toLowerCase();
   }
 

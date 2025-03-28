@@ -37,49 +37,49 @@ export interface ClaimRequest {
   projectName: string;
   claimDate: string;
   totalWorking: string;
-  status: 'Approved' | 'Paid';
+  status: "Approved" | "Paid";
 }
 
 export interface ClaimDetailResponse {
-  id: string,
-  name: string,
-  amount: 0,
-  remark: string,
-  createAt: string,
-  totalWorkingHours: number,
-  startDate: string,
-  endDate: string,
-  claimType: string
-  status: string,
-  claimApprovers: ClaimApproverResponse[],
-  project: GetProjectResponse,
-  changeHistory: ClaimChangeLogResponse[],
-  finance: GetStaffResponse,
-  claimer: GetStaffResponse
+  id: string;
+  name: string;
+  amount: 0;
+  remark: string;
+  createAt: string;
+  totalWorkingHours: number;
+  startDate: string;
+  endDate: string;
+  claimType: string;
+  status: string;
+  claimApprovers: ClaimApproverResponse[];
+  project: GetProjectResponse;
+  changeHistory: ClaimChangeLogResponse[];
+  finance: GetStaffResponse;
+  claimer: GetStaffResponse;
 }
 
 export interface ClaimChangeLogResponse {
-  message: string,
-  changedAt: string,
-  changedBy: string
+  message: string;
+  changedAt: string;
+  changedBy: string;
 }
 
 export interface ClaimApproverResponse {
-  approverId : string,
-  name: string,
-  approverStatus: string,
-  decisionAt: string
+  approverId: string;
+  name: string;
+  approverStatus: string;
+  decisionAt: string;
 }
 
 export interface ReturnClaimResponse {
-  claimId: string;  // Guid maps to string in TypeScript
-  status: string;   // ClaimStatus enum will be represented as string
+  claimId: string; // Guid maps to string in TypeScript
+  status: string; // ClaimStatus enum will be represented as string
   remark: string;
   updatedAt: string; // DateTime will be represented as string
 }
 
 export interface ClaimStatusCountResponse {
-  total : number;
+  total: number;
   pending: number;
   approved: number;
   rejected: number;
@@ -93,8 +93,7 @@ export interface ClaimExportRequest {
 }
 
 export interface ClaimExportResponse {
-    fileName: string;
-    fileContent: Uint8Array;
-    fileContentType: string;
+  fileName: string;
+  fileContent: Uint8Array;
+  fileContentType: string;
 }
-

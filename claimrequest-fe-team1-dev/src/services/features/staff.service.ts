@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import axiosInstance from "../constant/axiosInstance";
+import axiosInstance from "@/apis/axiosInstance";
 import {
   ApiResponse,
   PagingResponse,
@@ -16,12 +16,12 @@ export const staffService = {
   async getStaffList(): Promise<ApiResponse<GetStaffResponse[]>> {
     try {
       const response = await axiosInstance.get<ApiResponse<GetStaffResponse[]>>(
-        `${this.staffsEndpoint}`
+        `${this.staffsEndpoint}`,
       );
       return response.data;
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>;
-      
+
       if (apiError) {
         throw new Error(apiError.reason || "Get staff list failed");
       }
@@ -33,18 +33,18 @@ export const staffService = {
     pageNumber: number,
     pageSize: number,
     role: string,
-    department: string
+    department: string,
   ): Promise<PagingResponse<GetStaffResponse>> {
     try {
       const response = await axiosInstance.get<
         ApiResponse<PagingResponse<GetStaffResponse>>
       >(
-        `${this.staffsPagingEndpoint}?pageNumber=${pageNumber}&pageSize=${pageSize}&role=${role}&department=${department}`
+        `${this.staffsPagingEndpoint}?pageNumber=${pageNumber}&pageSize=${pageSize}&role=${role}&department=${department}`,
       );
       return response.data.data;
     } catch (error: unknown) {
       const apiError = (error as any).response?.data as ApiResponse<any>;
-      
+
       if (apiError) {
         throw new Error(apiError.reason || "Get staff list failed");
       }
@@ -56,7 +56,7 @@ export const staffService = {
   async getStaffById(staffId: string): Promise<ApiResponse<GetStaffResponse>> {
     try {
       const response = await axiosInstance.get<ApiResponse<GetStaffResponse>>(
-        `${this.staffEndpoint}/${staffId}`
+        `${this.staffEndpoint}/${staffId}`,
       );
       return response.data;
     } catch (error: any) {
@@ -71,14 +71,12 @@ export const staffService = {
   // Create - Add new staff
   async createStaff(staffData: any): Promise<ApiResponse<any>> {
     try {
-
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.staffEndpoint}/create`,
-        staffData
+        staffData,
       );
       return response.data;
     } catch (error: any) {
-
       // Extract more detailed error information if available
       const apiError = error.response?.data;
       if (apiError && apiError.errors) {
@@ -93,12 +91,12 @@ export const staffService = {
   // Update - Modify existing staff
   async updateStaff(
     staffId: string,
-    staffData: Partial<GetStaffResponse>
+    staffData: Partial<GetStaffResponse>,
   ): Promise<ApiResponse<GetStaffResponse>> {
     try {
       const response = await axiosInstance.put<ApiResponse<GetStaffResponse>>(
         `${this.staffEndpoint}/update?id=${staffId}`,
-        staffData
+        staffData,
       );
       return response.data;
     } catch (error: any) {
@@ -115,7 +113,7 @@ export const staffService = {
   async deleteStaff(staffId: string): Promise<ApiResponse<any>> {
     try {
       const response = await axiosInstance.delete<ApiResponse<any>>(
-        `${this.staffEndpoint}/delete?id=${staffId}`
+        `${this.staffEndpoint}/delete?id=${staffId}`,
       );
       return response.data;
     } catch (error: any) {
@@ -131,11 +129,11 @@ export const staffService = {
   async checkEmailExists(email: string): Promise<boolean> {
     try {
       const response = await axiosInstance.get<ApiResponse<GetStaffResponse[]>>(
-        `${this.staffsEndpoint}`
+        `${this.staffsEndpoint}`,
       );
       const staffList = response.data.data;
       return staffList.some(
-        (staff) => staff.email.toLowerCase() === email.toLowerCase()
+        (staff) => staff.email.toLowerCase() === email.toLowerCase(),
       );
     } catch (error: unknown) {
       throw new Error("Failed to check email existence");
@@ -146,7 +144,7 @@ export const staffService = {
     try {
       const response = await axiosInstance.post<IStaffDetails>(
         `${this.staffEndpoint}/upload-avatar`,
-        formData
+        formData,
       );
       return response.data;
     } catch (error: any) {

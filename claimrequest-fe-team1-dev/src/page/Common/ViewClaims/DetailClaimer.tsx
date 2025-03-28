@@ -48,7 +48,7 @@ const DetailClaimer: React.FC = () => {
 
       try {
         const response = await withLoading(
-          claimService.getClaimById(id as string)
+          claimService.getClaimById(id as string),
         );
 
         if (isMounted && response.is_success && response.data) {
@@ -63,7 +63,6 @@ const DetailClaimer: React.FC = () => {
         if (isMounted) {
           const errorMessage = (error as Error).message || "An error occurred";
           toast.error(errorMessage);
-          
         }
       } finally {
         if (isMounted) {
@@ -136,7 +135,7 @@ const DetailClaimer: React.FC = () => {
     try {
       // check user confirmation
       const confirm = window.confirm(
-        "Are you sure you want to submit this claim?"
+        "Are you sure you want to submit this claim?",
       );
       if (!confirm) return;
       const response = await claimService.submitClaim(id as string);
@@ -267,7 +266,7 @@ const DetailClaimer: React.FC = () => {
                     <p className="font-medium text-gray-900">
                       {claim.project
                         ? `${formatDate(
-                            claim.project.startDate
+                            claim.project.startDate,
                           )} to ${formatDate(claim.project.endDate)}`
                         : "NA"}
                     </p>

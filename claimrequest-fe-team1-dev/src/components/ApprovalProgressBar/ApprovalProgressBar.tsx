@@ -25,7 +25,7 @@ const ApprovalProgressBar: React.FC<ApprovalProgressBarProps> = ({ claim }) => {
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
             <span>Approved</span>
           </div>
-          </div>
+        </div>
       ) : (
         <div className="flex flex-col my-4">
           <div className="relative w-full h-8 bg-gray-200 rounded-full overflow-hidden">
@@ -66,7 +66,7 @@ const ApprovalProgressBar: React.FC<ApprovalProgressBarProps> = ({ claim }) => {
                 Approved:{" "}
                 {
                   claim.claimApprovers.filter(
-                    (a) => a.approverStatus === "Approved"
+                    (a) => a.approverStatus === "Approved",
                   ).length
                 }
               </span>
@@ -77,7 +77,7 @@ const ApprovalProgressBar: React.FC<ApprovalProgressBarProps> = ({ claim }) => {
                 Pending:{" "}
                 {
                   claim.claimApprovers.filter(
-                    (a) => a.approverStatus === "Pending"
+                    (a) => a.approverStatus === "Pending",
                   ).length
                 }
               </span>
@@ -88,7 +88,7 @@ const ApprovalProgressBar: React.FC<ApprovalProgressBarProps> = ({ claim }) => {
                 Rejected:{" "}
                 {
                   claim.claimApprovers.filter(
-                    (a) => a.approverStatus === "Rejected"
+                    (a) => a.approverStatus === "Rejected",
                   ).length
                 }
               </span>

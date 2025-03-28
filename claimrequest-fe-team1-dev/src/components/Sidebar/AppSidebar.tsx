@@ -96,8 +96,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
                   {role === SystemRole.ADMIN
                     ? "Admin"
                     : role === SystemRole.APPROVER
-                    ? "Approver"
-                    : "Finance"}
+                      ? "Approver"
+                      : "Finance"}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu className="space-y-1">

@@ -79,8 +79,8 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
               pageSize,
               mode,
               startDate,
-              endDate
-            )
+              endDate,
+            ),
           );
 
           if (claimsResponse) {
@@ -92,7 +92,7 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
                 claims: claimsResponse.items,
                 totalItems: claimsResponse.meta.total_items,
               },
-              ["claims", `${mode}-claims`]
+              ["claims", `${mode}-claims`],
             );
           }
         }
