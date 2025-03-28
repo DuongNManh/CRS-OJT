@@ -1,3 +1,4 @@
+import LanguageSelector from "@/components/common/LanguageSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IAuthUser } from "@/interfaces/auth.interface";
@@ -6,6 +7,7 @@ import { authService } from "@/services/features/auth.service";
 import { setUser } from "@/services/store/authSlice";
 import { useAppDispatch } from "@/services/store/store";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -15,6 +17,7 @@ export default function Login() {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,12 +57,12 @@ export default function Login() {
         ) : (
           <div className="w-full max-w-md p-8 rounded-xl shadow-2xl dark:bg-[#2f3136] dark:text-gray-50">
             <h2 className="text-3xl text-[#1169B0] font-bold text-center mb-5">
-              Welcome Back
+              {t("login_page.greeting")}
             </h2>
             <form onSubmit={handleLoginSubmit} className="space-y-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium">
-                  Email
+                  {t("login_page.form.email")}
                 </label>
                 <Input
                   id="email"
@@ -71,7 +74,7 @@ export default function Login() {
               </div>
               <div>
                 <label htmlFor="password" className="block text-sm font-medium">
-                  Password
+                  {t("login_page.form.password")}
                 </label>
                 <Input
                   id="password"
@@ -85,7 +88,7 @@ export default function Login() {
                 type="submit"
                 className="w-full bg-[#F27227] text-xl rounded-[5px] dark:bg-[#F27227] dark:text-white"
               >
-                Sign in
+                {t("login_page.form.sign_in")}
               </Button>
               <p className="text-sm text-center">
                 <Button
@@ -93,7 +96,7 @@ export default function Login() {
                   className="text-blue-400"
                   onClick={() => setIsForgotPassword(true)}
                 >
-                  Forgot Password?
+                  {t("login_page.form.forgot_password")}
                 </Button>
               </p>
             </form>
@@ -101,6 +104,7 @@ export default function Login() {
         )}
       </div>
       <div className="flex flex-col items-center justify-center w-[80%] md:w-1/2 p-5">
+        <LanguageSelector isDarkMode={false} />
         <div className="flex items-center justify-center gap-2">
           <img
             src="/icon.png"
@@ -112,11 +116,17 @@ export default function Login() {
           <p className="text-6xl font-semibold text-[#16B14B]">S</p>
         </div>
         <div className="flex flex-row items-center justify-center gap-2">
-          <p className="mt-4 text-2xl text-[#1169B0] text-center">Fast.</p>
-          <p className="mt-4 text-2xl text-[#F27227] text-center">Simple.</p>
-          <p className="mt-4 text-2xl text-[#16B14B] text-center">Secure.</p>
+          <p className="mt-4 text-2xl text-[#1169B0] text-center">
+            {t("login_page.sologan.f.fast")}
+          </p>
+          <p className="mt-4 text-2xl text-[#F27227] text-center">
+            {t("login_page.sologan.f.simple")}
+          </p>
+          <p className="mt-4 text-2xl text-[#16B14B] text-center">
+            {t("login_page.sologan.f.secure")}
+          </p>
           <p className="mt-4 text-2xl text-center dark:text-white">
-            Submit Your Claim with Ease
+            {t("login_page.sologan.s")}
           </p>
         </div>
       </div>

@@ -1,6 +1,23 @@
 {
   "translation": {
     "title": "こんにちは、世界！",
-    "description": "これはi18nを使ったReactコンポーネントのシンプルな例です。"
+    "description": "これはi18nを使ったReactコンポーネントのシンプルな例です。",
+    "login_page": {
+      "greeting": "お帰りなさい！",
+      "sologan": {
+        "f": {
+          "fast": "速い.",
+          "simple": "シンプル.",
+          "secure": "安全."
+        },
+        "s": "簡単に請求を提出する"
+      },
+      "form": {
+        "email": "メール",
+        "password": "パスワード",
+        "sign_in": "サインイン",
+        "forgot_password": "パスワードをお忘れですか？"
+      }
+    }
   }
 }

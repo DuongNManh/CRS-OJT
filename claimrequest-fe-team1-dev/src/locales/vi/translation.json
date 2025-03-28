@@ -1,6 +1,23 @@
 {
   "translation": {
     "title": "Xin chào, thế giới!",
-    "description": "Đây là một ví dụ đơn giản về một thành phần React với i18n."
+    "description": "Đây là một ví dụ đơn giản về một thành phần React với i18n.",
+    "login_page": {
+      "greeting": "Chào mừng bạn trở lại!",
+      "sologan": {
+        "f": {
+          "fast": "Nhanh.",
+          "simple": "Đơn giản.",
+          "secure": "An toàn."
+        },
+        "s": "Nộp Yêu Cầu Bảo Hiểm của Bạn một cách Dễ Dàng"
+      },
+      "form": {
+        "email": "Email",
+        "password": "Mật khẩu",
+        "sign_in": "Đăng nhập",
+        "forgot_password": "Quên mật khẩu?"
+      }
+    }
   }
 }

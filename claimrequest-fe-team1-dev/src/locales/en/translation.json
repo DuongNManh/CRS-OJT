@@ -1,6 +1,23 @@
 {
   "translation": {
     "title": "Hello, World!",
-    "description": "This is a simple example of a React component with i18n."
+    "description": "This is a simple example of a React component with i18n.",
+    "login_page": {
+      "greeting": "Welcome back!",
+      "sologan": {
+        "f": {
+          "fast": "Fast.",
+          "simple": "Simple.",
+          "secure": "Secure."
+        },
+        "s": "Submit Your Claim with Ease"
+      },
+      "form": {
+        "email": "Email",
+        "password": "Password",
+        "sign_in": "Sign In",
+        "forgot_password": "Forgot password?"
+      }
+    }
   }
 }
