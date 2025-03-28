@@ -72,7 +72,7 @@ const FinanceRequestDetail: React.FC = () => {
       if (!claim) return;
       try {
         const blob = await claimService.getClaimExportByList({
-          selectedClaimIds: claim.id,
+          selectedClaimIds: [claim.id],
         });
   
         saveAs(blob, "claims-export.xlsx");
