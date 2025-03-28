@@ -10,6 +10,7 @@ import { statusColors } from "@/utils/statusColors";
 import FinanceLayout from "@/layouts/FinanceLayout";
 import { CACHE_TAGS } from "@/services/features/cacheService";
 import { useApi } from "@/hooks/useApi";
+import { saveAs } from "file-saver";
 
 
 const FinanceRequestDetail: React.FC = () => {
@@ -68,10 +69,10 @@ const FinanceRequestDetail: React.FC = () => {
   }
   
     const handleExport = async () => {
-      if (id === undefined) return;
+      if (!claim) return;
       try {
         const blob = await claimService.getClaimExportByList({
-          selectedClaimIds: [id],
+          selectedClaimIds: claim.id,
         });
   
         saveAs(blob, "claims-export.xlsx");
@@ -127,7 +128,7 @@ const FinanceRequestDetail: React.FC = () => {
         <div className="flex justify-center gap-3">
           <button 
             className="px-6 py-2 rounded-lg bg-emerald-500 text-white font-medium hover:bg-emerald-600 transition-colors"
-            onClick={handleDownload}
+            onClick={handleExport}
           >
             Download Claim
           </button>
