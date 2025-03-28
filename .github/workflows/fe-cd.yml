@@ -3,7 +3,7 @@ on:
   push:
     branches: ["main"]
     # paths:
-    # - "claimrequest-fe-team1-dev/**"
+    #   - "claimrequest-fe-team1-dev/**"
 
 jobs:
   build:
@@ -19,31 +19,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.6.5
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('claimrequest-fe-team1-dev/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          cache: "npm"
+          cache-dependency-path: claimrequest-fe-team1-dev/package-lock.json
 
       - name: Install dependencies
-        run: pnpm install --no-git-checks
+        run: npm install
 
       - name: Build the project
-        run: pnpm run build
+        run: npm run build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
