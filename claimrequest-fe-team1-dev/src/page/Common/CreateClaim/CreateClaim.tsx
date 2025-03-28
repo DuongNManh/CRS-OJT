@@ -36,7 +36,9 @@ const CreateClaim: React.FC = () => {
       try {
         const resp = await claimService.getClaimTypes();
         setClaimTypes(resp.data ?? []);
-      } catch (error) {}
+      } catch (error) {
+        toast.error("Failed to fetch claim types");
+      }
     };
 
     const fetchProjects = async () => {

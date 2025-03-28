@@ -2,7 +2,6 @@ import { chatbotService } from "@/services/features/chatbot.service";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, SetStateAction } from "react";
 import { toast } from "react-toastify";
-import "/icon.png"
 
 export default function Chatbot() {
     const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +9,7 @@ export default function Chatbot() {
         { text: "Hello! How can I help?", sender: "bot" },
     ]);
     const [input, setInput] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); // ✅ Loading state
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
     const toggleChat = () => setIsOpen(!isOpen);
@@ -26,16 +25,17 @@ export default function Chatbot() {
     }
 
     const sendMessage = () => {
-        if (!input.trim() || loading) return; // Prevent sending when loading
-        setMessages([...messages, { text: input, sender: "user" }]);
+        const inputTrim = input.trim();
+        if (!inputTrim || loading) return; // Prevent sending when loading
+        setMessages([...messages, { text: inputTrim, sender: "user" }]);
         setInput("");
         setLoading(true); // ✅ Set loading when waiting for response
 
-        chatbotService.answer(input)
+        chatbotService.answer(inputTrim)
             .then((response) => {
                 setMessages((prevMessages) => [
                     ...prevMessages,
-                    { text: response.data, sender: "bot" },
+                    { text: response.data.trim(), sender: "bot" },
                 ]);
             })
             .catch((error) => {

@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+import axiosInstance from "@/apis/axiosInstance";
 import {
   ApiResponse,
   PagingResponse,
@@ -8,7 +9,6 @@ import {
 import {
   ClaimDetailResponse,
   ClaimExportRequest,
-  //   ClaimExportResponse,
   ClaimStatusCountResponse,
   GetClaimResponse,
   ReturnClaimResponse,
@@ -21,20 +21,17 @@ export const claimService = {
 
   async getClaimTypes(): Promise<ApiResponse<string[]>> {
     try {
-      const response = await axiosInstance.get<ApiResponse<string[]>>(
-        `${this.claimsEndpoint}/types`,
-      );
-
-      // Ensure we return a valid PagingResponse structure
-      return response.data;
+        const response = await axiosInstance.get<ApiResponse<string[]>>(`${this.claimsEndpoint}/types`);
+        return response.data;
     } catch (error: unknown) {
-      const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
-      if (apiError) {
-        throw new Error(apiError.reason || "Get claims failed");
-      }
-      throw new Error("Network error occurred");
+        const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
+        
+        if (apiError) {
+            throw new Error(apiError.reason || 'Get claims failed');
+        }
+        throw new Error('Network error occurred');
     }
-  },
+},
 
   async createClaim(claim: any): Promise<ApiResponse<any>> {
     try {

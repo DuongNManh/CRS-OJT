@@ -155,4 +155,17 @@ export const staffService = {
       throw new Error("Network error occurred");
     }
   },
+
+  async profile(): Promise<ApiResponse<ProfileResponse>> {
+    try {
+        const response = await axiosInstance.get<ApiResponse<ProfileResponse>>(`${this.staffEndpoint}/profile`);
+        return response.data;
+    } catch (error: any) {
+        const apiError = error.response?.data as ApiResponse<any>;
+        if (apiError) {
+            throw new Error(apiError.reason || 'Get profile failed');
+        }
+        throw new Error('Network error occurred');
+    }
+}
 };
