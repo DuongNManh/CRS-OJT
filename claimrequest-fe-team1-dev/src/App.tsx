@@ -1,15 +1,23 @@
-import { BrowserRouter } from "react-router-dom";
-import AppRouter from "./routers";
 import { LoadingProvider } from "@/contexts/LoadingContext";
+import { Suspense } from "react";
+import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "./components/error/ErrorBoundary";
+import Loading from "./components/Loading/Loading";
 import { LanguageProvider } from "./providers/LanguageProvider";
+import useRouteElement from "./useRouteElement";
 
 function App() {
+  const routeElement = useRouteElement();
+
   return (
     <LanguageProvider>
       <LoadingProvider>
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
+        <Suspense fallback={<Loading />}>
+          <ErrorBoundary>
+            {routeElement}
+            <ToastContainer />
+          </ErrorBoundary>
+        </Suspense>
       </LoadingProvider>
     </LanguageProvider>
   );
