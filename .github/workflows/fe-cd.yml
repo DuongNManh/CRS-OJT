@@ -2,8 +2,8 @@ name: FE Vercel CD
 on:
   push:
     branches: ["main"]
-    paths:
-      - "claimrequest-fe-team1-dev/**"
+    # paths:
+    # - "claimrequest-fe-team1-dev/**"
 
 jobs:
   build:
