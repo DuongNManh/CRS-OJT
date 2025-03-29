@@ -4,7 +4,6 @@ import { projectService } from "@/services/features/project.service";
 import { useAppSelector } from "@/services/store/store";
 import {
   LoadingOutlined,
-  MailOutlined,
   RollbackOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
