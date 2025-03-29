@@ -1,23 +1,21 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/hooks/use-theme";
 import { SystemRole } from "@/interfaces/auth.interface";
-import { authService } from "@/services/features/auth.service";
-import { clearUser } from "@/services/store/authSlice";
-import { useAppDispatch, useAppSelector } from "@/services/store/store";
+import { useAppSelector } from "@/services/store/store";
 import {
-  MenuOutlined,
-  UserOutlined,
   DownOutlined,
   LogoutOutlined,
-  SunOutlined,
+  MenuOutlined,
   MoonOutlined,
+  SunOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Menu, Dropdown, Button, Avatar } from "antd";
+import { Avatar, Button, Dropdown, Menu } from "antd";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import "./Header.css";
 
 // Import custom CSS
@@ -27,20 +25,12 @@ const Header: React.FC = () => {
   const [isClaimActionsOpen, setIsClaimActionsOpen] = useState(false);
   const [isRoleActionsOpen, setIsRoleActionsOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
   const { theme, toggleTheme } = useTheme();
+  const { authLogout } = useAuth();
 
   const handleLogout = async () => {
-    try {
-      await authService.logout();
-      dispatch(clearUser());
-      toast.success("Logged out successfully!");
-      navigate("/login");
-    } catch (error) {
-      toast.error("Logout failed. Please try again.");
-    }
+    await authLogout();
   };
 
   const roleGroups = {

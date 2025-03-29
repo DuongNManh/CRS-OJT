@@ -1,9 +1,11 @@
+import { authService } from "@/services/features/auth.service"; // API service for login
+import { clearUser } from "@/services/store/authSlice";
+import { useAppDispatch } from "@/services/store/store";
+import { AuthLoginData } from "@/types/auth.types";
+import { UserResponse } from "@/types/user.types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { authService } from "@/services/features/auth.service"; // API service for login
-import { AuthLoginData } from "@/types/auth.types";
-import { UserResponse } from "@/types/user.types";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -25,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [authData, setAuthData] = useState<AuthLoginData | null>(null);
   const [userDetails, setUserDetails] = useState<UserResponse | null>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const checkTokenExpiration = () => {
     const token = localStorage.getItem("token");
@@ -110,13 +113,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const authLogout = async () => {
     try {
+      await authService.logout();
       setIsAuthenticated(false);
       setAuthData(null);
       setUserDetails(null);
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpiration");
       localStorage.removeItem("userDetails");
-
+      dispatch(clearUser());
       toast.success("Logged out successfully");
       navigate("/");
     } catch (error) {

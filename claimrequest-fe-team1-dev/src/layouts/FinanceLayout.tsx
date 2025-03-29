@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 interface Props {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const FinanceLayoutInner: React.FC<Props> = ({ children }) => {

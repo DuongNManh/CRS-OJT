@@ -1,3 +1,4 @@
+import LanguageSelector from "@/components/common/LanguageSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,10 +26,10 @@ export default function Login() {
     validationSchema,
     onSubmit: async (values) => {
       const user = await authLogin(values.email, values.password); // Passing formik values
-
-      console.log("User:", JSON.stringify(user, null, 2));
+      console.log("User:", JSON.stringify(user, null, 2)); // Log user object
 
       if (user) {
+        console.log("Navigating to /home"); // Log navigation attempt
         navigate("/home"); // Navigate only if login is successful
       }
     },
@@ -95,6 +96,33 @@ export default function Login() {
             </form>
           </div>
         )}
+      </div>
+      <div className="flex flex-col items-center justify-center w-[80%] md:w-1/2 p-5">
+        <LanguageSelector isDarkMode={false} />
+        <div className="flex items-center justify-center gap-2">
+          <img
+            src="/icon.png"
+            alt="Claim Request System"
+            className="h-12 w-24 md:h-24 md:w-36"
+          />
+          <p className="text-6xl font-semibold text-[#1169B0]">C</p>
+          <p className="text-6xl font-semibold text-[#F27227]">R</p>
+          <p className="text-6xl font-semibold text-[#16B14B]">S</p>
+        </div>
+        <div className="flex flex-row items-center justify-center gap-2">
+          <p className="mt-4 text-2xl text-[#1169B0] text-center">
+            {t("login_page.sologan.f.fast")}
+          </p>
+          <p className="mt-4 text-2xl text-[#F27227] text-center">
+            {t("login_page.sologan.f.simple")}
+          </p>
+          <p className="mt-4 text-2xl text-[#16B14B] text-center">
+            {t("login_page.sologan.f.secure")}
+          </p>
+          <p className="mt-4 text-2xl text-center dark:text-white">
+            {t("login_page.sologan.s")}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,11 @@
 import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
+import Loading from "./components/Loading/Loading";
 import { ProtectedRoute, RejectedRoute } from "./guards/AuthGuard";
 import { SystemRole } from "./interfaces/auth.interface";
+import AdminLayout from "./layouts/AdminLayout";
+import CommonLayout from "./layouts/CommonLayout";
+import FinanceLayout from "./layouts/FinanceLayout";
 
 // Lazy-loading components
 const Home = lazy(() => import("./page/Common/Home/Home"));
@@ -9,6 +13,8 @@ const Login = lazy(() => import("./page/Common/Login/Login"));
 const ForgotPassword = lazy(
   () => import("./page/Common/ForgotPassword/ForgotPassword"),
 );
+const VerifyOTP = lazy(() => import("./page/Common/ForgotPassword/VerifyOTP"));
+
 const CreateClaim = lazy(() => import("./page/Common/CreateClaim/CreateClaim"));
 const UserDetail = lazy(() => import("./page/Common/UserDetail/UserDetail"));
 const ViewClaims = lazy(() => import("./page/Common/ViewClaims/ViewClaims"));
@@ -26,6 +32,10 @@ const FinanceRequestList = lazy(
 const FinanceRequestDetail = lazy(
   () => import("./page/Finance/FinanceRequestDetail"),
 );
+const DetailClaimer = lazy(
+  () => import("./page/Common/ViewClaims/DetailClaimer"),
+);
+const EditDetail = lazy(() => import("./page/Common/ViewClaims/EditDetail"));
 
 export default function useRouteElement() {
   const routeElements = useRoutes([
@@ -48,14 +58,32 @@ export default function useRouteElement() {
       children: [{ path: "/", element: <Login /> }],
     },
     { path: "/forgotpassword", element: <ForgotPassword /> },
-
+    { path: "/resetpassword", element: <VerifyOTP /> },
+    { path: "/loading", element: <Loading /> },
     // Protected routes for common roles
     {
-      element: <ProtectedRoute allowedRoles={[SystemRole.STAFF]} />,
+      element: (
+        <ProtectedRoute
+          allowedRoles={[
+            SystemRole.ADMIN,
+            SystemRole.APPROVER,
+            SystemRole.FINANCE,
+            SystemRole.STAFF,
+          ]}
+        />
+      ),
       children: [
-        { path: "/create-claim", element: <CreateClaim /> },
-        { path: "/profile", element: <UserDetail /> },
-        { path: "/claims", element: <ViewClaims /> },
+        {
+          path: "",
+          element: <CommonLayout />,
+          children: [
+            { path: "/create-claim", element: <CreateClaim /> },
+            { path: "/profile", element: <UserDetail /> },
+            { path: "/claims", element: <ViewClaims /> },
+            { path: "/claim-detail/:id", element: <DetailClaimer /> },
+            { path: "/claim-update/:id", element: <EditDetail /> },
+          ],
+        },
       ],
     },
 
@@ -78,8 +106,14 @@ export default function useRouteElement() {
         {
           path: "/admin",
           children: [
-            { path: "projects", element: <ProjectList /> },
-            { path: "staffs", element: <StaffList /> },
+            {
+              path: "",
+              element: <AdminLayout />,
+              children: [
+                { path: "projects", element: <ProjectList /> },
+                { path: "staffs", element: <StaffList /> },
+              ],
+            },
           ],
         },
       ],
@@ -92,8 +126,14 @@ export default function useRouteElement() {
         {
           path: "/finance",
           children: [
-            { path: "claims", element: <FinanceRequestList /> },
-            { path: "claim-detail/:id", element: <FinanceRequestDetail /> },
+            {
+              path: "",
+              element: <FinanceLayout />,
+              children: [
+                { path: "claims", element: <FinanceRequestList /> },
+                { path: "claim-detail/:id", element: <FinanceRequestDetail /> },
+              ],
+            },
           ],
         },
       ],

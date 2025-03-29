@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import PageTransition from "@/components/ui/PageTransition";
 import { memo } from "react";
 
 interface Props {
@@ -8,11 +9,11 @@ interface Props {
 
 const MainLayoutInner: React.FC<Props> = ({ children }) => {
   return (
-    <div className="main-layout">
+    <main className="">
       <Header />
-      <div className="main-layout-content">{children}</div>
+      <PageTransition>{children}</PageTransition>
       <Footer />
-    </div>
+    </main>
   );
 };
 

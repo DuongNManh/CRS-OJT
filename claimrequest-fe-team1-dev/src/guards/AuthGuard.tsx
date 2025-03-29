@@ -15,7 +15,7 @@ export const ProtectedRoute: React.FC<Props> = ({
     SystemRole.STAFF,
     SystemRole.FINANCE,
   ], // Default to all roles
-  redirectPath = "/",
+  redirectPath = "/home",
 }) => {
   const { isAuthenticated, userDetails } = useAuth();
   const location = useLocation();
