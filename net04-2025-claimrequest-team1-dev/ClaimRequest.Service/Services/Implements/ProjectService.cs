@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
 using ClaimRequest.DAL.Data.Exceptions;
 using ClaimRequest.DAL.Data.Requests.Project;
 using ClaimRequest.DAL.Data.Responses.Project;
+using ClaimRequest.DAL.Data.Responses.Staff;
 using ClaimRequest.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 
 namespace ClaimRequest.BLL.Services.Implements
@@ -29,8 +24,8 @@ namespace ClaimRequest.BLL.Services.Implements
         }
 
 
-        private async Task Validation(CreateProjectRequest request)        
-        
+        private async Task Validation(CreateProjectRequest request)
+
         {
             var projectManager = await _unitOfWork.GetRepository<Staff>()
                 .SingleOrDefaultAsync(
@@ -78,7 +73,7 @@ namespace ClaimRequest.BLL.Services.Implements
         }
 
         private async Task ValidateUpdate(UpdateProjectRequest request)
-        
+
         {
             var projectManager = await _unitOfWork.GetRepository<Staff>()
                 .SingleOrDefaultAsync(
@@ -124,8 +119,8 @@ namespace ClaimRequest.BLL.Services.Implements
                 throw new InvalidOperationException("The specified Business Unit Leader is not active");
             }
         }
-        
-        
+
+
         public async Task<CreateProjectResponse> CreateProject(CreateProjectRequest request)
         {
             try
@@ -361,7 +356,7 @@ namespace ClaimRequest.BLL.Services.Implements
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Error retrieving project list: {Message}", exception.Message); 
+                _logger.LogError(exception, "Error retrieving project list: {Message}", exception.Message);
                 throw;
             }
         }
@@ -372,7 +367,7 @@ namespace ClaimRequest.BLL.Services.Implements
             {
                 var projects = await _unitOfWork.GetRepository<Project>()
                     .GetListAsync(
-                        predicate: p => 
+                        predicate: p =>
                             (string.IsNullOrEmpty(filter.Name.ToLower()) || p.Name.Contains(filter.Name.ToLower())) &&
                             (string.IsNullOrEmpty(filter.Description.ToLower()) || p.Description.Contains(filter.Description.ToLower())) &&
                             (!filter.StartDateFrom.HasValue || p.StartDate >= filter.StartDateFrom) &&
@@ -474,7 +469,7 @@ namespace ClaimRequest.BLL.Services.Implements
                 throw;
             }
         }
-        
+
         public async Task<RemoveStaffResponse> RemoveStaffFromProject(Guid projectId, Guid staffId)
         {
             try
@@ -486,7 +481,7 @@ namespace ClaimRequest.BLL.Services.Implements
 
                     // Inject vao validate
                     ValidateProjectAndStaffExistence(project, staff);
-                    
+
                     var projectStaff = await _unitOfWork.GetRepository<ProjectStaff>()
                         .FirstOrDefaultAsync(
                             predicate: p => p.ProjectId == projectId && p.StaffId == staffId);
@@ -495,7 +490,7 @@ namespace ClaimRequest.BLL.Services.Implements
                     {
                         throw new NotFoundException($"Staff is not assigned to this project");
                     }
-                    
+
                     _unitOfWork.GetRepository<ProjectStaff>().DeleteAsync(projectStaff);
 
                     return new RemoveStaffResponse(

@@ -1,26 +1,29 @@
+#pragma warning disable 
+
+using ClaimRequest.AI;
 using ClaimRequest.API.Extensions;
 using ClaimRequest.API.Middlewares;
 using ClaimRequest.API.Services;
+using ClaimRequest.BLL.Services;
 using ClaimRequest.BLL.Services.Implements;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
 using ClaimRequest.DAL.Data.Responses.Claim;
 using ClaimRequest.DAL.Repositories.Implements;
 using ClaimRequest.DAL.Repositories.Interfaces;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.SemanticKernel;
 using System.Text;
 using System.Text.Json.Serialization;
-using ClaimRequest.BLL.Services;
-using Hangfire;
-using Hangfire.PostgreSql;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -95,9 +98,9 @@ builder.Services.AddHangfire(config => config
     SchemaName = "hangfire",
     PrepareSchemaIfNecessary = true,
     JobExpirationCheckInterval = TimeSpan.FromHours(4),
-    InvisibilityTimeout = TimeSpan.FromDays(1), //?n job trong vòng 24 ti?ng
+    InvisibilityTimeout = TimeSpan.FromDays(1), //?n job trong vÃ²ng 24 ti?ng
 }))
-.UseFilter(new AutomaticRetryAttribute { Attempts = 3}));
+.UseFilter(new AutomaticRetryAttribute { Attempts = 3 }));
 
 
 builder.Services.AddHangfireServer();
@@ -153,9 +156,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidIssuers = builder.Configuration.GetSection("Jwt:ValidIssuers").Get<string[]>()
-                ?? new[] { "http://localhost:5000", "http://localhost:5238" },
+                           ?? new[] { "http://localhost:5000", "https://localhost:5001", "http://localhost:5173", "https://crsojt.azurewebsites.net" },
             ValidAudiences = builder.Configuration.GetSection("Jwt:ValidAudiences").Get<string[]>()
-                ?? new[] { "http://localhost:5000", "http://localhost:5238" },
+                             ?? new[] { "http://localhost:5000", "https://localhost:5001", "http://localhost:5173", "https://crs-rust.vercel.app" },
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
@@ -176,6 +179,20 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole(SystemRole.Staff.ToString()));
 });
 
+// Register Model for Semantic Kernel
+var kernelBuilder = builder.Services.AddKernel();
+kernelBuilder.Services.AddGoogleAIGeminiChatCompletion(
+    builder.Configuration.GetSection("AI:ChatCompletionModel:Name").Get<string>(),
+    builder.Configuration.GetSection("AI:ChatCompletionModel:APIKey").Get<string>());
+kernelBuilder.Services.AddGoogleAIEmbeddingGeneration(
+    builder.Configuration.GetSection("AI:EmbeddingModel:Name").Get<string>(),
+    builder.Configuration.GetSection("AI:EmbeddingModel:APIKey").Get<string>());
+kernelBuilder.Services.AddMongoDBVectorStore(
+    builder.Configuration.GetSection("AI:VectorDatabase:ConnectionString").Get<string>(),
+    builder.Configuration.GetSection("AI:VectorDatabase:DatabaseName").Get<string>()
+    );
+
+kernelBuilder.Services.AddScoped<IRAGChatService, RAGChatService>();
 // Update the Kestrel configuration
 //builder.WebHost.ConfigureKestrel(serverOptions =>
 //{
@@ -216,7 +233,7 @@ app.UseHttpsRedirection();
 app.UseCors(options =>
 {
     options.SetIsOriginAllowed(origin =>
-            origin.StartsWith("http://localhost:") || origin.StartsWith("https://localhost:"))
+            origin.StartsWith("http://localhost:") || origin.StartsWith("https://localhost:") || origin == "https://crs-rust.vercel.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();

@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaimRequest.UnitTest", "Cl
 		{E7F8071D-0997-4621-91C2-43D575CA4802} = {E7F8071D-0997-4621-91C2-43D575CA4802}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaimRequest.AI", "ClaimRequest.AI\ClaimRequest.AI.csproj", "{8CB51E01-9CCF-4AA9-BA91-EC1010BCAAB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{F294EEE6-8998-49B1-92C0-759719531C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F294EEE6-8998-49B1-92C0-759719531C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F294EEE6-8998-49B1-92C0-759719531C58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CB51E01-9CCF-4AA9-BA91-EC1010BCAAB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CB51E01-9CCF-4AA9-BA91-EC1010BCAAB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CB51E01-9CCF-4AA9-BA91-EC1010BCAAB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CB51E01-9CCF-4AA9-BA91-EC1010BCAAB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

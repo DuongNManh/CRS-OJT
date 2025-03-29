@@ -2,7 +2,6 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace ClaimRequest.BLL.Services
 {

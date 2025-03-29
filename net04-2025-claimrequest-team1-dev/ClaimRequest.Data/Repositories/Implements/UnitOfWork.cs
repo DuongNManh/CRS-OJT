@@ -1,7 +1,5 @@
 ﻿using ClaimRequest.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.ComponentModel.DataAnnotations;
 
 namespace ClaimRequest.DAL.Repositories.Implements
 {

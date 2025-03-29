@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
 using ClaimRequest.DAL.Data.Entities;
 using ClaimRequest.DAL.Data.Requests.Staff;
-using ClaimRequest.DAL.Data.Responses.Project;
 using ClaimRequest.DAL.Data.Responses.Staff;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClaimRequest.DAL.Mappers
 {
@@ -62,12 +56,6 @@ namespace ClaimRequest.DAL.Mappers
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department))
                 .ForMember(dest => dest.AvatarUrl, opt => opt.MapFrom(src => src.AvatarUrl))
                 .ForMember(dest => dest.project, opt => opt.Ignore());
-
-            // Project -> GetProjectResponse
-            CreateMap<Project, GetProjectResponse>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
-                .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(src => src.ProjectManager.Name));
         }
     }
 }

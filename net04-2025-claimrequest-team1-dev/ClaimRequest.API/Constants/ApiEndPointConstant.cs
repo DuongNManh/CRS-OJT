@@ -79,5 +79,11 @@
             public const string ExportClaimsEndpoint = ClaimExportEndpoint + "/export";
             public const string ExportClaimsByRangeEndpoint = ClaimExportEndpoint + "/export-range";
         }
+        
+        public static class Chatbot
+        {
+            public const string ChatbotEndpoint  = ApiEndpoint + "/chat-bot";
+            public const string AnswerEndpoint = ChatbotEndpoint + "/answer";
+        }
     }
 }

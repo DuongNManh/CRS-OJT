@@ -1,28 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
+using ClaimRequest.DAL.Data.Exceptions;
+using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Staff;
+using ClaimRequest.DAL.Data.Responses.Project;
 using ClaimRequest.DAL.Data.Responses.Staff;
 using ClaimRequest.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using ClaimRequest.DAL.Data.Exceptions;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
-using ClaimRequest.DAL.Data.Requests.Auth;
-using ClaimRequest.DAL.Data.Responses.Auth;
-using ClaimRequest.DAL.Data.Responses.Claim;
-using ClaimRequest.DAL.Data.MetaDatas;
-using System.Collections;
-using ClaimRequest.DAL.Data.Responses.Project;
+using Microsoft.Extensions.Logging;
 
 
 namespace ClaimRequest.BLL.Services.Implements
@@ -198,7 +186,7 @@ namespace ClaimRequest.BLL.Services.Implements
                 {
                     staffs = staffs.Where(s => s.Department == departmentEnum).ToList();
                 }
-                
+
                 // build metadata
                 var metadata = new PaginationMeta
                 {

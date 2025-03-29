@@ -1,5 +1,4 @@
 using ClaimRequest.DAL.Data.Entities;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 public class AssignStaffRequest
@@ -10,4 +9,4 @@ public class AssignStaffRequest
     [Required(ErrorMessage = "Project Role is required")]
     [EnumDataType(typeof(ProjectRole))]
     public ProjectRole ProjectRole { get; set; }
-} 
+}

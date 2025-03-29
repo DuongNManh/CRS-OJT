@@ -238,8 +238,7 @@ namespace ClaimRequest.UnitTest.Staff
             _mockStaffRepository.Setup(r => r.GetListAsync(
                 It.Is<Expression<Func<DAL.Data.Entities.Staff, bool>>>(expr => true),
                 It.IsAny<Func<IQueryable<DAL.Data.Entities.Staff>, IOrderedQueryable<DAL.Data.Entities.Staff>>>(),
-                It.IsAny<Func<IQueryable<DAL.Data.Entities.Staff>, IIncludableQueryable<DAL.Data.Entities.Staff, object>>>(),
-                null))
+                It.IsAny<Func<IQueryable<DAL.Data.Entities.Staff>, IIncludableQueryable<DAL.Data.Entities.Staff, object>>>(), null))
                 .ReturnsAsync(staffList);
 
             _mockMapper.Setup(m => m.Map<IEnumerable<ClaimRequest.DAL.Data.Responses.Staff.CreateStaffResponse>>(staffList))

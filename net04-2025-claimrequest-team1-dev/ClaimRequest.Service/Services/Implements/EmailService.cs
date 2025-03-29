@@ -1,5 +1,6 @@
 ﻿//#define SMTP
-#define OATH
+#define SMTP
+#define URL1
 using AutoMapper;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
@@ -7,12 +8,7 @@ using ClaimRequest.DAL.Data.Exceptions;
 using ClaimRequest.DAL.Data.Responses.Project;
 using ClaimRequest.DAL.Data.Responses.Staff;
 using ClaimRequest.DAL.Repositories.Interfaces;
-using Google;
-using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
-using Google.Apis.Gmail.v1.Data;
-using Google.Apis.Services;
-using Google.Apis.Util.Store;
 using MailKit.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +16,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Claim = ClaimRequest.DAL.Data.Entities.Claim;
 using MimeKit;
-using CloudinaryDotNet;
 
 
 #if SMTP
 using MimeKit.Text;
-using MailKit;
 using MailKit.Net.Smtp;
 #endif
 
@@ -59,7 +53,7 @@ namespace ClaimRequest.BLL.Services.Implements
         public EmailService(IUnitOfWork<ClaimRequestDbContext> unitOfWork, ILogger<EmailService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IClaimService claimService, IProjectService projectService, IStaffService staffService) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
             _applicationName = configuration["Gmail:ApplicationName"];
-            _serviceAccountKeyFilePath = Path.Combine(AppContext.BaseDirectory, "service-account-key.json");    
+            _serviceAccountKeyFilePath = Path.Combine(AppContext.BaseDirectory, "service-account-key.json");
             _senderEmail = configuration["SMTP:Username"];
             _claimService = claimService;
             _projectService = projectService;
@@ -282,7 +276,11 @@ namespace ClaimRequest.BLL.Services.Implements
                     if (claim.FinanceId != null && claim.Status == ClaimStatus.Approved)
                     {
                         string template = templateOriginal;
+#if URL1
                         url = $"http://localhost:5173/claim-detail/{claim.Id}";
+#else
+                        url = $"https://crs-rust.vercel.app/claim-detail/{claim.Id}";
+#endif
                         template = template.Replace("{Name}", claim.Finance.Name)
                         .Replace("{StaffName}", claim.Claimer.Name)
                         .Replace("{ProjectName}", claim.Project.Name)

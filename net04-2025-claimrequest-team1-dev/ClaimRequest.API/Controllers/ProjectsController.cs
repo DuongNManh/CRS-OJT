@@ -1,12 +1,11 @@
+using ClaimRequest.API.Constants;
+using ClaimRequest.API.Extensions;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Project;
 using ClaimRequest.DAL.Data.Responses.Project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ClaimRequest.API.Constants;
-using ClaimRequest.API.Extensions;
-using ClaimRequest.BLL.Services.Implements;
 
 namespace ClaimRequest.API.Controllers
 {
@@ -43,7 +42,7 @@ namespace ClaimRequest.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetProjectById([FromRoute] Guid id)
-        { 
+        {
             var project = await _projectService.GetProjectById(id);
             return Ok(ApiResponseBuilder.BuildResponse(
                 StatusCodes.Status200OK,
@@ -93,7 +92,7 @@ namespace ClaimRequest.API.Controllers
             return Ok(ApiResponseBuilder.BuildResponse(
                 StatusCodes.Status200OK,
                 "Project retrieved successfully",
-                projects    
+                projects
             ));
         }
 
@@ -162,7 +161,7 @@ namespace ClaimRequest.API.Controllers
         [ValidateModelAttributes]
         [Authorize(Roles = "Approver, Admin")]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] UpdateProjectRequest request)
-        {   
+        {
             var updatedProject = await _projectService.UpdateProject(id, request);
             var apiResponse = new ApiResponse<CreateProjectResponse>
             {
@@ -227,7 +226,7 @@ namespace ClaimRequest.API.Controllers
                 result
             ));
         }
-        
+
         [HttpDelete(ApiEndPointConstant.Project.RemoveStaffFromProjectEndpoint)]
         [ProducesResponseType(typeof(ApiResponse<AssignStaffResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -244,7 +243,7 @@ namespace ClaimRequest.API.Controllers
                 result
             ));
         }
-        
+
         [HttpPut(ApiEndPointConstant.Project.UpdateStaffFromProjectEndpoint)]
         [ProducesResponseType(typeof(ApiResponse<AssignStaffResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

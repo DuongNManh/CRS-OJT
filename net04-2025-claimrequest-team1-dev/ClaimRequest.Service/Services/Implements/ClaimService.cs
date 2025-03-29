@@ -77,9 +77,6 @@ namespace ClaimRequest.BLL.Services.Implements
 
                     // Add change log
                     await AddChangeLog(newClaim.Id, "Claim created", currentUserEmail, newClaim.CreateAt);
-                    // Send email notification
-                    //var emailService = _emailServiceFactory.Create();
-                    //await emailService.SendClaimSubmittedEmail(newClaim.Id, "ClaimSubmittedEmailTemplate");
                     return newClaim;
                 });
 
@@ -337,6 +334,8 @@ namespace ClaimRequest.BLL.Services.Implements
 
                     // Update the claim
                     _unitOfWork.GetRepository<Claim>().UpdateAsync(existingClaim);
+                    var emailService = _emailServiceFactory.Create();
+                    await emailService.SendEmail(existingClaim.Id, EmailTemplate.ClaimSubmitted);
                     // Map and return response
                     var response = _mapper.Map<CreateClaimResponse>(existingClaim);
                     return response;
@@ -370,6 +369,9 @@ namespace ClaimRequest.BLL.Services.Implements
                     _unitOfWork.GetRepository<Claim>().UpdateAsync(claim);
 
                     await AddChangeLog(claim.Id, "Cancelled", currentUserEmail);
+
+                    var emailService = _emailServiceFactory.Create();
+                    await emailService.SendEmail(claim.Id, EmailTemplate.ClaimSubmitted);
                     return true;
                 });
             }
@@ -408,8 +410,6 @@ namespace ClaimRequest.BLL.Services.Implements
                     // Send email notification
                     var emailService = _emailServiceFactory.Create();
                     await emailService.SendEmail(claimId, EmailTemplate.ManagerApproved);
-
-
                     return true;
                 });
             }
@@ -488,9 +488,6 @@ namespace ClaimRequest.BLL.Services.Implements
                     // Send email notification
                     var emailService = _emailServiceFactory.Create();
                     await emailService.SendEmail(claim.Id, EmailTemplate.ClaimReturned);
-
-
-                    //var updatedClaim = await GetClaimByIdAsync(claim.Id);
                     return _mapper.Map<ReturnClaimResponse>(claim);
                 });
             }
@@ -637,6 +634,8 @@ namespace ClaimRequest.BLL.Services.Implements
                     // Add to change history
                     await AddChangeLog(claim.Id, "Submitted", currentUserEmail, DateTime.UtcNow);
 
+                    var emailService = _emailServiceFactory.Create();
+                    await emailService.SendEmail(claim.Id, EmailTemplate.ClaimSubmitted);
                     return _mapper.Map<SubmitClaimResponse>(claim);
                 });
             }

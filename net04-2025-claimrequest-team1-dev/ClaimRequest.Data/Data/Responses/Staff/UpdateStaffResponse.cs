@@ -1,5 +1,3 @@
-using ClaimRequest.DAL.Data.Entities;
-
 namespace ClaimRequest.DAL.Data.Responses.Staff
 {
     public class UpdateStaffResponse

@@ -554,5 +554,375 @@ namespace ClaimRequest.UnitTest.Claim
             // Act & Assert
             await Assert.ThrowsAsync<Exception>(() => _controller.GetClaimStatusCount(viewMode, null, null));
         }
+
+        [Fact]
+        public async Task UpdateClaim_ShouldReturnOk_WhenClaimIsUpdatedSuccessfully()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            var updateRequest = new UpdateClaimRequest
+            {
+                ClaimType = ClaimType.Other,
+                Name = "Updated Claim",
+                Remark = "Updated remark",
+                Amount = 100,
+                TotalWorkingHours = 10,
+                StartDate = DateOnly.FromDateTime(DateTime.Today),
+                EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(5)),
+                ProjectId = Guid.NewGuid()
+            };
+
+            var expectedResponse = new CreateClaimResponse
+            {
+                Name = updateRequest.Name,
+                Remark = updateRequest.Remark
+            };
+
+            _mockClaimService.Setup(s => s.UpdateClaim(claimId, updateRequest))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.UpdateClaim(claimId, updateRequest);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var apiResponse = Assert.IsType<ApiResponse<CreateClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal(expectedResponse.Name, apiResponse.Data.Name);
+            Assert.Equal(expectedResponse.Remark, apiResponse.Data.Remark);
+        }
+
+        [Fact]
+        public async Task UpdateClaim_ShouldReturnNotFound_WhenClaimDoesNotExist()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            var updateRequest = new UpdateClaimRequest();
+
+            _mockClaimService.Setup(s => s.UpdateClaim(claimId, updateRequest))
+                .ThrowsAsync(new NotFoundException($"Claim with ID {claimId} not found"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => _controller.UpdateClaim(claimId, updateRequest));
+        }
+
+
+        [Fact]
+        public async Task UpdateClaim_ShouldReturnProblem_WhenServiceThrowsException()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            var updateRequest = new UpdateClaimRequest();
+
+            _mockClaimService.Setup(s => s.UpdateClaim(claimId, updateRequest))
+                .ThrowsAsync(new Exception("Test exception"));
+
+            // Assert 
+            await Assert.ThrowsAsync<Exception>(() => _controller.UpdateClaim(claimId, updateRequest));
+        }
+
+        [Fact]
+        public async Task SubmitClaim_ShouldReturnOk_WhenClaimIsSubmittedSuccessfully()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            var expectedResponse = new SubmitClaimResponse
+            
+            {
+                ClaimId = claimId,
+                Status = ClaimStatus.Pending.ToString(),
+                SubmittedDate = DateTime.UtcNow
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.SubmitClaim(claimId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ApiResponse<SubmitClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal("Claims submitted successfully", response.Message);
+            Assert.Equal(expectedResponse.ClaimId, response.Data.ClaimId);
+            Assert.Equal(expectedResponse.Status, response.Data.Status);
+        }
+
+        [Fact]
+        public async Task SubmitClaim_ShouldThrowNotFoundException_WhenClaimDoesNotExist()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ThrowsAsync(new NotFoundException($"Claim with ID {claimId} not found"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NotFoundException>(
+                () => _controller.SubmitClaim(claimId));
+            Assert.Contains(claimId.ToString(), exception.Message);
+        }
+
+        [Fact]
+        public async Task SubmitClaim_ShouldThrowUnauthorizedException_WhenUserIsNotClaimer()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ThrowsAsync(new UnauthorizedException("You are not the claimer of this claim."));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<UnauthorizedException>(
+                () => _controller.SubmitClaim(claimId));
+            Assert.Equal("You are not the claimer of this claim.", exception.Message);
+        }
+
+        [Fact]
+        public async Task SubmitClaim_ShouldThrowBusinessException_WhenClaimIsNotInDraftStatus()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ThrowsAsync(new BusinessException("Only claims in Draft status can be submitted"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<BusinessException>(
+                () => _controller.SubmitClaim(claimId));
+            Assert.Equal("Only claims in Draft status can be submitted", exception.Message);
+        }
+
+        [Fact]
+        public async Task SubmitClaim_WithProjectBasedClaim_ShouldReturnOkWithPendingStatus()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            var expectedResponse = new SubmitClaimResponse
+            {
+                ClaimId = claimId,
+                Status = ClaimStatus.Pending.ToString(),
+                SubmittedDate = DateTime.UtcNow
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.SubmitClaim(claimId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ApiResponse<SubmitClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal(ClaimStatus.Pending.ToString(), response.Data.Status);
+        }
+
+        [Fact]
+        public async Task SubmitClaim_WithNonProjectClaim_ShouldReturnOkWithApprovedStatus()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            var expectedResponse = new SubmitClaimResponse
+            {
+                ClaimId = claimId,
+                Status = ClaimStatus.Approved.ToString(),
+                SubmittedDate = DateTime.UtcNow
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.SubmitClaim(claimId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ApiResponse<SubmitClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal(ClaimStatus.Approved.ToString(), response.Data.Status);
+        }
+
+        [Fact]
+        public async Task SubmitClaim_ShouldThrowException_WhenServiceThrowsUnexpectedException()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            _mockClaimService
+                .Setup(service => service.SubmitClaim(claimId))
+                .ThrowsAsync(new Exception("Unexpected error occurred"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(() => _controller.SubmitClaim(claimId));
+        }
+
+        [Fact]
+        public async Task SubmitV2_ShouldReturnOk_WhenClaimIsSubmittedSuccessfully()
+        {
+            // Arrange
+            var createClaimRequest = new CreateClaimRequest
+            {
+                ClaimType = ClaimType.Other,
+                Name = "Test Claim",
+                Remark = "Test remark",
+                Amount = 100,
+                TotalWorkingHours = 8,
+                StartDate = DateOnly.FromDateTime(DateTime.Today),
+                EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
+                ProjectId = Guid.NewGuid()
+            };
+
+            var expectedResponse = new SubmitClaimResponse
+            {
+                ClaimId = Guid.NewGuid(),
+                Status = ClaimStatus.Pending.ToString(),
+                SubmittedDate = DateTime.UtcNow
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitV2(It.IsAny<CreateClaimRequest>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.SubmitV2(createClaimRequest);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ApiResponse<SubmitClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal("Claim submitted successfully", response.Message);
+            Assert.Equal(expectedResponse.Status, response.Data.Status);
+        }
+
+        [Fact]
+        public async Task SubmitV2_WithProjectBasedClaim_ShouldReturnOkWithPendingStatus()
+        {
+            // Arrange
+            var createClaimRequest = new CreateClaimRequest
+            {
+                ProjectId = Guid.NewGuid(),
+                Name = "Project Based Claim",
+                ClaimType = ClaimType.Other,
+                Amount = 100,
+                StartDate = DateOnly.FromDateTime(DateTime.Today),
+                EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(1))
+            };
+
+            var expectedResponse = new SubmitClaimResponse
+            {
+                ClaimId = Guid.NewGuid(),
+                Status = ClaimStatus.Pending.ToString(),
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitV2(It.IsAny<CreateClaimRequest>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.SubmitV2(createClaimRequest);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ApiResponse<SubmitClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal(ClaimStatus.Pending.ToString(), response.Data.Status);
+        }
+
+        [Fact]
+        public async Task SubmitV2_WithNonProjectClaim_ShouldReturnOkWithApprovedStatus()
+        {
+            // Arrange
+            var createClaimRequest = new CreateClaimRequest
+            {
+                ProjectId = null,
+                Name = "Non-Project Claim",
+                ClaimType = ClaimType.Other,
+                Amount = 100,
+                StartDate = DateOnly.FromDateTime(DateTime.Today),
+                EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(1))
+            };
+
+            var expectedResponse = new SubmitClaimResponse
+            {
+                ClaimId = Guid.NewGuid(),
+                Status = ClaimStatus.Approved.ToString(),
+          
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitV2(It.IsAny<CreateClaimRequest>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _controller.SubmitV2(createClaimRequest);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ApiResponse<SubmitClaimResponse>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal(ClaimStatus.Approved.ToString(), response.Data.Status);
+        }
+
+        [Fact]
+        public async Task SubmitV2_ShouldThrowBusinessException_WhenProjectNotFound()
+        {
+            // Arrange
+            var createClaimRequest = new CreateClaimRequest
+            {
+                ProjectId = Guid.NewGuid(),
+                Name = "Test Claim"
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitV2(It.IsAny<CreateClaimRequest>()))
+                .ThrowsAsync(new BusinessException($"Project with ID {createClaimRequest.ProjectId} not found"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<BusinessException>(
+                () => _controller.SubmitV2(createClaimRequest));
+            Assert.Contains(createClaimRequest.ProjectId.ToString(), exception.Message);
+        }
+
+        [Fact]
+        public async Task SubmitV2_ShouldThrowBusinessException_WhenUserNotInProject()
+        {
+            // Arrange
+            var createClaimRequest = new CreateClaimRequest
+            {
+                ProjectId = Guid.NewGuid(),
+                Name = "Test Claim"
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitV2(It.IsAny<CreateClaimRequest>()))
+                .ThrowsAsync(new BusinessException("You must be a member of this project to create a claim."));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<BusinessException>(
+                () => _controller.SubmitV2(createClaimRequest));
+            Assert.Equal("You must be a member of this project to create a claim.", exception.Message);
+        }
+
+        [Fact]
+        public async Task SubmitV2_ShouldThrowException_WhenServiceThrowsUnexpectedException()
+        {
+            // Arrange
+            var createClaimRequest = new CreateClaimRequest
+            {
+                Name = "Test Claim"
+            };
+
+            _mockClaimService
+                .Setup(service => service.SubmitV2(It.IsAny<CreateClaimRequest>()))
+                .ThrowsAsync(new Exception("Unexpected error occurred"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(() => _controller.SubmitV2(createClaimRequest));
+        }
+        
     }
 }

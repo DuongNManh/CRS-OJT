@@ -1,10 +1,6 @@
-﻿using ClaimRequest.DAL.Data.Requests.Auth;
-using ClaimRequest.DAL.Data.Requests.Claim;
+﻿using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Staff;
-using ClaimRequest.DAL.Data.Responses.Auth;
-using ClaimRequest.DAL.Data.Responses.Claim;
 using ClaimRequest.DAL.Data.Responses.Staff;
-using ClaimRequest.DAL.Data.MetaDatas;
 using Microsoft.AspNetCore.Http;
 
 namespace ClaimRequest.BLL.Services.Interfaces

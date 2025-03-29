@@ -17,8 +17,6 @@
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
 		<PackageReference Include="Google.Apis.Gmail.v1" Version="1.68.0.3427" />
-		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
-		<PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
@@ -43,6 +41,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\ClaimRequest.AI\ClaimRequest.AI.csproj" />
 		<ProjectReference Include="..\ClaimRequest.Service\ClaimRequest.BLL.csproj" />
 		<ProjectReference Include="..\ClaimRequest.Data\ClaimRequest.DAL.csproj" />
 	</ItemGroup>

@@ -1,16 +1,11 @@
-﻿using ClaimRequest.BLL.Services.Interfaces;
-using ClaimRequest.DAL.Data.Exceptions;
+﻿using ClaimRequest.API.Constants;
+using ClaimRequest.API.Extensions;
+using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Staff;
 using ClaimRequest.DAL.Data.Responses.Staff;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ClaimRequest.API.Extensions;
-using System.Security.Claims;
-using ClaimRequest.DAL.Data.Requests.Auth;
-using ClaimRequest.DAL.Data.Responses.Auth;
 using Microsoft.AspNetCore.Authorization;
-using ClaimRequest.API.Constants;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ClaimRequest.API.Controllers
 {

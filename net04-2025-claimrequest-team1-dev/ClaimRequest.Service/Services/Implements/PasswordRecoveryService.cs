@@ -2,20 +2,16 @@
 using ClaimRequest.BLL.Services;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
-using ClaimRequest.DAL.Repositories.Implements;
+using ClaimRequest.DAL.Data.Exceptions;
+using ClaimRequest.DAL.Data.Responses.Auth;
 using ClaimRequest.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OtpNet;
-using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using ClaimRequest.DAL.Data.Exceptions;
-using ClaimRequest.DAL.Data.Responses.Auth;
 
 namespace ClaimRequest.API.Services
 {
@@ -143,7 +139,7 @@ namespace ClaimRequest.API.Services
                 throw new Exception("Invalid or expired recovery code.");
             }
 
-            
+
 
             // Change the password
             staff.Password = newPassword; // You should hash the password before saving it

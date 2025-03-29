@@ -1,6 +1,4 @@
-﻿using ClaimRequest.BLL.Services.Implements;
-using ClaimRequest.BLL.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using ClaimRequest.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClaimRequest.API.Controllers
@@ -11,8 +9,9 @@ namespace ClaimRequest.API.Controllers
     {
         public readonly IEmailService _emailService;
 
-        public EmailController(IEmailService emailService) { 
-        _emailService = emailService;
+        public EmailController(IEmailService emailService)
+        {
+            _emailService = emailService;
         }
 
         [HttpPost("send-claim-returned/{claimId}")]

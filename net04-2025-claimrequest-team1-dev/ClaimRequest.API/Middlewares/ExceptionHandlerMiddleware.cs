@@ -1,6 +1,5 @@
-﻿using ClaimRequest.DAL.Data.MetaDatas;
-using ClaimRequest.DAL.Data.Exceptions;
-using System.Net;
+﻿using ClaimRequest.DAL.Data.Exceptions;
+using ClaimRequest.DAL.Data.MetaDatas;
 
 namespace ClaimRequest.API.Middlewares
 {

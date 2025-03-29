@@ -1,11 +1,10 @@
-using ClaimRequest.DAL.Data.Responses.Claim;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
 namespace ClaimRequest.DAL.Data.Responses.Claim;
 
 public class ExcelConstants : IExcelConstants
-{        
+{
     public readonly string[] HEADERS = new[]
     {
         "No.",
@@ -16,13 +15,13 @@ public class ExcelConstants : IExcelConstants
         "Project Name",
         "Amount",
         "Working Hours",
-        "Paid Date", 
+        "Paid Date",
     };
-    
+
     public byte[] GenerateClaimExport(IEnumerable<ClaimExportDto> exportModels)
     {
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        
+
         using var package = new ExcelPackage();
         var worksheet = package.Workbook.Worksheets.Add("Claims Export");
 
@@ -37,7 +36,7 @@ public class ExcelConstants : IExcelConstants
         int row = 2;
         foreach (var claim in exportModels)
         {
-            try 
+            try
             {
                 worksheet.Cells[row, 1].Value = claim.RowNumber;
                 worksheet.Cells[row, 2].Value = claim.ClaimId;

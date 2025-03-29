@@ -7,28 +7,28 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Services\Templates\ClaimApprovedEmailTemplate.html" />
-	  <None Remove="Services\Templates\ClaimReturnedEmailTemplate.html" />
-	  <None Remove="Services\Templates\ClaimSubmittedEmailTemplate.html" />
-	  <None Remove="Services\Templates\TemplateSendMailReminder.html" />
+		<None Remove="Services\Templates\ClaimApprovedEmailTemplate.html" />
+		<None Remove="Services\Templates\ClaimReturnedEmailTemplate.html" />
+		<None Remove="Services\Templates\ClaimSubmittedEmailTemplate.html" />
+		<None Remove="Services\Templates\TemplateSendMailReminder.html" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="Services\Templates\ClaimApprovedEmailTemplate.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Services\Templates\ClaimSubmittedEmailTemplate.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Services\Templates\ManagerApprovedEmailTemplate.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Services\Templates\ClaimReturnedEmailTemplate.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Services\Templates\TemplateSendMailReminder.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
+		<Content Include="Services\Templates\ClaimApprovedEmailTemplate.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Services\Templates\ClaimSubmittedEmailTemplate.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Services\Templates\ManagerApprovedEmailTemplate.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Services\Templates\ClaimReturnedEmailTemplate.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Services\Templates\TemplateSendMailReminder.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -46,7 +46,6 @@
 		<PackageReference Include="EPPlus" Version="7.6.0" />
 		<PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
 		<PackageReference Include="Google.Apis.Gmail.v1" Version="1.68.0.3427" />
-		<PackageReference Include="MailKit" Version="4.11.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.2" />
