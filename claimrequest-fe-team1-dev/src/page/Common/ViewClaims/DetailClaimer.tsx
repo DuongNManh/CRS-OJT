@@ -3,6 +3,7 @@
 
 import ApprovalProgressBar from "@/components/ApprovalProgressBar/ApprovalProgressBar";
 import ClaimChangeLog from "@/components/ClaimChangeLog/ClaimChangeLog";
+import ClaimDetailLoading from "@/components/Loading/ClaimDetailLoading";
 import NotFound from "@/components/NotFound/NotFound";
 import { useApi } from "@/hooks/useApi";
 import { ClaimDetailResponse } from "@/interfaces/claim.interface";
@@ -27,63 +28,45 @@ const DetailClaimer: React.FC = () => {
   const date = new Date(claim?.createAt || "");
   const { withLoading } = useApi();
 
+  // Function to fetch claim details with caching
+  const fetchClaimDetail = async () => {
+    if (!id) return;
+
+    // Check cache first
+    const cacheKey = cacheService.generateClaimDetailCacheKey(id);
+    const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
+
+    if (cachedData) {
+      setClaim(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await withLoading(claimService.getClaimById(id as string));
+      if (response.is_success && response.data) {
+        setClaim(response.data);
+        // Store in cache for future use
+        cacheService.set(cacheKey, response.data, [
+          CACHE_TAGS.CLAIMS,
+          CACHE_TAGS.CLAIMER_MODE,
+          `claim_${id}`,
+        ]);
+      }
+    } catch (error) {
+      const errorMessage = (error as Error).message || "An error occurred";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-
-    const fetchData = async () => {
-      if (!id) return;
-
-      // Check cache first
-      const cacheKey = cacheService.generateClaimDetailCacheKey(id);
-      const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
-
-      if (cachedData) {
-        if (isMounted) {
-          setClaim(cachedData);
-          setLoading(false);
-        }
-        return;
-      }
-
-      try {
-        const response = await withLoading(
-          claimService.getClaimById(id as string),
-        );
-
-        if (isMounted && response.is_success && response.data) {
-          setClaim(response.data);
-          cacheService.set(cacheKey, response.data, [
-            CACHE_TAGS.CLAIMS,
-            CACHE_TAGS.CLAIMER_MODE,
-            `claim_${id}`,
-          ]);
-        }
-      } catch (error) {
-        if (isMounted) {
-          const errorMessage = (error as Error).message || "An error occurred";
-          toast.error(errorMessage);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      isMounted = false;
-    };
+    fetchClaimDetail(); // Call the new fetch function
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg">Loading claim details...</div>
-      </div>
-    );
+    return ClaimDetailLoading();
   }
 
   if (!claim) {
@@ -113,10 +96,7 @@ const DetailClaimer: React.FC = () => {
       setCancelRemark("");
 
       // Fetch updated claim data
-      const updatedResponse = await claimService.getClaimById(id as string);
-      if (updatedResponse.is_success && updatedResponse.data) {
-        setClaim(updatedResponse.data);
-      }
+      fetchClaimDetail(); // Fetch updated claim details after cancellation
 
       // Invalidate cache
       cacheService.invalidateByTags([
@@ -125,35 +105,25 @@ const DetailClaimer: React.FC = () => {
         `claim_${id}`,
       ]);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to cancel claim";
+      const errorMessage = error instanceof Error ? error.message : "Failed to cancel claim";
       toast.error(errorMessage);
     }
   };
 
   const handleSubmit = async () => {
     try {
-      // check user confirmation
-      const confirm = window.confirm(
-        "Are you sure you want to submit this claim?",
-      );
+      const confirm = window.confirm("Are you sure you want to submit this claim?");
       if (!confirm) return;
       const response = await claimService.submitClaim(id as string);
       if (response.is_success) {
         toast.success("Claim submitted successfully!");
         // Invalidate caches after submission
-        cacheService.invalidateByTags([
-          CACHE_TAGS.CLAIMS,
-          CACHE_TAGS.CLAIM_LISTS,
-        ]);
-        // Instead of reloading, fetch new data
-        const updatedResponse = await claimService.getClaimById(id as string);
-        if (updatedResponse.is_success && updatedResponse.data) {
-          setClaim(updatedResponse.data);
-        }
+        cacheService.invalidateByTags([CACHE_TAGS.CLAIMS, CACHE_TAGS.CLAIM_LISTS]);
+        fetchClaimDetail(); // Fetch updated claim details after submission
       }
     } catch (error) {
-      toast.error("Failed to submit claim. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit claim";
+      toast.error(errorMessage);
     }
   };
 
@@ -168,12 +138,12 @@ const DetailClaimer: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0E1217] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Claim Details</h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Claim Details</h1>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             View and manage your claim request information
           </p>
         </div>
@@ -182,51 +152,51 @@ const DetailClaimer: React.FC = () => {
           {/* Left Column - Claim Info */}
           <div className="space-y-6">
             {/* Claim Information Card */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm overflow-hidden">
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
                   Claim Information
                 </h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <p className="text-sm text-gray-500">Claim Name</p>
-                      <p className="font-medium text-gray-900">{claim.name}</p>
+                    <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Claim Name</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">{claim.name}</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <p className="text-sm text-gray-500">Claim Type</p>
-                      <p className="font-medium text-gray-900">
+                    <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Claim Type</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">
                         {claim.claimType}
                       </p>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Created At</p>
-                    <p className="font-medium text-gray-900">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Created At</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
                       {date.toLocaleString()}
                     </p>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Total Compensation</p>
-                    <p className="text-2xl font-bold text-green-600">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Total Compensation</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {claim.amount} VND
                     </p>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500 mb-2">Remark</p>
-                    <p className="text-gray-900">{claim.remark}</p>
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Remark</p>
+                    <p className="text-gray-900 dark:text-gray-200">{claim.remark}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Status and Progress Card */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Current Status
                 </h3>
                 <span
@@ -238,7 +208,7 @@ const DetailClaimer: React.FC = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h4 className="text-base font-medium text-gray-700 mb-4">
+                <h4 className="text-base font-medium text-gray-700 dark:text-gray-300 mb-4">
                   Approval Progress
                 </h4>
                 <ApprovalProgressBar claim={claim} />
@@ -249,41 +219,37 @@ const DetailClaimer: React.FC = () => {
           {/* Right Column - Project Info & History */}
           <div className="space-y-6">
             {/* Project Information Card */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
                 Project Information
               </h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Project Name</p>
-                    <p className="font-medium text-gray-900">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Project Name</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
                       {claim.project ? claim.project.name : "NA"}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Duration</p>
-                    <p className="font-medium text-gray-900">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Duration</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
                       {claim.project
-                        ? `${formatDate(
-                            claim.project.startDate,
-                          )} to ${formatDate(claim.project.endDate)}`
+                        ? `${formatDate(claim.project.startDate)} to ${formatDate(claim.project.endDate)}`
                         : "NA"}
                     </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Project Manager</p>
-                    <p className="font-medium text-gray-900">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Project Manager</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
                       {claim.project ? claim.project.projectManager : "NA"}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">
-                      Business Unit Leader
-                    </p>
-                    <p className="font-medium text-gray-900">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Business Unit Leader</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
                       {claim.project ? claim.project.businessUnitLeader : "NA"}
                     </p>
                   </div>
@@ -292,8 +258,8 @@ const DetailClaimer: React.FC = () => {
             </div>
 
             {/* Change History Card */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Change History
               </h3>
               <div className="h-[250px] overflow-y-auto pr-2">
@@ -302,7 +268,7 @@ const DetailClaimer: React.FC = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-end gap-4">
                 <button
                   className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
@@ -312,7 +278,7 @@ const DetailClaimer: React.FC = () => {
                 </button>
                 {claim.status === "Draft" && (
                   <button
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
                     onClick={handleSubmit}
                   >
                     Submit

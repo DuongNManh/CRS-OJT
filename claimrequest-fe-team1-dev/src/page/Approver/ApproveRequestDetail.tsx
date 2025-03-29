@@ -12,6 +12,8 @@ import { formatDate } from "@/utils/dateFormatter";
 import NotFound from "@/components/NotFound/NotFound";
 import { CACHE_TAGS } from "@/services/features/cacheService";
 import { useApi } from "@/hooks/useApi";
+import { statusColors } from "@/utils/statusColors";
+import ClaimDetailLoading from "@/components/Loading/ClaimDetailLoading";
 
 const ApproveRequestDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,50 +24,47 @@ const ApproveRequestDetail: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { withLoading } = useApi();
 
+  // Function to fetch claim details with caching
+  const fetchClaimDetail = async () => {
+    if (!id) return;
+
+    // Check cache first
+    const cacheKey = cacheService.generateClaimDetailCacheKey(id);
+    const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
+    if (cachedData) {
+      setClaim(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await withLoading(
+        claimService.getClaimById(id as string),
+      );
+      if (response && response.is_success && response.data) {
+        setClaim(response.data);
+        // Store in cache for future use
+        cacheService.set(cacheKey, response.data, [
+          CACHE_TAGS.CLAIMS,
+          CACHE_TAGS.APPROVER_MODE,
+          `claim_${id}`,
+        ]);
+      }
+    } catch (error: unknown) {
+      const errorMessage = (error as Error).message || "An error occurred";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
-    const fetchClaimDetail = async () => {
-      if (!id) return;
-
-      // Check cache first
-      const cacheKey = cacheService.generateClaimDetailCacheKey(id);
-      const cachedData = cacheService.get<ClaimDetailResponse>(cacheKey);
-      if (cachedData) {
-        setClaim(cachedData);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await withLoading(
-          claimService.getClaimById(id as string),
-        );
-        if (response && response.is_success && response.data) {
-          setClaim(response.data);
-          // Store in cache for future use
-          cacheService.set(cacheKey, response.data, [
-            CACHE_TAGS.CLAIMS,
-            CACHE_TAGS.APPROVER_MODE,
-            `claim_${id}`,
-          ]);
-        }
-      } catch (error: unknown) {
-        const errorMessage = (error as Error).message || "An error occurred";
-        toast.error(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchClaimDetail();
+    fetchClaimDetail(); // Call the new fetch function
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg">Loading claim details...</div>
-      </div>
-    );
+    return ClaimDetailLoading();
   }
 
   if (!claim) {
@@ -88,11 +87,7 @@ const ApproveRequestDetail: React.FC = () => {
         CACHE_TAGS.CLAIM_LISTS,
         CACHE_TAGS.APPROVER_MODE,
       ]);
-      // Instead of reloading, fetch new data
-      const updatedResponse = await claimService.getClaimById(id as string);
-      if (updatedResponse.is_success && updatedResponse.data) {
-        setClaim(updatedResponse.data);
-      }
+      fetchClaimDetail(); // Fetch updated claim details
     } catch (error: unknown) {
       const errorMessage =
         (error as Error).message || "Failed to approve claim";
@@ -118,7 +113,7 @@ const ApproveRequestDetail: React.FC = () => {
         CACHE_TAGS.CLAIM_LISTS,
         CACHE_TAGS.APPROVER_MODE,
       ]);
-      window.location.reload();
+      fetchClaimDetail(); // Fetch updated claim details
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || "Failed to reject claim";
       toast.error(errorMessage);
@@ -141,14 +136,14 @@ const ApproveRequestDetail: React.FC = () => {
 
   return (
     <ApproverLayout>
-      <div className="min-h-screen bg-gray-50 py-6">
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0E1217] py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section - Made more compact */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               Claim Request Details
             </h1>
-            <p className="mt-1 text-sm text-gray-600">
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
               Review and process claim request information
             </p>
           </div>
@@ -157,22 +152,30 @@ const ApproveRequestDetail: React.FC = () => {
             {/* Left Column - Made more compact */}
             <div className="grid grid-rows-[auto_1fr] gap-4">
               {/* Claimer Card - Reduced vertical padding */}
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm overflow-hidden">
                 <div className="relative h-32 bg-gradient-to-r from-blue-500 to-blue-600">
-                  <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2">
-                    <img
-                      src="/src/assets/default-avatar.jpeg"
+                  <div className="shadow-md">
+                    <img src="/bg-claim.png" alt="bg-claim" />
+                  </div>
+                  <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
+                    {claim.claimer.avatarUrl ? (
+                      <img
+                      src={claim.claimer.avatarUrl}
                       alt={claim.claimer.name}
                       className="w-40 h-40 rounded-full border-4 border-white shadow-lg object-fill"
-                    />
+                    />) : (<img
+                      src="/default-avatar.jpeg"
+                      alt={claim.claimer.name}
+                      className="w-40 h-40 rounded-full border-4 border-white shadow-lg object-fill"
+                    />)}
                   </div>
                 </div>
                 <div className="pt-12 pb-4 px-4">
-                  <div className="text-center">
-                    <h2 className="text-lg font-bold text-gray-900">
+                  <div className="text-center pt-8">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                       {claim.claimer.name}
                     </h2>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {claim.claimer.email}
                     </p>
                     <p className="text-sm font-medium text-blue-600">
@@ -183,8 +186,8 @@ const ApproveRequestDetail: React.FC = () => {
               </div>
 
               {/* Project Information Card - More compact spacing */}
-              <div className="bg-white rounded-xl shadow-sm p-4">
-                <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center">
+              <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-4">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                   <svg
                     className="w-4 h-4 mr-2 text-blue-500"
                     fill="none"
@@ -202,36 +205,36 @@ const ApproveRequestDetail: React.FC = () => {
                 </h3>
                 <div className="space-y-3">
                   {/* Project details content remains the same but with reduced padding */}
-                  <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <p className="text-sm text-gray-500">Project Name</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Project Name</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-200">
                           {claim.project?.name}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Duration</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Duration</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-200">
                           {formatDate(claim.project?.startDate)} -{" "}
                           {formatDate(claim.project?.endDate)}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
                     <div className="space-y-2">
                       <div>
-                        <p className="text-sm text-gray-500">Project Manager</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Project Manager</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-200">
                           {claim.project?.projectManager}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                           Business Unit Leader
                         </p>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-gray-900 dark:text-gray-200">
                           {claim.project?.businessUnitLeader}
                         </p>
                       </div>
@@ -244,12 +247,12 @@ const ApproveRequestDetail: React.FC = () => {
             {/* Right Column - Reorganized for better visibility */}
             <div className="grid grid-rows-[auto_auto_1fr_auto] gap-4">
               {/* Claim Status Card */}
-              <div className="bg-white rounded-xl shadow-sm p-4">
+              <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-semibold text-gray-900">
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-white">
                     Claim Status
                   </h3>
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-700">
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[claim.status]}`}>
                     {claim.status}
                   </span>
                 </div>
@@ -257,45 +260,45 @@ const ApproveRequestDetail: React.FC = () => {
               </div>
 
               {/* Claim Information Card */}
-              <div className="bg-white rounded-xl shadow-sm p-4">
-                <h3 className="text-base font-semibold text-gray-900 mb-3">
+              <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-4">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3">
                   Claim Information
                 </h3>
                 <div className="space-y-3">
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-sm text-gray-500">Claim Name</p>
-                    <p className="font-medium text-gray-900">{claim.name}</p>
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Claim Name</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">{claim.name}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-sm text-gray-500">Claim Type</p>
-                      <p className="font-medium text-gray-900">
+                    <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Claim Type</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">
                         {claim.claimType}
                       </p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-sm text-gray-500">Created At</p>
-                      <p className="font-medium text-gray-900">
+                    <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Created At</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">
                         {date.toLocaleString()}
                       </p>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-sm text-gray-500">Total Compensation</p>
-                    <p className="text-xl font-bold text-green-600">
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Total Compensation</p>
+                    <p className="text-xl font-bold text-green-600 dark:text-green-400">
                       {claim.amount} VND
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-sm text-gray-500 mb-1">Remark</p>
-                    <p className="text-gray-900">{claim.remark}</p>
+                  <div className="bg-gray-50 dark:bg-[#272B34] rounded-lg p-3">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Remark</p>
+                    <p className="text-gray-900 dark:text-gray-200">{claim.remark}</p>
                   </div>
                 </div>
               </div>
 
               {/* Change History Card - Fixed height */}
-              <div className="bg-white rounded-xl shadow-sm p-4">
-                <h3 className="text-base font-semibold text-gray-900">
+              <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-4">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white">
                   Change History
                 </h3>
                 <div className="h-[200px] overflow-y-auto pr-2">
@@ -303,7 +306,7 @@ const ApproveRequestDetail: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-sm p-6">
                 {claim.claimApprovers.find(
                   (approver) => approver.approverId === user?.id,
                 )?.approverStatus === "Pending" && (

@@ -11,6 +11,7 @@ import FinanceLayout from "@/layouts/FinanceLayout";
 import { CACHE_TAGS } from "@/services/features/cacheService";
 import { useApi } from "@/hooks/useApi";
 import { saveAs } from "file-saver";
+import ClaimDetailLoading from "@/components/Loading/ClaimDetailLoading";
 
 const FinanceRequestDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,11 +58,7 @@ const FinanceRequestDetail: React.FC = () => {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg">Loading claim details...</div>
-      </div>
-    );
+    return ClaimDetailLoading();
   }
 
   if (!claim) {
@@ -106,7 +103,7 @@ const FinanceRequestDetail: React.FC = () => {
 
   const statusContent: Record<string, JSX.Element> = {
     Approved: (
-      <div className="flex justify-end gap-6 mt-5 pt-4 border-t border-gray-200">
+      <div className="flex justify-end gap-6 mt-5 pt-4 border-t border-gray-200 dark:border-gray-700">
         <button
           className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
           onClick={handlePay}
@@ -116,7 +113,7 @@ const FinanceRequestDetail: React.FC = () => {
       </div>
     ),
     Paid: (
-      <div className="text-center pt-5 mt-5 border-t border-gray-200">
+      <div className="text-center pt-5 mt-5 border-t border-gray-200 dark:border-gray-700">
         <div className="text-green-600 text-lg font-semibold mb-4">
           This claim has been paid successfully!
         </div>
@@ -140,14 +137,14 @@ const FinanceRequestDetail: React.FC = () => {
 
   return (
     <FinanceLayout>
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0E1217] py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Claim Request Details
             </h1>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
               Review and manage claim request information
             </p>
           </div>
@@ -155,37 +152,46 @@ const FinanceRequestDetail: React.FC = () => {
           {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8">
             {/* Staff Information Card */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-md overflow-hidden">
               <div className="p-8">
                 <div className="flex flex-col items-center">
                   <div className="relative">
-                    <img
-                      src="/src/assets/default-avatar.jpeg"
-                      alt={claim.claimer.name}
-                      className="w-[200px] h-[200px] rounded-full object-fill border-4 border-white shadow-lg"
-                    />
+                    {/* Profile Image */}
+                    {claim.claimer?.avatarUrl ? (
+                      <img
+                        src={claim.claimer.avatarUrl}
+                        alt={claim.claimer.name}
+                        className="w-[200px] h-[200px] rounded-full object-fill border-4 border-white shadow-lg"
+                      />
+                    ) : (
+                      <img
+                        src="/default-avatar.jpeg"
+                        alt={claim.claimer.name}
+                        className="w-[200px] h-[200px] rounded-full object-fill border-4 border-white shadow-lg"
+                      />
+                    )}
                     <div
                       className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-white ${
                         claim.status === "Approved"
                           ? "bg-green-500"
                           : claim.status === "Paid"
-                            ? "bg-blue-500"
-                            : "bg-gray-500"
+                          ? "bg-blue-500"
+                          : "bg-gray-500"
                       }`}
                     ></div>
                   </div>
 
-                  <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-1">
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-1">
                     {claim.claimer.name}
                   </h1>
-                  <p className="text-sm text-gray-500 mb-6">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                     {claim.claimer.email}
                   </p>
 
                   {/* Status Section with enhanced styling */}
-                  <div className="w-full bg-gray-50 rounded-lg p-6 mb-6">
+                  <div className="w-full bg-gray-50 dark:bg-[#272B34] rounded-lg p-6 mb-6">
                     <div className="flex justify-between items-center mb-4">
-                      <span className="text-sm font-medium text-gray-500">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                         Status
                       </span>
                       <span
@@ -196,10 +202,10 @@ const FinanceRequestDetail: React.FC = () => {
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-500">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                         Approved By
                       </span>
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                         {claim.claimApprovers
                           .map((approver) => approver.name)
                           .join(", ")}
@@ -209,23 +215,23 @@ const FinanceRequestDetail: React.FC = () => {
 
                   {/* Contact Information with enhanced styling */}
                   <div className="w-full">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Contact Information
                     </h3>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Email
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.claimer.email}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Department
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.claimer.department}
                         </span>
                       </div>
@@ -236,46 +242,46 @@ const FinanceRequestDetail: React.FC = () => {
             </div>
 
             {/* Project and Claim Details Card */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-white dark:bg-[#1C1F26] rounded-xl shadow-md overflow-hidden">
               <div className="p-8">
                 <div className="space-y-8">
                   {/* Project Information */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Project Information
                     </h3>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Project Name
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.project ? claim.project.name : "NA"}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Duration
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.project
                             ? `${formatDate(claim.project.startDate)} to ${formatDate(claim.project.endDate)}`
                             : "NA"}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Project Manager
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.project ? claim.project.projectManager : "NA"}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Business Unit Leader
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.project
                             ? claim.project.businessUnitLeader
                             : "NA"}
@@ -286,40 +292,40 @@ const FinanceRequestDetail: React.FC = () => {
 
                   {/* Claim Details */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Claim Details
                     </h3>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Claim Type
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.claimType}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Work Hours
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {claim.totalWorkingHours}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-500">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Created at
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {date.toLocaleString()}
                         </span>
                       </div>
                       {claim.status === "approved" && (
-                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                          <span className="text-sm font-medium text-gray-500">
+                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                             Total Compensation
                           </span>
-                          <span className="text-lg font-bold text-green-500">
+                          <span className="text-lg font-bold text-green-500 dark:text-green-400">
                             {claim.amount}
                           </span>
                         </div>
@@ -329,11 +335,11 @@ const FinanceRequestDetail: React.FC = () => {
 
                   {/* Reason Section */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Reason
                     </h3>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700">{claim.remark}</p>
+                    <div className="p-4 bg-gray-50 dark:bg-[#272B34] rounded-lg">
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{claim.remark}</p>
                     </div>
                   </div>
 

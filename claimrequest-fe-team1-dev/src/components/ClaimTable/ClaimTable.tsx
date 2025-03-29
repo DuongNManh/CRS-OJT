@@ -244,7 +244,7 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
       : undefined;
 
   return (
-    <div className="bg-white p-6 rounded-xl overflow-x-auto">
+    <div className="bg-white dark:bg-[#272B34] p-6 rounded-xl overflow-x-auto">
       <Table
         rowSelection={rowSelection}
         columns={columns}
@@ -280,6 +280,48 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
         })}
         scroll={{ x: "max-content" }}
         className="custom-antd-table round-xl"
+        components={{
+          header: {
+            cell: (props) => (
+              <th
+                {...props}
+                className={`
+                  !bg-gray-200 dark:!bg-[#121212]
+                  !text-gray-800 dark:!text-white
+                  ![&.ant-table-cell-sort]:bg-gray-300
+                  ![&.ant-table-cell-sort]:dark:bg-gray-700
+                  border-b border-gray-300 dark:border-gray-700
+                  ![&.ant-table-column-has-sorters]:hover:bg-gray-300
+                  ![&.ant-table-column-has-sorters]:dark:hover:bg-gray-700
+                  ![&_.ant-table-column-sorter]:text-gray-800
+                  ![&_.ant-table-column-sorter]:dark:text-white
+                `}
+              />
+            ),
+          },
+          body: {
+            row: (props) => (
+              <tr
+                {...props}
+                className="hover:bg-gray-50 dark:hover:bg-gray-800 
+                          bg-white dark:bg-gray-900 
+                          text-gray-800 dark:text-white"
+              />
+            ),
+            cell: (props) => (
+              <td
+                {...props}
+                className={`
+                  text-gray-800 dark:text-white
+                  ![&.ant-table-column-sort]:bg-gray-50
+                  ![&.ant-table-column-sort]:dark:bg-gray-800
+                  ![&.ant-table-column-sort]:text-gray-800
+                  ![&.ant-table-column-sort]:dark:text-white
+                `}
+              />
+            ), 
+          },
+        }}
       />
     </div>
   );

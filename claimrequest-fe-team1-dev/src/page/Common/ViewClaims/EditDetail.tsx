@@ -4,6 +4,7 @@ import { projectService } from "@/services/features/project.service";
 import { useAppSelector } from "@/services/store/store";
 import {
   LoadingOutlined,
+  MailOutlined,
   RollbackOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
@@ -172,24 +173,24 @@ const EditDetail: React.FC = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className=" p-6 flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#0E1217]">
       <form
         ref={formRef}
-        className="max-w-[800px] mx-auto bg-white p-[20px] rounded-[10px] shadow-md"
+        className="max-w-[800px] w-full bg-white dark:bg-[#272B34] p-8 rounded-lg shadow-lg"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-2xl font-bold mb-[20px] text-center">
+        <h2 className="text-2xl font-bold mb-[20px] text-center text-gray-900 dark:text-white">
           Update Claim
         </h2>
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="claimType"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             Claim Type:
           </label>
           <select
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="claimType"
             name="claimType"
             required
@@ -208,12 +209,12 @@ const EditDetail: React.FC = () => {
         </div>
 
         <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="name" className="block mr-2.5 w-[150px] text-[18px]">
+          <label htmlFor="name" className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white">
             Claim Name:
           </label>
           <input
             type="text"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="name"
             name="name"
             required
@@ -226,13 +227,13 @@ const EditDetail: React.FC = () => {
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="remark"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             Remark:
           </label>
           <input
             type="text"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="remark"
             name="remark"
             required
@@ -245,13 +246,13 @@ const EditDetail: React.FC = () => {
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="amount"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             Amount:
           </label>
           <input
             type="number"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="amount"
             name="amount"
             required
@@ -264,13 +265,13 @@ const EditDetail: React.FC = () => {
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="totalWorkingHours"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             Working Hours:
           </label>
           <input
             type="number"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="totalWorkingHours"
             name="totalWorkingHours"
             required
@@ -283,13 +284,13 @@ const EditDetail: React.FC = () => {
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="startDate"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             Start Date:
           </label>
           <input
             type="date"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="startDate"
             name="startDate"
             required
@@ -301,13 +302,13 @@ const EditDetail: React.FC = () => {
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="endDate"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             End Date:
           </label>
           <input
             type="date"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="endDate"
             name="endDate"
             required
@@ -319,12 +320,12 @@ const EditDetail: React.FC = () => {
         <div className="mb-[15px] w-full flex items-center">
           <label
             htmlFor="projectId"
-            className="block mr-2.5 w-[150px] text-[18px]"
+            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
           >
             Project:
           </label>
           <select
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc]"
+            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="projectId"
             name="projectId"
             value={formData.projectId}
@@ -342,7 +343,7 @@ const EditDetail: React.FC = () => {
         <div className="container flex justify-center mt-5 gap-4">
           <button
             type="button"
-            className="bg-blue-500 text-white cursor-pointer px-5 py-2.5 rounded-[5px] border-none hover:bg-gray-700 flex items-center gap-2"
+            className="bg-blue-500 text-white cursor-pointer px-5 py-2.5 rounded-[5px] border-none hover:bg-blue-700 flex items-center gap-2"
             onClick={handleUpdate}
             disabled={isLoading}
           >

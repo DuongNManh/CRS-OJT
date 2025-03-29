@@ -113,8 +113,8 @@ const ViewClaims: React.FC = () => {
   const getCardClassName = (status: string | null) => {
     const isSelected = tempClaimStatus === (status || "");
     return cn(
-      "bg-white rounded-xl shadow cursor-pointer transition-all duration-200",
-      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg",
+      "bg-white dark:bg-[#272B34] rounded-xl shadow cursor-pointer transition-all duration-200",
+      isSelected ? "ring-2 ring-[#3185ca] ring-offset-2" : "hover:shadow-lg",
     );
   };
 
@@ -162,15 +162,15 @@ const ViewClaims: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen p-6 bg-gray-50 dark:bg-[#1C1F26]">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="m-0 text-2xl font-semibold">
+        <h1 className="m-0 text-2xl font-semibold text-gray-900 dark:text-white">
           Hello, {user?.name || "User"}!
         </h1>
         <Input
           type="search"
           placeholder="Search"
-          className="w-full sm:w-[200px]"
+          className="w-full sm:w-[200px] dark:bg-[#272B34] dark:text-gray-300"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
@@ -187,14 +187,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   "bg-[#cee6fa] text-[#3185ca]",
-                  tempClaimStatus === "" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]", // Increased ring visibility in dark mode
                 )}
               >
                 <UserOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Total</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Total</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.total}
                 </span>
               </div>
@@ -212,14 +212,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   `w-[65px] h-[65px] rounded-full flex items-center justify-center`,
                   statusColors.Draft,
-                  tempClaimStatus === "Draft" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Draft" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <PaperClipOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Draft</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Draft</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.draft}
                 </span>
               </div>
@@ -237,14 +237,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Pending,
-                  tempClaimStatus === "Pending" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Pending" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <ClockCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Pending</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Pending</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.pending}
                 </span>
               </div>
@@ -262,14 +262,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Approved,
-                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <CheckCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Approved</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Approved</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.approved}
                 </span>
               </div>
@@ -287,14 +287,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Rejected,
-                  tempClaimStatus === "Rejected" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Rejected" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <CloseCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Rejected</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Rejected</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.rejected}
                 </span>
               </div>
@@ -312,14 +312,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Paid,
-                  tempClaimStatus === "Paid" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Paid" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <MoneyCollectOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Paid</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Paid</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.paid}
                 </span>
               </div>
@@ -337,14 +337,14 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Cancelled,
-                  tempClaimStatus === "Cancelled" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Cancelled" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <FileExcelOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Cancelled</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">Cancelled</span>
+                <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.cancelled}
                 </span>
               </div>
@@ -371,7 +371,7 @@ const ViewClaims: React.FC = () => {
         <Button
           onClick={handleClearFilters}
           type="default"
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto dark:bg-[#272B34] dark:text-gray-300"
           disabled={!tempStartDate && !tempEndDate && !claimStatus} // Disable button if both dates are not set
         >
           Clear Filters

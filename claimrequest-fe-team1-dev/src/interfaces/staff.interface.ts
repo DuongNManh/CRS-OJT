@@ -7,6 +7,7 @@ export interface GetStaffResponse {
   role: SystemRole;
   department: string;
   salary: number;
+  avatarUrl: string;
 }
 
 export interface ICreateStaffRequest {

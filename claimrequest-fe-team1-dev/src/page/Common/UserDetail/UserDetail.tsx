@@ -15,7 +15,7 @@ function UserDetail() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const {withLoading} = useApi();
+  const { withLoading } = useApi();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ function UserDetail() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center dark:text-white dark:bg-[#121212]">
         <div className="text-lg">Loading user info...</div>
       </div>
     );
@@ -100,8 +100,8 @@ function UserDetail() {
   return (
     <CommonLayout>
       {profile ? (
-        <div className="space-y-6 mx-auto dark:text-white"> 
-          <div className="min-h-[300px] relative bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="space-y-6 min-h-screen mx-auto dark:text-white dark:bg-[#121212]"> 
+          <div className="min-h-[300px] relative bg-white dark:bg-[#1C1F26] shadow-md rounded-lg overflow-hidden">
             <div className="absolute inset-0 z-0">
               <img src="/bg.jpg" alt="Background" className="w-full h-full object-cover" />
             </div>
@@ -127,13 +127,13 @@ function UserDetail() {
           {/* Modal for Image Upload */}
           {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded shadow-lg">
-                <h4 className="text-lg font-semibold">Change Avatar</h4>
+              <div className="bg-white dark:bg-[#1C1F26] p-6 rounded shadow-lg">
+                <h4 className="text-lg font-semibold dark:text-white">Change Avatar</h4>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="mt-4 p-2 border border-gray-300 rounded w-full"
+                  className="mt-4 p-2 border border-gray-300 rounded w-full dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
                 />
                 <div className="flex justify-end mt-4">
                   <button
@@ -152,26 +152,27 @@ function UserDetail() {
               </div>
             </div>
           )}
-          <Card title="Participated Projects" className="p-4">
-          <div className="border-t pt-4 space-y-4">
-            <div className="text-gray-600 pl-4">
-              {profile?.project && profile.project.length > 0 ? (
-                profile.project.map((project) => (
-                  <div key={project.id} className="bg-white p-4 rounded-md mb-2 shadow-md hover:shadow-lg transition-shadow duration-200">
-                    <p className="font-medium text-gray-900">{project.name || 'Unnamed Project'}</p>
-                    <p className="text-sm text-gray-500">Status: <span className="font-medium">{project.status}</span></p>
-                    <p className="text-sm text-gray-500">Budget: <span className="font-medium">${project.budget.toLocaleString()}</span></p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">No projects available.</p>
-              )}
+          <Card className="p-4 dark:bg-[#1C1F26]">
+            <h2 className="text-xl font-semibold dark:text-white">Projects currently involved</h2>
+            <div className="border-t pt-4 space-y-4">
+              <div className="text-gray-600 dark:text-gray-300 pl-4">
+                {profile?.project && profile.project.length > 0 ? (
+                  profile.project.map((project) => (
+                    <div key={project.id} className="bg-white dark:bg-[#272B34] p-4 rounded-md mb-2 shadow-md hover:shadow-lg transition-shadow duration-200">
+                      <p className="font-bold text-gray-900 dark:text-white">{project.name || 'Unnamed Project'}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Status: <span className="font-medium">{project.status}</span></p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Budget: <span className="font-medium">${project.budget.toLocaleString()}</span></p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 dark:text-gray-400">No projects available.</p>
+                )}
+              </div>
             </div>
-          </div>
           </Card>
         </div>
       ) : (
-        <p className="text-center text-gray-500">No user information available.</p>
+        <p className="text-center text-gray-500 dark:text-gray-400">No user information available.</p>
       )}
     </CommonLayout>
   );
