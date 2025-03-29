@@ -1,27 +1,6 @@
-import { SystemRole } from "@/interfaces/auth.interface";
-import axiosInstance from "./axiosInstance";
 import { ApiResponse } from "@/interfaces/apiresponse.interface";
-
-export type AuthUser = {
-  id: string;
-  email: string;
-  name: string;
-  systemRole: SystemRole;
-  department: string;
-  avatarUrl: string;
-};
-
-export type LoginResponse = {
-  token: string;
-  user: AuthUser;
-  expiration: string;
-};
-
-export type LogoutResponse = {
-  message: string;
-  statusCode: number;
-  isSuccess: boolean;
-};
+import axiosInstance from "./axiosInstance";
+import { AuthUser, LogoutResponse } from "@/types/auth.types";
 
 export const doLogout = async (token: string): Promise<LogoutResponse> => {
   const response = await axiosInstance.post(

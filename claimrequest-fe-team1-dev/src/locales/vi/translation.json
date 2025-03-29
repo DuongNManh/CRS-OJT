@@ -16,7 +16,13 @@
         "email": "Email",
         "password": "Mật khẩu",
         "sign_in": "Đăng nhập",
-        "forgot_password": "Quên mật khẩu?"
+        "forgot_password": "Quên mật khẩu?",
+        "validation": {
+          "email_required": "Email là bắt buộc",
+          "username_required": "Tên người dùng là bắt buộc",
+          "password_required": "Mật khẩu là bắt buộc",
+          "password_length": "Mật khẩu phải có ít nhất 8 ký tự"
+        }
       }
     }
   }

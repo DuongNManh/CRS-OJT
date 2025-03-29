@@ -30,13 +30,22 @@ const FinanceRequestDetail = lazy(
 export default function useRouteElement() {
   const routeElements = useRoutes([
     // Public Routes
-    { path: "/geo", element: <Home /> },
+    {
+      element: (
+        <ProtectedRoute
+          allowedRoles={[
+            SystemRole.ADMIN,
+            SystemRole.APPROVER,
+            SystemRole.FINANCE,
+            SystemRole.STAFF,
+          ]}
+        />
+      ),
+      children: [{ path: "/home", element: <Home /> }],
+    },
     {
       element: <RejectedRoute />, // Prevent logged-in users from accessing the login page
-      children: [
-        { path: "/", element: <Login /> },
-        { path: "/login", element: <Login /> },
-      ],
+      children: [{ path: "/", element: <Login /> }],
     },
     { path: "/forgotpassword", element: <ForgotPassword /> },
 

@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { authService } from "@/services/features/auth.service"; // API service for login
 import { AuthLoginData } from "@/types/auth.types";
-import { doExtractUserFromToken } from "@/apis/auth.apis";
 import { UserResponse } from "@/types/user.types";
 
 interface AuthContextType {
@@ -10,7 +10,7 @@ interface AuthContextType {
   isInitialized: boolean;
   authData: AuthLoginData | null;
   userDetails: UserResponse | null;
-  authLogin: (userData: AuthLoginData) => Promise<UserResponse | null>;
+  authLogin: (email: string, password: string) => Promise<UserResponse | null>;
   authLogout: () => void;
   getToken: () => string | null;
 }
@@ -22,46 +22,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [authData, setAuthData] = useState<AuthLoginData | null>(null); // Store token-related info
-  const [userDetails, setUserDetails] = useState<UserResponse | null>(null); // Store user-related info
+  const [authData, setAuthData] = useState<AuthLoginData | null>(null);
+  const [userDetails, setUserDetails] = useState<UserResponse | null>(null);
   const navigate = useNavigate();
 
-  // Check token expiration
   const checkTokenExpiration = () => {
-    const expiresTimestamp = localStorage.getItem("token");
-    if (expiresTimestamp) {
-      const expiresDate = new Date(expiresTimestamp);
-      const currentDate = new Date();
+    const token = localStorage.getItem("token");
+    const expiration = localStorage.getItem("tokenExpiration");
 
-      if (currentDate > expiresDate) {
-        console.log("Token expired, logging out");
-        authLogout();
-        return false;
-      }
+    if (!token || !expiration) {
+      authLogout();
+      return false;
+    }
+    const expirationDate = new Date(expiration);
+    if (new Date() > expirationDate) {
+      authLogout();
+      return false;
     }
     return true;
   };
 
   useEffect(() => {
-    const initializeAuth = async () => {
+    const initializeAuth = () => {
       try {
         const token = localStorage.getItem("token");
-        if (token) {
-          // Check if token is expired before proceeding
+        const userDetails = localStorage.getItem("userDetails");
+
+        if (token && userDetails) {
           if (!checkTokenExpiration()) {
             setIsInitialized(true);
             return;
           }
-
-          // Extract user details from token
-          const { data } = await doExtractUserFromToken(token);
-
-          console.log(`User details: ${JSON.stringify(data, null, 2)}`);
-
-          if (data) {
-            setIsAuthenticated(true);
-            setUserDetails(data); // Set user details from token
-          }
+          setIsAuthenticated(true);
+          setUserDetails(JSON.parse(userDetails));
         }
       } catch (error) {
         console.error("Failed to initialize auth:", error);
@@ -72,12 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     initializeAuth();
 
-    // Set up interval to check token expiration regularly
     const expirationCheckInterval = setInterval(() => {
       if (isAuthenticated) {
         checkTokenExpiration();
       }
-    }, 60000); // Check every minute
+    }, 60000);
 
     return () => {
       clearInterval(expirationCheckInterval);
@@ -85,57 +77,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [isAuthenticated]);
 
   const authLogin = async (
-    loginData: AuthLoginData,
+    email: string,
+    password: string,
   ): Promise<UserResponse | null> => {
-    if (!loginData) {
-      console.error("Invalid login data");
-      return null;
-    }
-
     try {
-      // Set login state and store token
-      setIsAuthenticated(true);
-      setAuthData(loginData);
+      const response = await authService.login({ email, password }); // API call moved here
 
-      // Store token and expiration in cookies
-      localStorage.setItem("token", loginData.token);
-      localStorage.setItem("tokenExpiration", loginData.tokenExpiration);
+      if (response.is_success && response.data) {
+        const { token, user, expiration } = response.data;
 
-      // Extract and store user details
-      const { data } = await doExtractUserFromToken(loginData.token);
-      if (data) {
-        setUserDetails(data);
-        return data;
+        // Store token and user details in localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("tokenExpiration", expiration);
+        localStorage.setItem("userDetails", JSON.stringify(user));
+
+        setIsAuthenticated(true);
+        setAuthData(response.data);
+        setUserDetails(user);
+
+        toast.success("Login successful");
+        return user;
+      } else {
+        toast.error(response.message || "Login failed");
+        return null;
       }
-      return null;
     } catch (error) {
-      console.error("Error during login:", error);
+      const errorMessage = (error as Error).message || "An error occurred";
+      toast.error(errorMessage);
       return null;
     }
   };
 
   const authLogout = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        // await doLogout(token);
-      } catch (error) {
-        console.error("Error during logout:", error);
-      }
-
+    try {
       setIsAuthenticated(false);
       setAuthData(null);
-      setUserDetails(null); // Clear the user details on logout
-      localStorage.setItem("token", "");
-      localStorage.setItem("tokenExpiration", "");
+      setUserDetails(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("tokenExpiration");
+      localStorage.removeItem("userDetails");
 
-      toast.success("Đăng xuất thành công");
+      toast.success("Logged out successfully");
       navigate("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
   };
 
   const getToken = () => {
-    // Check if token is valid before returning it
     if (isAuthenticated && checkTokenExpiration()) {
       return localStorage.getItem("token");
     }

@@ -16,7 +16,13 @@
         "email": "Email",
         "password": "Password",
         "sign_in": "Sign In",
-        "forgot_password": "Forgot password?"
+        "forgot_password": "Forgot password?",
+        "validation": {
+          "email_required": "Email is required",
+          "username_required": "Username is required",
+          "password_required": "Password is required",
+          "password_length": "Password must be at least 8 characters"
+        }
       }
     }
   }

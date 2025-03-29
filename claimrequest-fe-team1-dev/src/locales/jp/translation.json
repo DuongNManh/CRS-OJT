@@ -16,7 +16,13 @@
         "email": "メール",
         "password": "パスワード",
         "sign_in": "サインイン",
-        "forgot_password": "パスワードをお忘れですか？"
+        "forgot_password": "パスワードをお忘れですか？",
+        "validation": {
+          "email_required": "メールは必須です",
+          "username_required": "ユーザー名は必須です",
+          "password_required": "パスワードは必須です",
+          "password_length": "パスワードは少なくとも8文字である必要があります"
+        }
       }
     }
   }

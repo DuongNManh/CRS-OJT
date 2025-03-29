@@ -1,18 +1,17 @@
 import { createRoot } from "react-dom/client";
+import { I18nextProvider } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./hooks/use-theme";
+import i18n from "./i18n";
 import "./index.scss";
 import { worker } from "./mocks/browser";
 import { persistor, store } from "./services/store/store";
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
-import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
