@@ -890,7 +890,7 @@ const ProjectList: React.FC = () => {
         <Form layout="vertical">
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={t("project_list.name")}>
+              <Form.Item label={t("project_list.project_name")}>
                 <Input
                   value={filterForm.name}
                   onChange={(e) =>
@@ -1106,12 +1106,14 @@ const ProjectList: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2">{t("project_list.name")}:</label>
+            <label className="block mb-2">
+              {t("project_list.project_name")}:
+            </label>
             <Input
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder={t("project_list.enter_project_name")}
+              placeholder={t("project_list.project_name")}
               disabled={viewMode === "view"}
               className="dark:bg-gray-700 dark:text-gray-200"
             />
@@ -1125,7 +1127,7 @@ const ProjectList: React.FC = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder={t("project_list.enter_project_description")}
+              placeholder={t("project_list.description")}
               disabled={viewMode === "view"}
               className="dark:bg-gray-700 dark:text-gray-200"
             />
@@ -1137,7 +1139,7 @@ const ProjectList: React.FC = () => {
               name="status"
               value={formData.status}
               onChange={(value) => setFormData({ ...formData, status: value })}
-              placeholder={t("project_list.select_project_status")}
+              placeholder={t("project_list.status")}
               disabled={viewMode === "view"}
               style={{ width: "100%" }}
               className="dark:bg-gray-700 dark:text-gray-200"
@@ -1163,7 +1165,7 @@ const ProjectList: React.FC = () => {
                   startDate: date ? date.format("YYYY-MM-DD") : "",
                 });
               }}
-              placeholder={t("project_list.select_start_date")}
+              placeholder={t("project_list.start_date")}
               disabled={viewMode === "view"}
               style={{ width: "100%" }}
               className="dark:bg-gray-700 dark:text-gray-200"
@@ -1181,7 +1183,7 @@ const ProjectList: React.FC = () => {
                   endDate: date ? date.format("YYYY-MM-DD") : "",
                 });
               }}
-              placeholder={t("project_list.select_end_date")}
+              placeholder={t("project_list.end_date")}
               disabled={viewMode === "view"}
               style={{ width: "100%" }}
               className="dark:bg-gray-700 dark:text-gray-200"

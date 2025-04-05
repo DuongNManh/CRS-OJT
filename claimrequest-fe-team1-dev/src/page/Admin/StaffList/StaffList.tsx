@@ -735,7 +735,11 @@ const StaffList: React.FC = () => {
         )}
 
         <Modal
-          title={isEditing ? "Edit Staff" : "Create New Staff"}
+          title={
+            isEditing
+              ? t("staff_list.edit_modal_title")
+              : t("staff_list.create_modal_title")
+          }
           open={isModalOpen}
           onOk={handleSave}
           onCancel={handleCancel}
@@ -745,38 +749,38 @@ const StaffList: React.FC = () => {
 
           <div className="flex flex-col gap-4 pt-2">
             <div className="form-group">
-              <label>Name</label>
+              <label>{t("staff_list.name")}</label>
               <Input
-                name="name"
+                name={t("staff_list.name")}
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Enter name"
+                placeholder={t("staff_list.name")}
                 disabled={isEditing}
               />
             </div>
             <div className="form-group">
-              <label>Email</label>
+              <label>{t("staff_list.email")}</label>
               <Input
-                name="email"
+                name={t("staff_list.email")}
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter email"
+                placeholder={t("staff_list.email")}
                 disabled={isEditing} // Email can only be set during creation
               />
             </div>
             {!isEditing && (
               <div className="form-group">
-                <label>Password</label>
+                <label>{t("staff_list.password")}</label>
                 <Input.Password
-                  name="password"
+                  name={t("staff_list.password")}
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter password"
+                  placeholder={t("staff_list.password")}
                 />
               </div>
             )}
             <div className="form-group">
-              <label>Role</label>
+              <label>{t("staff_list.role")}</label>
               <Select
                 value={formData.role}
                 onChange={(value) => {
@@ -801,7 +805,7 @@ const StaffList: React.FC = () => {
               </Select>
             </div>
             <div className="form-group">
-              <label>Department</label>
+              <label>{t("staff_list.department")}</label>
               <Select
                 value={formData.department}
                 onChange={(value) =>
@@ -837,12 +841,12 @@ const StaffList: React.FC = () => {
               </Select>
             </div>
             <div className="form-group">
-              <label>Salary</label>
+              <label>{t("staff_list.salary")}</label>
               <Input
                 name="salary"
                 value={formData.salary}
                 onChange={handleChange}
-                placeholder="Enter salary"
+                placeholder={t("staff_list.salary")}
               />
             </div>
           </div>
