@@ -8,17 +8,16 @@ import { cacheService } from "@/services/features/cacheService";
 import { claimService } from "@/services/features/claim.service";
 import { useAppSelector } from "@/services/store/store";
 import { statusColors } from "@/utils/statusColors";
-// Import cacheService
 import {
   CheckSquareOutlined,
   CloseCircleOutlined,
-  DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
 import { Table, Tag, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 // Add interface for table column
 interface TableColumn {
@@ -33,7 +32,7 @@ interface TableColumn {
 }
 
 interface ClaimTableProps {
-  mode: "ApproverMode" | "ClaimerMode" | "FinanceMode";
+  mode: "ApproverMode" | "ClaimerMode" | "FinanceMode" | "AdminMode";
   claimStatus: string;
   startDate: string;
   endDate: string;
@@ -41,7 +40,9 @@ interface ClaimTableProps {
   selectedRows?: string[];
   onSelectionChange?: (selectedRowKeys: string[]) => void;
   onCancelClaim?: (claimId: string) => void;
+  onSubmitClaim?: (claimId: string) => void;
   refreshKey?: number;
+  searchText?: string;
 }
 
 const ClaimTable: React.FC<ClaimTableProps> = ({
@@ -52,7 +53,9 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
   selectedRows,
   onSelectionChange,
   onCancelClaim,
+  onSubmitClaim,
   refreshKey,
+  searchText,
 }) => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
@@ -61,11 +64,12 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
   const [pageSize, setPageSize] = useState<number>(20);
   const [totalItems, setTotalItems] = useState<number>(0);
   const { withLoading } = useApi();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cacheKey = `claims_${mode}_${claimStatus}_${pageNumber}_${pageSize}_${startDate}_${endDate}`;
+        const cacheKey = `claims_${mode}_${claimStatus}_${pageNumber}_${pageSize}_${startDate}_${endDate}_${searchText || ""}`;
         const cachedData = cacheService.get(cacheKey);
 
         if (cachedData) {
@@ -80,6 +84,7 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
               mode,
               startDate,
               endDate,
+              searchText,
             ),
           );
 
@@ -97,25 +102,48 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
           }
         }
       } catch (error) {
-        toast.error((error as Error).message || "Failed to fetch claims");
+        toast.error(
+          (error as Error).message || t("claim_table.error_fetching_claims"),
+        );
       }
     };
 
     fetchData();
-  }, [pageNumber, pageSize, claimStatus, mode, startDate, endDate, refreshKey]);
+  }, [
+    pageNumber,
+    pageSize,
+    claimStatus,
+    mode,
+    startDate,
+    endDate,
+    refreshKey,
+    searchText,
+  ]);
 
   const columns: TableColumn[] = [
     {
-      title: "Name",
+      title: t("claim_table.name"),
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.localeCompare(b.name),
+      render: (text: string) => (
+        <Tooltip title={text}>
+          <div className="max-w-[200px] truncate">{text}</div>
+        </Tooltip>
+      ),
     },
     {
-      title: "Project Name",
+      title: t("claim_table.project_name"),
       dataIndex: "project",
       key: "projectName",
-      render: (text, record) => record.project?.name || "N/A",
+      render: (text, record) => {
+        const projectName = record.project?.name || t("claim_table.na");
+        return (
+          <Tooltip title={projectName}>
+            <div className="max-w-[200px] truncate">{projectName}</div>
+          </Tooltip>
+        );
+      },
       filters: claims
         .map((claim) => claim.project?.name)
         .filter((name): name is string => name !== undefined)
@@ -125,33 +153,33 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
         (a.project?.name || "").localeCompare(b.project?.name || ""),
     },
     {
-      title: "Created At",
+      title: t("claim_table.created_at"),
       dataIndex: "createAt",
       key: "createAt",
       sorter: (a, b) =>
         new Date(a.createAt).getTime() - new Date(b.createAt).getTime(),
     },
     {
-      title: "Total Working Hours",
+      title: t("claim_table.total_working_hours"),
       dataIndex: "totalWorkingHours",
       key: "totalWorkingHours",
       sorter: (a, b) => a.totalWorkingHours - b.totalWorkingHours,
     },
     {
-      title: "Total Claim Amount",
+      title: t("claim_table.total_claim_amount"),
       dataIndex: "amount",
       key: "amount",
       sorter: (a, b) => a.amount - b.amount,
     },
     {
-      title: "Status",
+      title: t("claim_table.status"),
       dataIndex: "status",
       key: "status",
       render: (status) => {
-        const colorClass = statusColors[status] || "bg-gray-100 text-gray-800"; // Default color if status not found
+        const colorClass = statusColors[status] || "bg-gray-200 text-gray-800";
         return (
           <Tag
-            className={`border-none px-3 py-1 rounded-md w-[77px] text-center ${colorClass}`}
+            className={`border-none px-3 py-1 rounded-xl w-[77px] text-center font-bold ${colorClass}`}
           >
             {status}
           </Tag>
@@ -162,16 +190,16 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
 
   if (user?.systemRole === SystemRole.APPROVER && mode === "ApproverMode") {
     columns.push({
-      title: "Your Approval Status",
+      title: t("claim_table.your_approval_status"),
       dataIndex: "claimApprover",
       key: "claimApprover.approverStatus",
       width: 100,
       render: (text, record) => {
         const status = record.claimApprover.approverStatus;
-        const colorClass = statusColors[status] || "bg-gray-100 text-gray-800"; // Default color if status not found
+        const colorClass = statusColors[status] || "bg-gray-200 text-gray-800";
         return (
           <Tag
-            className={`border-none px-3 py-1 rounded-md w-[77px] text-center ${colorClass}`}
+            className={`border-none px-3 py-1 rounded-xl w-[77px] text-center font-bold ${colorClass}`}
           >
             {status}
           </Tag>
@@ -182,41 +210,32 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
 
   if (mode === "ClaimerMode") {
     columns.push({
-      title: "Actions",
+      title: t("claim_table.actions"),
       key: "actions",
       dataIndex: "",
       render: (text, record) => (
         <div className="ml-2 flex gap-4">
           {record.status === "Draft" ? (
             <>
-              <Tooltip title="Send">
+              <Tooltip title={t("claim_table.submit")}>
                 <CheckSquareOutlined
-                  className="text-blue-500 text-xl cursor-pointer hover:text-blue-600 transition-colors"
+                  className="text-blue-500 dark:text-blue-400 text-xl cursor-pointer hover:text-blue-600 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
-                    showModal(record, false);
+                    onSubmitClaim(record.id);
                   }}
                 />
               </Tooltip>
-              <Tooltip title="Edit">
+              <Tooltip title={t("claim_table.edit")}>
                 <EditOutlined
-                  className="text-green-500 text-xl cursor-pointer hover:text-green-600 transition-colors"
+                  className="text-green-500 dark:text-green-400 text-xl cursor-pointer hover:text-green-600 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/claim-update/${record.id}`, { state: record });
                   }}
                 />
               </Tooltip>
-              <Tooltip title="Delete">
-                <DeleteOutlined
-                  className="text-red-500 text-xl cursor-pointer hover:text-red-600 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    showModal(record, true);
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title="Cancel">
+              <Tooltip title={t("claim_table.cancel")}>
                 <CloseCircleOutlined
                   className="text-red-500 text-xl cursor-pointer hover:text-red-600 transition-colors"
                   onClick={(e) => {
@@ -232,7 +251,6 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
     });
   }
 
-  // Add rowSelection configuration
   const rowSelection =
     mode === "FinanceMode"
       ? {
@@ -257,6 +275,10 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
             setPageNumber(page);
             setPageSize(pageSize);
           },
+          showSizeChanger: true,
+          pageSizeOptions: ["10", "20", "50", "100"],
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} ${t("claim_table.of")} ${total} ${t("claim_table.items")}`,
         }}
         onRow={(record) => ({
           onClick: () => {
@@ -270,6 +292,9 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
                 break;
               case "ClaimerMode":
                 navigationPath = `/claim-detail/${record.id}`;
+                break;
+              case "AdminMode":
+                navigationPath = `/admin/claim-detail/${record.id}`;
                 break;
               default:
                 navigationPath = `/claim-detail/${record.id}`;
@@ -286,7 +311,7 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
               <th
                 {...props}
                 className={`
-                  !bg-gray-200 dark:!bg-[#121212]
+                  !bg-gray-300 dark:!bg-[#121212]
                   !text-gray-800 dark:!text-white
                   ![&.ant-table-cell-sort]:bg-gray-300
                   ![&.ant-table-cell-sort]:dark:bg-gray-700
@@ -303,8 +328,8 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
             row: (props) => (
               <tr
                 {...props}
-                className="hover:bg-gray-50 dark:hover:bg-gray-800 
-                          bg-white dark:bg-gray-900 
+                className="hover:bg-gray-100 dark:hover:bg-gray-800
+                          bg-white dark:bg-gray-900
                           text-gray-800 dark:text-white"
               />
             ),
@@ -313,13 +338,13 @@ const ClaimTable: React.FC<ClaimTableProps> = ({
                 {...props}
                 className={`
                   text-gray-800 dark:text-white
-                  ![&.ant-table-column-sort]:bg-gray-50
+                  ![&.ant-table-column-sort]:bg-gray-100
                   ![&.ant-table-column-sort]:dark:bg-gray-800
                   ![&.ant-table-column-sort]:text-gray-800
                   ![&.ant-table-column-sort]:dark:text-white
                 `}
               />
-            ), 
+            ),
           },
         }}
       />

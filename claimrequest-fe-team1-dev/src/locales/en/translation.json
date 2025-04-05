@@ -17,7 +17,514 @@
         "password": "Password",
         "sign_in": "Sign In",
         "forgot_password": "Forgot password?"
+      },
+      "toast": {
+        "login_success": "Login successful!",
+        "login_error": "Login failed. Please check your login information.",
+        "email_required": "Email is required.",
+        "password_required": "Password is required.",
+        "invalid_email": "Invalid email.",
+        "invalid_password": "Invalid password.",
+        "error_general": "An error occurred. Please try again."
       }
+    },
+    "global_page": {
+      "header": {
+        "title": "Global Presence",
+        "slogan": "Connecting Innovation Across Continents"
+      },
+      "sider": {
+        "global_clients": "Global Clients",
+        "global_offices": "Global Offices",
+        "employees_worldwide": "Employees Worldwide",
+        "countries_territories": "Countries & Territories"
+      }
+    },
+    "weather_table": {
+      "loading": "Loading weather data...",
+      "title": "Weather",
+      "search_placeholder": "Enter city name...",
+      "search_button": "Search",
+      "current_location": "Current Location",
+      "humidity": "Humidity",
+      "wind_speed": "Wind Speed",
+      "air_quality": "Air Quality",
+      "feels_like": "Feels like",
+      "error_message": "Unable to fetch location data"
+    },
+    "chart": {
+      "subtitle": "Last 90 days",
+      "loading": "Loading claim status data...",
+      "error_message": "Unable to load claim data",
+      "try_again": "Try Again",
+      "no_data": "No claim data available",
+      "no_data_reasons": {
+        "reason_1": "No claims exist in the selected time period",
+        "reason_2": "Your role doesn't have access to view claims",
+        "reason_3": "The system is still processing data"
+      },
+      "total_claims": "Total Claims",
+      "admin": {
+        "title": "System's Claims Distribution"
+      },
+      "staff": {
+        "title": "Your Claims"
+      },
+      "approver": {
+        "title": "Your Approval Status"
+      },
+      "finance": {
+        "title": "Your Payment Status"
+      }
+    },
+    "header": {
+      "claim_actions": "Claim Actions",
+      "role_actions": "Role Actions",
+      "view_claims": "View Claims",
+      "create_claim": "Create Claim",
+      "my_profile": "My Profile",
+      "log_out": "Log Out",
+      "pending_payment": "Pending Payment",
+      "pending_approval": "Pending Approval",
+      "staff_information": "Staff Information",
+      "project_information": "Project Information",
+      "claim_information": "Claim Information"
+    },
+    "footer": {
+      "claims": "Claims",
+      "create_claim": "Create Claim",
+      "view_claims": "View Claims",
+      "role_action": "Role Action",
+      "about_us": "About Us",
+      "about_us_description": "Welcome to the Claim Request System. This is the project where HCM25_CPL_NET_04 Team 1 develops.",
+      "copyright": "© {{year}} Claim Request System. All rights reserved.",
+      "staff_information": "Staff Information",
+      "project_information": "Project Information",
+      "claim_information": "Claim Information",
+      "pending_payment": "Pending Payment",
+      "pending_approval": "Pending Approval"
+    },
+    "chatbot": {
+      "welcome_message": "Hello! How can I help?",
+      "toggle_button": "Toggle chatbot",
+      "icon_alt": "Chat Icon",
+      "header": "Chatbot Assistance",
+      "typing": "Typing...",
+      "input_placeholder": "Type a message...",
+      "send_button": "Send",
+      "sending": "Sending...",
+      "error_message": "Error processing chatbot"
+    },
+    "staff_list": {
+      "title": "Staff Management",
+      "avatar": "Avatar",
+      "avatar_alt": "Staff Avatar",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "department": "Department",
+      "salary": "Salary (VND)",
+      "action": "Action",
+      "search_placeholder": "Search staff...",
+      "add_staff": "Add Staff",
+      "filter_by_role": "Filter by Role",
+      "filter_by_department": "Filter by Department",
+      "toast": {
+        "fill_required": "Please fill in all required fields",
+        "invalid_email": "Please enter a valid email address",
+        "email_exists": "This email address is already in use",
+        "email_verify_failed": "Failed to verify email availability",
+        "invalid_salary": "Please enter a valid salary amount",
+        "role_department": {
+          "finance": "Finance role must be in Finance department",
+          "approver": "Approver role must be in Project Management or Business Leader department",
+          "staff": "Staff role must be in Engineer department",
+          "admin": "Admin role must be in Administration department"
+        },
+        "update_success": "Staff updated successfully",
+        "create_success": "Staff created successfully",
+        "save_error": "An error occurred while saving staff",
+        "delete_success": "Staff deleted successfully",
+        "delete_error": "An error occurred while deleting staff"
+      }
+    },
+    "claim_table": {
+      "name": "Name",
+      "project_name": "Project Name",
+      "created_at": "Created At",
+      "total_working_hours": "Total Working Hours",
+      "total_claim_amount": "Total Claim Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "send": "Send",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "of": "of",
+      "items": "items",
+      "na": "N/A",
+      "error_fetching_claims": "Failed to fetch claims",
+      "your_approval_status": "Your Approval Status"
+    },
+    "project_list": {
+      "title": "Project Manager",
+      "project_name": "Project Name",
+      "description": "Description",
+      "status": "Status",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "budget": "Budget",
+      "project_manager": "Project Manager",
+      "business_unit_leader": "Business Unit Leader",
+      "action": "Action",
+      "assign_staff": "Assign Staff",
+      "search_placeholder": "Search projects",
+      "add_project": "Add Project",
+      "confirm_refresh_title": "Confirm Refresh",
+      "confirm_refresh_content": "Are you sure you want to refresh the page and remove all filters?",
+      "staff_name": "Staff Name",
+      "email": "Email",
+      "department": "Department",
+      "project_role": "Project Role",
+      "system_role": "System Role",
+      "filter_projects": "Filter Projects",
+      "edit_project": "Edit Project",
+      "view_project": "View Project",
+      "confirm_delete": "Confirm Delete",
+      "confirm_delete_message": "Are you sure you want to delete this project?",
+      "update_success": "Project updated successfully!",
+      "add_success": "Project added successfully!",
+      "edit_staff": "Update Project Staff",
+      "confirm_delete_staff": "Are you sure you want to remove this staff from the project?",
+      "confirm_delete_staff_message": "Are you sure you want to remove this staff from the project? This action cannot be undone.",
+      "staff_removed": "Staff removed successfully",
+      "staff_assigned": "Staff assigned successfully",
+      "staff_updated": "Staff role updated successfully",
+      "error": {
+        "fetch_projects": "Failed to fetch projects",
+        "filter_projects": "Failed to filter projects",
+        "fetch_staff": "Failed to fetch staff list",
+        "create_project": "Failed to create project",
+        "update_project": "Failed to update project",
+        "delete_project": "Failed to delete project",
+        "assign_staff": "Failed to assign staff to project",
+        "update_staff": "Failed to update staff in project",
+        "remove_staff": "Failed to remove staff from project",
+        "load_details": "Failed to load project details",
+        "parent_project": "Could not find parent project"
+      },
+      "select_staff": "Select staff to assign",
+      "select_role": "Select role"
+    },
+    "common": {
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "update": "Update",
+      "add": "Add",
+      "apply_filters": "Apply Filters",
+      "reset_filters": "Reset Filters",
+      "success": "Success",
+      "ok": "OK",
+      "export_selected": "Export Selected",
+      "export_range": "Export Range"
+    },
+    "claim_list": {
+      "title": "Claims Management",
+      "search_placeholder": "Search",
+      "card_view": "Card View",
+      "table_view": "Table View",
+      "hello": "Hello",
+      "approval_list": "Approval Request List",
+      "paid_list": "Pending Payment List",
+      "finance_toast": {
+        "select_claims": "Please select claims to export",
+        "export_success": "Claims exported successfully",
+        "export_error": "Failed to export claims",
+        "select_date_range": "Please select start and end date",
+        "general_error": "An error occurred"
+      }
+    },
+    "date_picker": {
+      "pick_start_date": "Pick start date",
+      "pick_end_date": "Pick end date",
+      "clear_dates": "Clear dates"
+    },
+    "claim_card": {
+      "working_hours": "Working Hours",
+      "amount": "Amount",
+      "created": "Created",
+      "of": "of",
+      "items": "items",
+      "na": "N/A",
+      "error_message": "Failed to fetch claims",
+      "submit_claim": "Submit Claim",
+      "edit_claim": "Edit Claim",
+      "cancel_claim": "Cancel Claim"
+    },
+    "claim_detail": {
+      "title": "Claim Request Details",
+      "id": "ID",
+      "claimer_information": "Claimer Information",
+      "project_details": "Project Details",
+      "project_name": "Project Name",
+      "project_duration": "Project Duration",
+      "project_manager": "Project Manager",
+      "business_unit_leader": "Business Unit Leader",
+      "claim_information": "Claim Information",
+      "claim_type": "Claim Type",
+      "working_hours": "Working Hours",
+      "amount": "Amount",
+      "reason": "Reason",
+      "approvers": "Approvers",
+      "na": "N/A",
+      "error_message": "Failed to fetch claim details"
+    },
+    "user_detail": {
+      "loading_user_info": "Loading user info...",
+      "error_fetch_profile": "Failed to fetch user profile",
+      "avatar_upload_success": "Avatar uploaded successfully",
+      "avatar_upload_error": "Error uploading avatar",
+      "current_projects": "Current Projects",
+      "unnamed_project": "Unnamed Project",
+      "status": "Status",
+      "budget": "Budget",
+      "no_projects": "No projects available.",
+      "update_profile_photo": "Update Profile Photo",
+      "avatar_alt": "Avatar Preview",
+      "no_user_info": "No user information available."
+    },
+    "create_claim": {
+      "title": "Create New Claim",
+      "claim_type": "Claim Type",
+      "select_claim_type": "Please select a claim type",
+      "claim_name": "Claim Name",
+      "enter_claim_name": "Please enter your claim name",
+      "remark": "Remark",
+      "enter_remark": "Please enter your remark",
+      "amount": "Amount",
+      "working_hours": "Working Hours",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "project": "Project",
+      "no_projects_available": "No project available. Please contact your manager.",
+      "submit": "Submit",
+      "save_draft": "Save Draft",
+      "return": "Return",
+      "success_submit": "Claim submitted successfully!",
+      "error_submit": "Failed to submit claim. Please try again.",
+      "success_save_draft": "Draft saved successfully!",
+      "error_save_draft": "Failed to save draft. Please try again.",
+      "error_fetch_claim_types": "Failed to fetch claim types",
+      "error_fetch_projects": "Failed to fetch projects",
+      "error_claim_type_required": "Claim type is required.",
+      "error_name_required": "Claim name is required.",
+      "error_remark_required": "Remark is required.",
+      "error_amount_required": "Amount must be greater than 0.",
+      "error_working_hours_required": "Total working hours must be greater than 0.",
+      "error_start_date_required": "Start date is required.",
+      "error_end_date_required": "End date is required.",
+      "error_project_required": "Project is required.",
+      "select_project": "Select Project"
+    },
+    "edit_detail": {
+      "title": "Update Claim",
+      "claim_type": "Claim Type",
+      "select_claim_type": "Please select a claim type",
+      "claim_name": "Claim Name",
+      "enter_claim_name": "Please enter your claim name",
+      "remark": "Remark",
+      "enter_remark": "Please enter your remark",
+      "amount": "Amount",
+      "working_hours": "Working Hours",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "project": "Project",
+      "select_project": "Select Project",
+      "save_draft": "Save Draft",
+      "return": "Return",
+      "no_project_selected": "No project selected",
+      "validation": {
+        "claim_type_required": "Claim type is required.",
+        "name_required": "Claim name is required.",
+        "remark_required": "Remark is required.",
+        "amount_required": "Amount must be greater than 0.",
+        "working_hours_required": "Working hours must be greater than 0.",
+        "start_date_required": "Start date is required.",
+        "end_date_required": "End date is required.",
+        "project_required": "Project selection is required."
+      },
+      "toast": {
+        "fetch_error": "Failed to fetch data",
+        "draft_save_success": "Draft saved successfully!",
+        "draft_save_error": "Failed to save draft",
+        "draft_save_error_generic": "Failed to save draft. Please try again.",
+        "submit_success": "Claim submitted successfully!",
+        "submit_error": "Failed to submit claim",
+        "submit_error_generic": "Failed to submit claim. Please try again."
+      }
+    },
+    "detail_claimer": {
+      "title": "Claim Details",
+      "description": "View and manage your claim request information",
+      "claim_information": "Claim Information",
+      "claim_name": "Claim Name",
+      "claim_type": "Claim Type",
+      "created_at": "Created At",
+      "total_hours": "Total Hours",
+      "total_compensation": "Total Compensation",
+      "remark": "Remark",
+      "current_status": "Current Status",
+      "approval_progress": "Approval Progress",
+      "project_details": "Project Details",
+      "project_name": "Project Name",
+      "project_duration": "Project Duration",
+      "project_manager": "Project Manager",
+      "business_unit_leader": "Business Unit Leader",
+      "change_history": "Change History",
+      "back": "Back",
+      "submit": "Submit",
+      "update": "Update",
+      "cancel": "Cancel",
+      "cancel_claim": "Cancel Claim",
+      "cancel_reason_prompt": "Please provide a reason for cancelling this claim:",
+      "cancel_reason_placeholder": "Enter cancellation reason",
+      "close": "Close",
+      "toast": {
+        "error_general": "An error occurred",
+        "error_cancel_reason_required": "Please enter a reason for cancellation",
+        "cancel_success": "Claim cancelled successfully!",
+        "confirm_submit": "Are you sure you want to submit this claim?",
+        "submit_success": "Claim submitted successfully!",
+        "submit_error": "Failed to submit claim",
+        "edit_error": "Cannot edit: Claim ID not found"
+      }
+    },
+    "claim_detail_loading": {
+      "loading_message": "Loading claim details..."
+    },
+    "finance_request_detail": {
+      "title": "Claim Request Details",
+      "description": "Review and manage claim request information",
+      "status": "Status",
+      "approved_by": "Approved By",
+      "contact_information": "Contact Information",
+      "email": "Email",
+      "department": "Department",
+      "project_information": "Project Information",
+      "project_name": "Project Name",
+      "duration": "Duration",
+      "project_manager": "Project Manager",
+      "business_unit_leader": "Business Unit Leader",
+      "claim_details": "Claim Details",
+      "claim_type": "Claim Type",
+      "work_hours": "Work Hours",
+      "created_at": "Created at",
+      "total_compensation": "Total Compensation",
+      "reason": "Reason",
+      "pay": "Pay",
+      "reject": "Reject",
+      "paid_successfully": "This claim has been paid successfully!",
+      "total_amount": "Total Amount",
+      "download_claim": "Download Claim",
+      "export_success": "Claim exported successfully",
+      "export_fail": "Failed to export claim",
+      "payment_success": "Payment processed successfully",
+      "payment_fail": "Failed to process payment",
+      "reject_success": "Claim rejected successfully",
+      "reject_fail": "Failed to reject claim",
+      "confirm_reject": "Are you sure you want to reject this claim?"
+    },
+    "approve_request_detail": {
+      "title": "Claim Request Details",
+      "description": "Review and process claim request information",
+      "claimer_info": {
+        "department": "Department"
+      },
+      "project_details": {
+        "title": "Project Details",
+        "project_name": "Project Name",
+        "duration": "Duration",
+        "project_manager": "Project Manager",
+        "business_unit_leader": "Business Unit Leader"
+      },
+      "claim_status": {
+        "title": "Claim Status"
+      },
+      "claim_info": {
+        "title": "Claim Information",
+        "claim_name": "Claim Name",
+        "claim_type": "Claim Type",
+        "created_at": "Created At",
+        "total_compensation": "Total Compensation",
+        "total_working_hours": "Total Working Hours",
+        "remark": "Remark",
+        "approval_progress": "Approval Progress"
+      },
+      "change_history": "Change History",
+      "actions": {
+        "approve": "Approve",
+        "return": "Return",
+        "reject": "Reject"
+      },
+      "toast": {
+        "error_general": "An error occurred",
+        "confirm_approve": "Are you sure you want to approve this claim?",
+        "approve_success": "Claim approved successfully",
+        "approve_error": "Failed to approve claim",
+        "confirm_reject": "Are you sure you want to reject this claim?",
+        "reject_success": "Claim rejected successfully",
+        "reject_error": "Failed to reject claim",
+        "return_reason_prompt": "Please enter a reason for return:",
+        "return_success": "Claim returned successfully",
+        "return_error": "Failed to return claim"
+      }
+    },
+    "forgot_password": {
+      "title": "Forgot Password",
+      "reset_title": "Reset Password",
+      "email": "Email",
+      "otp": "OTP",
+      "new_password": "New Password",
+      "confirm_password": "Confirm Password",
+      "send_otp": "Send OTP",
+      "reset_password": "Reset Password",
+      "back_to_login": "Back to Login",
+      "re_enter_email": "Re-enter Email",
+      "resend_otp": "Resend OTP",
+      "toast": {
+        "otp_sent": "OTP sent to your email",
+        "passwords_not_match": "Passwords do not match",
+        "reset_success": "Password reset successful",
+        "error_general": "An error occurred"
+      }
+    },
+    "session_expired": "Your session has expired. Please log in again.",
+    "logout_success": "Logged out successfully.",
+    "not_found": {
+      "title": "404 - Not Found",
+      "description": "The content you are looking for does not exist.",
+      "go_home": "Go to Home"
+    },
+    "view_claims": {
+      "toast": {
+        "error_general": "An error occurred",
+        "confirm_submit": "Are you sure you want to submit this claim?",
+        "submit_success": "Claim submitted successfully",
+        "submit_error": "Failed to submit claim",
+        "cancel_success": "Claim cancelled successfully",
+        "cancel_error": "Failed to cancel claim",
+        "cancel_reason_required": "Please provide a reason for cancellation"
+      },
+      "modal": {
+        "cancel_title": "Cancel Claim",
+        "cancel_prompt": "Please provide a reason for cancelling this claim:",
+        "cancel_placeholder": "Enter cancellation reason"
+      }
+    },
+    "api": {
+      "timeout_error": "Request timed out",
+      "retrying": "Retry attempt {{attempt}} of {{max}}...",
+      "network_error": "Network error occurred"
     }
   }
 }

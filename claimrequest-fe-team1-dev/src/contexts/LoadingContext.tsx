@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import React, { createContext, useContext, useState } from "react";
 import Loading from "@/components/Loading/Loading";
 

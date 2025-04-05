@@ -25,7 +25,7 @@ export const claimService = {
         return response.data;
     } catch (error: unknown) {
         const apiError = (error as any).response?.data as ApiResponse<any>; // Specify a type instead of 'any'
-        
+
         if (apiError) {
             throw new Error(apiError.reason || 'Get claims failed');
         }
@@ -35,6 +35,7 @@ export const claimService = {
 
   async createClaim(claim: any): Promise<ApiResponse<any>> {
     try {
+      console.log(claim);
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.claimsEndpoint}`,
         claim,
@@ -71,12 +72,13 @@ export const claimService = {
     viewMode: string,
     startDate: string,
     endDate: string,
+    searchText?: string,
   ): Promise<PagingResponse<GetClaimResponse>> {
     try {
       const response = await axiosInstance.get<
         ApiResponse<PagingResponse<GetClaimResponse>>
       >(
-        `${this.claimsEndpoint}?viewMode=${viewMode}&claimStatus=${claimStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`,
+        `${this.claimsEndpoint}?viewMode=${viewMode}&claimStatus=${claimStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}${searchText ? `&searchText=${searchText}` : ""}`,
       );
 
       // Ensure we return a valid PagingResponse structure
@@ -276,6 +278,7 @@ export const claimService = {
 
   async submitClaimV2(claim: any): Promise<ApiResponse<any>> {
     try {
+      console.log(claim);
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.claimsEndpoint}/submit-v2`,
         claim,

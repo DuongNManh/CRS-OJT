@@ -1,4 +1,4 @@
-import "./Loading.css"; // Assuming you have a separate CSS file for styles
+import "./Loading.css";
 
 const colors = ["#1169B0", "#F27227", "#16B14B"];
 
@@ -11,10 +11,10 @@ const Loading = () => {
             <div
               key={index}
               className="item"
-              style={{ backgroundColor: color }}
-            >
-              <div className="sceneElement"></div>
-            </div>
+              style={{
+                backgroundColor: color
+              }}
+            />
           ))}
         </div>
       </div>

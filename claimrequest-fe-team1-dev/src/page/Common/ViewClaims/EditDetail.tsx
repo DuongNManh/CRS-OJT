@@ -1,15 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { GetProjectResponse } from "@/interfaces/project.interface";
+import { CACHE_TAGS, cacheService } from "@/services/features/cacheService";
 import { claimService } from "@/services/features/claim.service";
 import { projectService } from "@/services/features/project.service";
 import { useAppSelector } from "@/services/store/store";
-import {
-  LoadingOutlined,
-  RollbackOutlined,
-  SaveOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 interface FormDataState {
   claimType: string;
@@ -42,6 +43,10 @@ const EditDetail: React.FC = () => {
     projectId: "",
     status: "Draft",
   });
+  const [validationErrors, setValidationErrors] = useState<
+    Partial<FormDataState>
+  >({});
+  const { t } = useTranslation();
 
   // Fetch claim data và các data cần thiết khác
   useEffect(() => {
@@ -87,7 +92,7 @@ const EditDetail: React.FC = () => {
           }
         }
       } catch (error: any) {
-        toast.error(error.message || "Failed to fetch data");
+        toast.error(error.message || t("edit_detail.toast.fetch_error"));
       } finally {
         setIsLoading(false);
       }
@@ -109,8 +114,29 @@ const EditDetail: React.FC = () => {
     }));
   };
 
+  const validateForm = (): boolean => {
+    const errors: Partial<FormDataState> = {};
+
+    if (!formData.claimType) errors.claimType = "Claim type is required.";
+    if (!formData.name) errors.name = "Claim name is required.";
+    if (!formData.remark) errors.remark = "Remark is required.";
+    if (!formData.amount || formData.amount <= 0)
+      errors.amount = "Amount must be greater than 0.";
+    if (!formData.totalWorkingHours || formData.totalWorkingHours <= 0)
+      errors.totalWorkingHours = "Working hours must be greater than 0.";
+    if (!formData.startDate) errors.startDate = "Start date is required.";
+    if (!formData.endDate) errors.endDate = "End date is required.";
+    if (!formData.projectId)
+      errors.projectId = "Project selection is required.";
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleUpdate = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setIsLoading(true);
     try {
       const updateData = {
@@ -118,17 +144,25 @@ const EditDetail: React.FC = () => {
         id: id,
         status: "Draft",
       };
-
       const response = await claimService.updateClaim(updateData);
 
       if (response.is_success) {
-        toast.success("Draft saved successfully!");
-        navigate("/claims");
+        toast.success(t("edit_detail.toast.draft_save_success"));
+        cacheService.invalidateByTags([
+          CACHE_TAGS.CLAIMS,
+          CACHE_TAGS.CLAIM_LISTS,
+          `claim_${id}`,
+        ]);
+        navigate("/claim-detail/" + id);
       } else {
-        toast.error(response.message || "Failed to save draft");
+        toast.error(
+          response.message || t("edit_detail.toast.draft_save_error"),
+        );
       }
     } catch (error: any) {
-      toast.error(error.message || "Failed to save draft. Please try again.");
+      toast.error(
+        error.message || t("edit_detail.toast.draft_save_error_generic"),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -147,13 +181,18 @@ const EditDetail: React.FC = () => {
       const response = await claimService.updateClaim(updateData);
 
       if (response.is_success) {
-        toast.success("Claim submitted successfully!");
-        navigate("/claims");
+        toast.success(t("edit_detail.toast.submit_success"));
+        cacheService.invalidateByTags([
+          CACHE_TAGS.CLAIMS,
+          CACHE_TAGS.CLAIM_LISTS,
+          `claim_${id}`,
+        ]);
+        navigate("/claim-detail/" + id);
       } else {
-        toast.error(response.message || "Failed to submit claim");
+        toast.error(response.message || t("edit_detail.toast.submit_error"));
       }
     } catch (error: any) {
-      toast.error(error.message || "Failed to submit claim. Please try again.");
+      toast.error(error.message || t("edit_detail.toast.submit_error_generic"));
     } finally {
       setIsLoading(false);
     }
@@ -165,31 +204,33 @@ const EditDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-[#0E1217]">
         <LoadingOutlined style={{ fontSize: 40 }} />
       </div>
     );
   }
 
   return (
-    <div className=" p-6 flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#0E1217]">
+    <div className="p-6 flex items-center justify-center min-h-screen bg-gray-100 dark:bg-[#0E1217]">
       <form
         ref={formRef}
         className="max-w-[800px] w-full bg-white dark:bg-[#272B34] p-8 rounded-lg shadow-lg"
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold mb-[20px] text-center text-gray-900 dark:text-white">
-          Update Claim
+          {t("edit_detail.title")}
         </h2>
-        <div className="mb-[15px] w-full flex items-center">
+
+        {/* Claim Type */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="claimType"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            Claim Type:
+            {t("edit_detail.claim_type")}
           </label>
           <select
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="claimType"
             name="claimType"
             required
@@ -197,7 +238,7 @@ const EditDetail: React.FC = () => {
             onChange={handleChange}
           >
             <option value="" disabled>
-              Please select a claim type
+              {t("edit_detail.select_claim_type")}
             </option>
             {claimTypes.map((type) => (
               <option key={type} value={type}>
@@ -205,53 +246,74 @@ const EditDetail: React.FC = () => {
               </option>
             ))}
           </select>
+          {validationErrors.claimType && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.claim_type_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
-          <label htmlFor="name" className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white">
-            Claim Name:
+        {/* Claim Name */}
+        <div className="mb-[15px] w-full flex flex-col">
+          <label
+            htmlFor="name"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
+          >
+            {t("edit_detail.claim_name")}
           </label>
           <input
             type="text"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="name"
             name="name"
             required
             value={formData.name}
-            placeholder="Please enter your claim name"
+            placeholder={t("edit_detail.enter_claim_name")}
             onChange={handleChange}
           />
+          {validationErrors.name && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.name_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
+        {/* Remark */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="remark"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            Remark:
+            {t("edit_detail.remark")}
           </label>
           <input
             type="text"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="remark"
             name="remark"
             required
             value={formData.remark}
-            placeholder="Please enter your remark"
+            placeholder={t("edit_detail.enter_remark")}
             onChange={handleChange}
           />
+          {validationErrors.remark && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.remark_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
+        {/* Amount */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="amount"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            Amount:
+            {t("edit_detail.amount")}
           </label>
           <input
             type="number"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="amount"
             name="amount"
             required
@@ -259,18 +321,24 @@ const EditDetail: React.FC = () => {
             onChange={handleChange}
             min={0}
           />
+          {validationErrors.amount && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.amount_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
+        {/* Working Hours */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="totalWorkingHours"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            Working Hours:
+            {t("edit_detail.working_hours")}
           </label>
           <input
             type="number"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="totalWorkingHours"
             name="totalWorkingHours"
             required
@@ -278,65 +346,88 @@ const EditDetail: React.FC = () => {
             onChange={handleChange}
             min={0}
           />
+          {validationErrors.totalWorkingHours && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.working_hours_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
+        {/* Start Date */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="startDate"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            Start Date:
+            {t("edit_detail.start_date")}
           </label>
           <input
             type="date"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="startDate"
             name="startDate"
             required
             value={formData.startDate}
             onChange={handleChange}
           />
+          {validationErrors.startDate && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.start_date_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
+        {/* End Date */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="endDate"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            End Date:
+            {t("edit_detail.end_date")}
           </label>
           <input
             type="date"
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="endDate"
             name="endDate"
             required
             value={formData.endDate}
             onChange={handleChange}
           />
+          {validationErrors.endDate && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.end_date_required")}
+            </span>
+          )}
         </div>
 
-        <div className="mb-[15px] w-full flex items-center">
+        {/* Project */}
+        <div className="mb-[15px] w-full flex flex-col">
           <label
             htmlFor="projectId"
-            className="block mr-2.5 w-[150px] text-[18px] text-gray-900 dark:text-white"
+            className="block mb-1 text-[18px] text-gray-900 dark:text-white"
           >
-            Project:
+            {t("edit_detail.project")}
           </label>
           <select
-            className="w-[calc(100%_-_160px)] box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
+            className="box-border border p-2 rounded-[5px] border-solid border-[#ccc] dark:border-gray-600 dark:bg-[#272B34] dark:text-white"
             id="projectId"
             name="projectId"
             value={formData.projectId}
             onChange={handleChange}
           >
-            <option value="">No project selected</option>
+            <option value="">{t("edit_detail.no_project_selected")}</option>
             {projects.map((project) => (
               <option key={project.id} value={project.id}>
                 {project.name}
               </option>
             ))}
           </select>
+          {validationErrors.projectId && (
+            <span className="text-red-500 text-sm">
+              {t("edit_detail.validation.project_required")}
+            </span>
+          )}
         </div>
 
         <div className="container flex justify-center mt-5 gap-4">
@@ -346,15 +437,15 @@ const EditDetail: React.FC = () => {
             onClick={handleUpdate}
             disabled={isLoading}
           >
-            {isLoading ? <LoadingOutlined spin /> : <SaveOutlined />} Save Draft
+            {t("edit_detail.save_draft")}
           </button>
           <button
             type="button"
-            className="bg-gray-500 text-white cursor-pointer px-5 py-2.5 rounded-[5px] border-none hover:bg-gray-700 flex items-center gap-2"
+            className="bg-gray-400 text-white cursor-pointer px-5 py-2.5 rounded-[5px] border-none hover:bg-gray-700 flex items-center gap-2"
             onClick={handleReturn}
             disabled={isLoading}
           >
-            <RollbackOutlined /> Return
+            {t("edit_detail.return")}
           </button>
         </div>
       </form>

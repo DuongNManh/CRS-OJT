@@ -10,14 +10,509 @@
           "simple": "Đơn giản.",
           "secure": "An toàn."
         },
-        "s": "Nộp Yêu Cầu Bảo Hiểm của Bạn một cách Dễ Dàng"
+        "s": "Nộp yêu cầu tài chính của bạn một cách dễ dàng"
       },
       "form": {
         "email": "Email",
         "password": "Mật khẩu",
         "sign_in": "Đăng nhập",
         "forgot_password": "Quên mật khẩu?"
+      },
+      "toast": {
+        "login_success": "Đăng nhập thành công!",
+        "login_error": "Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin đăng nhập.",
+        "email_required": "Email là bắt buộc.",
+        "password_required": "Mật khẩu là bắt buộc.",
+        "invalid_email": "Email không hợp lệ.",
+        "invalid_password": "Mật khẩu không hợp lệ.",
+        "error_general": "Đã xảy ra lỗi. Vui lòng thử lại."
       }
+    },
+    "global_page": {
+      "header": {
+        "title": "Sự Hiện Diện Toàn Cầu",
+        "slogan": "Kết Nối Sáng Tạo Trên Các Châu Lục"
+      },
+      "sider": {
+        "global_clients": "Khách Hàng Trên Toàn Cầu",
+        "global_offices": "Văn Phòng Trên Toàn Cầu",
+        "employees_worldwide": "Nhân Viên Trên Toàn Cầu",
+        "countries_territories": "Quốc Gia & Vùng Lãnh Thổ"
+      }
+    },
+    "weather_table": {
+      "loading": "Đang tải dữ liệu thời tiết...",
+      "title": "Thời tiết",
+      "search_placeholder": "Nhập tên thành phố...",
+      "search_button": "Tìm",
+      "current_location": "Vị trí hiện tại",
+      "humidity": "Độ ẩm",
+      "wind_speed": "Tốc độ gió",
+      "air_quality": "Chất lượng không khí",
+      "feels_like": "Cảm giác như",
+      "error_message": "Không thể lấy dữ liệu vị trí"
+    },
+    "chart": {
+      "subtitle": "Trong 90 ngày qua",
+      "loading": "Đang tải dữ liệu trạng thái yêu cầu...",
+      "error_message": "Không thể tải dữ liệu yêu cầu",
+      "try_again": "Thử Lại",
+      "no_data": "Không có dữ liệu yêu cầu",
+      "no_data_reasons": {
+        "reason_1": "Không có yêu cầu nào trong khoảng thời gian đã chọn",
+        "reason_2": "Vai trò của bạn không có quyền truy cập để xem yêu cầu",
+        "reason_3": "Hệ thống vẫn đang xử lý dữ liệu"
+      },
+      "total_claims": "Tổng Số Yêu Cầu",
+      "admin": {
+        "title": "Số Liệu Yêu Cầu Của Hệ Thống"
+      },
+      "staff": {
+        "title": "Yêu Cầu Của Bạn"
+      },
+      "approver": {
+        "title": "Trạng Thái Phê Duyệt"
+      },
+      "finance": {
+        "title": "Trạng Thái Thanh Toán"
+      }
+    },
+    "header": {
+      "claim_actions": "Yêu Cầu",
+      "role_actions": "Vai Trò",
+      "view_claims": "Xem Yêu Cầu",
+      "create_claim": "Tạo Yêu Cầu",
+      "my_profile": "Hồ Sơ Của Tôi",
+      "log_out": "Đăng Xuất",
+      "pending_payment": "Thanh Toán Yêu Cầu",
+      "pending_approval": "Phê Duyệt Yêu Cầu",
+      "staff_information": "Thông Tin Nhân Viên",
+      "project_information": "Thông Tin Dự Án",
+      "claim_information": "Thông Tin Yêu Cầu"
+    },
+    "footer": {
+      "claims": "Yêu Cầu",
+      "create_claim": "Tạo Yêu Cầu",
+      "view_claims": "Xem Yêu Cầu",
+      "role_action": "Vai Trò",
+      "about_us": "Về Chúng Tôi",
+      "about_us_description": "Chào mừng đến với Hệ thống Xử lý Yêu cầu Tài chính CRS. Đây là dự án được phát triển bởi Nhóm 1 HCM25_CPL_NET_04.",
+      "copyright": "© {{year}} Hệ thống Xử lý Yêu Cầu Tài chính. Mọi quyền được bảo lưu.",
+      "staff_information": "Thông Tin Nhân Viên",
+      "project_information": "Thông Tin Dự Án",
+      "claim_information": "Thông Tin Yêu Cầu",
+      "pending_payment": "Thanh Toán Yêu Cầu",
+      "pending_approval": "Phê Duyệt Yêu Cầu"
+    },
+    "chatbot": {
+      "welcome_message": "Xin chào! Tôi có thể giúp gì cho bạn?",
+      "toggle_button": "Bật/tắt chatbot",
+      "icon_alt": "Biểu tượng Chat",
+      "header": "Hỗ trợ Chatbot",
+      "typing": "Đang nhập...",
+      "input_placeholder": "Nhập tin nhắn...",
+      "send_button": "Gửi",
+      "sending": "Đang gửi...",
+      "error_message": "Lỗi xử lý chatbot"
+    },
+    "staff_list": {
+      "title": "Quản Lý Nhân Viên",
+      "avatar": "Ảnh đại diện",
+      "avatar_alt": "Ảnh đại diện nhân viên",
+      "name": "Tên",
+      "email": "Email",
+      "role": "Vai trò",
+      "department": "Phòng ban",
+      "salary": "Lương (VND)",
+      "action": "Hành động",
+      "search_placeholder": "Tìm kiếm nhân viên...",
+      "add_staff": "Thêm Nhân Viên",
+      "filter_by_role": "Lọc theo Vai Trò",
+      "filter_by_department": "Lọc theo Phòng Ban",
+      "toast": {
+        "fill_required": "Vui lòng điền đầy đủ thông tin",
+        "invalid_email": "Vui lòng nhập địa chỉ email hợp lệ",
+        "email_exists": "Địa chỉ email này đã được sử dụng",
+        "email_verify_failed": "Không thể xác minh email",
+        "invalid_salary": "Vui lòng nhập mức lương hợp lệ",
+        "role_department": {
+          "finance": "Vai trò Tài chính phải thuộc phòng Tài chính",
+          "approver": "Vai trò Phê duyệt phải thuộc phòng Quản lý Dự án hoặc Lãnh đạo Kinh doanh",
+          "staff": "Vai trò Nhân viên phải thuộc phòng Kỹ thuật",
+          "admin": "Vai trò Admin phải thuộc phòng Hành chính"
+        },
+        "update_success": "Cập nhật nhân viên thành công",
+        "create_success": "Thêm nhân viên thành công",
+        "save_error": "Đã xảy ra lỗi khi lưu thông tin nhân viên",
+        "delete_success": "Xóa nhân viên thành công",
+        "delete_error": "Đã xảy ra lỗi khi xóa nhân viên"
+      }
+    },
+    "claim_table": {
+      "name": "Tên",
+      "project_name": "Tên Dự Án",
+      "created_at": "Ngày Tạo",
+      "total_working_hours": "Tổng Giờ Làm Việc",
+      "total_claim_amount": "Tổng Số Tiền Yêu Cầu",
+      "status": "Trạng Thái",
+      "actions": "Hành Động",
+      "send": "Gửi",
+      "edit": "Chỉnh Sửa",
+      "delete": "Xóa",
+      "cancel": "Hủy",
+      "of": "trong",
+      "items": "mục",
+      "na": "Không Có",
+      "error_fetching_claims": "Không thể tải yêu cầu",
+      "your_approval_status": "Trạng Thái Phê Duyệt"
+    },
+    "project_list": {
+      "title": "Quản Lý Dự Án",
+      "project_name": "Tên Dự Án",
+      "description": "Mô Tả",
+      "status": "Trạng Thái",
+      "start_date": "Ngày Bắt Đầu",
+      "end_date": "Ngày Kết Thúc",
+      "budget": "Ngân Sách",
+      "project_manager": "Quản Lý Dự Án",
+      "business_unit_leader": "Trưởng Đơn Vị Kinh Doanh",
+      "action": "Hành Động",
+      "assign_staff": "Phân Công Nhân Viên",
+      "search_placeholder": "Tìm kiếm dự án",
+      "add_project": "Thêm Dự Án",
+      "confirm_refresh_title": "Xác Nhận Làm Mới",
+      "confirm_refresh_content": "Bạn có chắc chắn muốn làm mới trang và xóa tất cả bộ lọc không?",
+      "staff_name": "Tên Nhân Viên",
+      "email": "Email",
+      "department": "Phòng Ban",
+      "project_role": "Vai Trò Dự Án",
+      "system_role": "Vai Trò Hệ Thống",
+      "filter_projects": "Lọc Dự Án",
+      "edit_project": "Chỉnh Sửa Dự Án",
+      "view_project": "Xem Dự Án",
+      "confirm_delete": "Xác Nhận Xóa",
+      "confirm_delete_message": "Bạn có chắc chắn muốn xóa dự án này không?",
+      "update_success": "Dự án đã được cập nhật thành công!",
+      "add_success": "Dự án đã được thêm thành công!",
+      "edit_staff": "Cập Nhật Nhân Viên Dự Án",
+      "confirm_delete_staff": "Bạn có chắc chắn muốn xóa nhân viên này khỏi dự án không?",
+      "select_staff": "Chọn nhân viên để phân công",
+      "select_role": "Chọn vai trò",
+      "confirm_delete_staff_message": "Bạn có chắc chắn muốn xóa nhân viên này khỏi dự án? Hành động này không thể hoàn tác.",
+      "staff_removed": "Đã xóa nhân viên thành công",
+      "staff_assigned": "Đã phân công nhân viên thành công",
+      "staff_updated": "Đã cập nhật vai trò nhân viên thành công",
+      "error": {
+        "fetch_projects": "Không thể tải danh sách dự án",
+        "filter_projects": "Không thể lọc dự án",
+        "fetch_staff": "Không thể tải danh sách nhân viên",
+        "create_project": "Không thể tạo dự án",
+        "update_project": "Không thể cập nhật dự án",
+        "delete_project": "Không thể xóa dự án",
+        "assign_staff": "Không thể phân công nhân viên vào dự án",
+        "update_staff": "Không thể cập nhật nhân viên trong dự án",
+        "remove_staff": "Không thể xóa nhân viên khỏi dự án",
+        "load_details": "Không thể tải chi tiết dự án",
+        "parent_project": "Không tìm thấy dự án chính"
+      }
+    },
+    "common": {
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "update": "Cập Nhật",
+      "add": "Thêm",
+      "apply_filters": "Áp Dụng Bộ Lọc",
+      "reset_filters": "Đặt Lại Bộ Lọc",
+      "success": "Thành Công",
+      "ok": "OK",
+      "export_selected": "Export Đã Chọn",
+      "export_range": "Export Theo Khoảng"
+    },
+    "claim_list": {
+      "title": "Quản Lý Yêu Cầu",
+      "search_placeholder": "Tìm kiếm",
+      "card_view": "Chế Độ Thẻ",
+      "table_view": "Chế Độ Bảng",
+      "hello": "Xin chào",
+      "approval_list": "Yêu Cầu Chờ Phê Duyệt",
+      "paid_list": "Yêu Cầu Chờ Thanh Toán",
+      "finance_toast": {
+        "select_claims": "Vui lòng chọn các yêu cầu để export",
+        "export_success": "Export yêu cầu thành công",
+        "export_error": "Không thể export yêu cầu",
+        "select_date_range": "Vui lòng chọn ngày bắt đầu và ngày kết thúc",
+        "general_error": "Đã xảy ra lỗi"
+      }
+    },
+    "date_picker": {
+      "pick_start_date": "Chọn ngày bắt đầu",
+      "pick_end_date": "Chọn ngày kết thúc",
+      "clear_dates": "Xóa ngày"
+    },
+    "claim_card": {
+      "working_hours": "Số Giờ Làm Việc",
+      "amount": "Khoản tiền",
+      "created": "Ngày Tạo",
+      "of": "trong",
+      "items": "mục",
+      "na": "Không Có",
+      "error_message": "Không thể tải yêu cầu",
+      "submit_claim": "Gửi Yêu Cầu",
+      "edit_claim": "Chỉnh Sửa Yêu Cầu",
+      "cancel_claim": "Hủy Yêu Cầu"
+    },
+    "claim_detail": {
+      "title": "Chi Tiết Yêu Cầu",
+      "id": "ID",
+      "claimer_information": "Thông Tin Người Yêu Cầu",
+      "project_details": "Chi Tiết Dự Án",
+      "project_name": "Tên Dự Án",
+      "project_duration": "Thời Gian Dự Án",
+      "project_manager": "Quản Lý Dự Án",
+      "business_unit_leader": "Trưởng Đơn Vị Kinh Doanh",
+      "claim_information": "Thông Tin Yêu Cầu",
+      "claim_type": "Loại Yêu Cầu",
+      "working_hours": "Số Giờ Làm Việc",
+      "amount": "Số Tiền",
+      "reason": "Lý Do",
+      "approvers": "Người Phê Duyệt",
+      "na": "Không Có",
+      "error_message": "Không thể tải chi tiết yêu cầu"
+    },
+    "user_detail": {
+      "loading_user_info": "Đang tải thông tin người dùng...",
+      "error_fetch_profile": "Không thể tải thông tin người dùng",
+      "avatar_upload_success": "Tải ảnh đại diện thành công",
+      "avatar_upload_error": "Lỗi khi tải ảnh đại diện",
+      "current_projects": "Dự Án Hiện Tại",
+      "unnamed_project": "Dự Án Không Tên",
+      "status": "Trạng Thái",
+      "budget": "Ngân Sách",
+      "no_projects": "Không có dự án nào.",
+      "update_profile_photo": "Cập Nhật Ảnh Đại Diện",
+      "avatar_alt": "Xem Trước Ảnh Đại Diện",
+      "no_user_info": "Không có thông tin người dùng."
+    },
+    "create_claim": {
+      "title": "Tạo Yêu Cầu Mới",
+      "claim_type": "Loại Yêu Cầu",
+      "select_claim_type": "Vui lòng chọn loại yêu cầu",
+      "claim_name": "Tên Yêu Cầu",
+      "enter_claim_name": "Vui lòng nhập tên yêu cầu",
+      "remark": "Ghi Chú",
+      "enter_remark": "Vui lòng nhập ghi chú",
+      "amount": "Số Tiền",
+      "working_hours": "Số Giờ Làm Việc",
+      "start_date": "Ngày Bắt Đầu",
+      "end_date": "Ngày Kết Thúc",
+      "project": "Dự Án",
+      "no_projects_available": "Không có dự án nào khả dụng. Vui lòng liên hệ với quản trị viên.",
+      "submit": "Gửi",
+      "save_draft": "Lưu Nháp",
+      "return": "Quay Lại",
+      "success_submit": "Yêu cầu đã được gửi thành công!",
+      "error_submit": "Không thể gửi yêu cầu. Vui lòng thử lại.",
+      "success_save_draft": "Nháp đã được lưu thành công!",
+      "error_save_draft": "Không thể lưu nháp. Vui lòng thử lại.",
+      "error_fetch_claim_types": "Không thể tải loại yêu cầu",
+      "error_fetch_projects": "Không thể tải dự án",
+      "error_claim_type_required": "Loại yêu cầu là bắt buộc.",
+      "error_name_required": "Tên yêu cầu là bắt buộc.",
+      "error_remark_required": "Ghi chú là bắt buộc.",
+      "error_amount_required": "Số tiền phải lớn hơn 0.",
+      "error_working_hours_required": "Tổng số giờ làm việc phải lớn hơn 0.",
+      "error_start_date_required": "Ngày bắt đầu là bắt buộc.",
+      "error_end_date_required": "Ngày kết thúc là bắt buộc.",
+      "error_project_required": "Dự án là bắt buộc.",
+      "select_project": "Chọn Dự Án"
+    },
+    "edit_detail": {
+      "title": "Cập Nhật Yêu Cầu",
+      "claim_type": "Loại Yêu Cầu",
+      "select_claim_type": "Vui lòng chọn loại yêu cầu",
+      "claim_name": "Tên Yêu Cầu",
+      "enter_claim_name": "Vui lòng nhập tên yêu cầu",
+      "remark": "Ghi Chú",
+      "enter_remark": "Vui lòng nhập ghi chú",
+      "amount": "Số Tiền",
+      "working_hours": "Số Giờ Làm Việc",
+      "start_date": "Ngày Bắt Đầu",
+      "end_date": "Ngày Kết Thúc",
+      "project": "Dự Án",
+      "select_project": "Chọn Dự Án",
+      "save_draft": "Lưu Nháp",
+      "return": "Quay Lại",
+      "no_project_selected": "Không có dự án nào được chọn",
+      "validation": {
+        "claim_type_required": "Loại yêu cầu là bắt buộc.",
+        "name_required": "Tên yêu cầu là bắt buộc.",
+        "remark_required": "Ghi chú là bắt buộc.",
+        "amount_required": "Số tiền phải lớn hơn 0.",
+        "working_hours_required": "Tổng số giờ làm việc phải lớn hơn 0.",
+        "start_date_required": "Ngày bắt đầu là bắt buộc.",
+        "end_date_required": "Ngày kết thúc là bắt buộc.",
+        "project_required": "Dự án là bắt buộc."
+      },
+      "toast": {
+        "fetch_error": "Không thể tải dữ liệu",
+        "draft_save_success": "Lưu nháp thành công!",
+        "draft_save_error": "Không thể lưu nháp",
+        "draft_save_error_generic": "Không thể lưu nháp. Vui lòng thử lại.",
+        "submit_success": "Gửi yêu cầu thành công!",
+        "submit_error": "Không thể gửi yêu cầu",
+        "submit_error_generic": "Không thể gửi yêu cầu. Vui lòng thử lại."
+      }
+    },
+    "detail_claimer": {
+      "title": "Chi Tiết Yêu Cầu",
+      "description": "Xem và quản lý thông tin yêu cầu của bạn",
+      "claim_information": "Thông Tin Yêu Cầu",
+      "claim_name": "Tên Yêu Cầu",
+      "claim_type": "Loại Yêu Cầu",
+      "created_at": "Ngày Tạo",
+      "total_hours": "Tổng Số Giờ",
+      "total_compensation": "Tổng Số Tiền",
+      "remark": "Ghi Chú",
+      "current_status": "Trạng Thái Hiện Tại",
+      "approval_progress": "Tiến Trình Phê Duyệt",
+      "project_details": "Chi Tiết Dự Án",
+      "project_name": "Tên Dự Án",
+      "project_duration": "Thời Gian Dự Án",
+      "project_manager": "Quản Lý Dự Án",
+      "business_unit_leader": "Trưởng Đơn Vị Kinh Doanh",
+      "change_history": "Lịch Sử Thay Đổi",
+      "back": "Quay Lại",
+      "submit": "Gửi",
+      "update": "Cập Nhật",
+      "cancel": "Hủy",
+      "cancel_claim": "Hủy Yêu Cầu",
+      "cancel_reason_prompt": "Vui lòng cung cấp lý do hủy yêu cầu này:",
+      "cancel_reason_placeholder": "Nhập lý do hủy",
+      "close": "Đóng"
+    },
+    "claim_detail_loading": {
+      "loading_message": "Đang tải chi tiết yêu cầu..."
+    },
+    "finance_request_detail": {
+      "title": "Chi Tiết Yêu Cầu",
+      "description": "Xem và quản lý thông tin yêu cầu",
+      "status": "Trạng Thái",
+      "approved_by": "Được Duyệt Bởi",
+      "contact_information": "Thông Tin Liên Hệ",
+      "email": "Email",
+      "department": "Phòng Ban",
+      "project_information": "Thông Tin Dự Án",
+      "project_name": "Tên Dự Án",
+      "duration": "Thời Gian",
+      "project_manager": "Quản Lý Dự Án",
+      "business_unit_leader": "Trưởng Đơn Vị Kinh Doanh",
+      "claim_details": "Chi Tiết Yêu Cầu",
+      "claim_type": "Loại Yêu Cầu",
+      "work_hours": "Số Giờ Làm Việc",
+      "created_at": "Ngày Tạo",
+      "total_compensation": "Tổng Số Tiền",
+      "reason": "Lý Do",
+      "pay": "Thanh Toán",
+      "reject": "Từ Chối",
+      "paid_successfully": "Yêu cầu này đã được thanh toán thành công!",
+      "total_amount": "Tổng Số Tiền",
+      "download_claim": "Tải Yêu Cầu",
+      "export_success": "Xuất yêu cầu thành công",
+      "export_fail": "Không thể xuất yêu cầu",
+      "payment_success": "Thanh toán thành công",
+      "payment_fail": "Không thể xử lý thanh toán",
+      "reject_success": "Từ chối yêu cầu thành công",
+      "reject_fail": "Không thể từ chối yêu cầu",
+      "confirm_reject": "Bạn có chắc chắn muốn từ chối yêu cầu này không?"
+    },
+    "approve_request_detail": {
+      "title": "Chi Tiết Yêu Cầu",
+      "description": "Xem xét và xử lý thông tin yêu cầu",
+      "claimer_info": {
+        "department": "Phòng Ban"
+      },
+      "project_details": {
+        "title": "Chi Tiết Dự Án",
+        "project_name": "Tên Dự Án",
+        "duration": "Thời Gian",
+        "project_manager": "Quản Lý Dự Án",
+        "business_unit_leader": "Trưởng Đơn Vị Kinh Doanh"
+      },
+      "claim_info": {
+        "title": "Thông Tin Yêu Cầu",
+        "claim_name": "Tên Yêu Cầu",
+        "claim_type": "Loại Yêu Cầu",
+        "created_at": "Ngày Tạo",
+        "total_compensation": "Tổng Số Tiền",
+        "total_working_hours": "Tổng Số Giờ Làm Việc",
+        "remark": "Ghi Chú",
+        "approval_progress": "Tiến Trình Phê Duyệt"
+      },
+      "change_history": "Lịch Sử Thay Đổi",
+      "actions": {
+        "approve": "Phê Duyệt",
+        "return": "Trả Về",
+        "reject": "Từ Chối"
+      },
+      "toast": {
+        "error_general": "Đã xảy ra lỗi",
+        "confirm_approve": "Bạn có chắc chắn muốn phê duyệt yêu cầu này không?",
+        "approve_success": "Phê duyệt yêu cầu thành công",
+        "approve_error": "Không thể phê duyệt yêu cầu",
+        "confirm_reject": "Bạn có chắc chắn muốn từ chối yêu cầu này không?",
+        "reject_success": "Từ chối yêu cầu thành công",
+        "reject_error": "Không thể từ chối yêu cầu",
+        "return_reason_prompt": "Vui lòng nhập lý do trả về:",
+        "return_success": "Trả về yêu cầu thành công",
+        "return_error": "Không thể trả về yêu cầu"
+      }
+    },
+    "forgot_password": {
+      "title": "Quên Mật Khẩu",
+      "reset_title": "Đặt Lại Mật Khẩu",
+      "email": "Email",
+      "otp": "Mã OTP",
+      "new_password": "Mật Khẩu Mới",
+      "confirm_password": "Xác Nhận Mật Khẩu",
+      "send_otp": "Gửi Mã OTP",
+      "reset_password": "Đặt Lại Mật Khẩu",
+      "back_to_login": "Quay Lại Đăng Nhập",
+      "re_enter_email": "Nhập Lại Email",
+      "resend_otp": "Gửi Lại Mã OTP",
+      "toast": {
+        "otp_sent": "Mã OTP đã được gửi đến email của bạn",
+        "passwords_not_match": "Mật khẩu không khớp",
+        "reset_success": "Đặt lại mật khẩu thành công",
+        "error_general": "Đã xảy ra lỗi"
+      }
+    },
+    "session_expired": "Phiên của bạn đã hết hạn. Vui lòng đăng nhập lại.",
+    "logout_success": "Đăng xuất thành công",
+    "not_found": {
+      "title": "404 - Không Tìm Thấy",
+      "description": "Nội dung bạn đang tìm kiếm không tồn tại.",
+      "go_home": "Về Trang Chủ"
+    },
+    "view_claims": {
+      "toast": {
+        "error_general": "Đã xảy ra lỗi",
+        "confirm_submit": "Bạn có chắc chắn muốn gửi yêu cầu này không?",
+        "submit_success": "Gửi yêu cầu thành công",
+        "submit_error": "Không thể gửi yêu cầu",
+        "cancel_success": "Hủy yêu cầu thành công",
+        "cancel_error": "Không thể hủy yêu cầu",
+        "cancel_reason_required": "Vui lòng cung cấp lý do hủy"
+      },
+      "modal": {
+        "cancel_title": "Hủy Yêu Cầu",
+        "cancel_prompt": "Vui lòng cung cấp lý do hủy yêu cầu này:",
+        "cancel_placeholder": "Nhập lý do hủy"
+      }
+    },
+    "api": {
+      "timeout_error": "Yêu cầu hết thời gian chờ",
+      "retrying": "Thử lại lần {{attempt}} trong {{max}}...",
+      "network_error": "Lỗi kết nối mạng"
     }
   }
 }

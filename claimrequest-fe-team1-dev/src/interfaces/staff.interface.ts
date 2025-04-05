@@ -1,11 +1,19 @@
 import { SystemRole } from "./auth.interface";
 
+export enum Department {
+  Engineering = "Engineering",
+  ProjectManagement = "ProjectManagement",
+  Finance = "Finance",
+  BusinessUnitLeader = "BusinessUnitLeader",
+  Administration = "Administration"
+}
+
 export interface GetStaffResponse {
-  //id: string; // Assuming Guid can be represented as a string in TypeScript
+  id: string; // Assuming Guid can be represented as a string in TypeScript
   name: string;
   email: string;
-  role: SystemRole;
-  department: string;
+  systemRole: SystemRole;
+  department: Department;
   salary: number;
   avatarUrl: string;
 }

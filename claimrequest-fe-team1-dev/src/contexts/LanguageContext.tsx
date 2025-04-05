@@ -1,6 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { createContext } from "react";
 
-interface LanguageContextType {
+export interface LanguageContextType {
   currentLanguage: string;
   changeLanguage: (lang: string) => void;
 }

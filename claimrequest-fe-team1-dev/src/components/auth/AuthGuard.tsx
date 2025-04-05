@@ -5,6 +5,7 @@ import { clearUser } from "@/services/store/authSlice";
 import { isTokenExpired } from "@/utils/tokenUtils";
 import { toast } from "react-toastify";
 import { cacheService } from "@/services/features/cacheService";
+import { useTranslation } from "react-i18next";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { t } = useTranslation();
 
   // Check if the token is expired
   if (isTokenExpired()) {
@@ -19,7 +21,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     clearUser();
     cacheService.clear(); // Clear all cache data when session expires
     toast.dismiss();
-    toast.error("Session expired. Please login again.");
+    toast.error(t("session_expired"));
     return <Navigate to="/login" />;
   }
 

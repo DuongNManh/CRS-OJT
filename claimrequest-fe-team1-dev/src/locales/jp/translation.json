@@ -17,7 +17,508 @@
         "password": "パスワード",
         "sign_in": "サインイン",
         "forgot_password": "パスワードをお忘れですか？"
+      },
+      "toast": {
+        "login_success": "ログインに成功しました！",
+        "login_error": "ログインに失敗しました。ログイン情報を再確認してください。",
+        "email_required": "メールは必須です。",
+        "password_required": "パスワードは必須です。",
+        "invalid_email": "無効なメールアドレスです。",
+        "invalid_password": "無効なパスワードです。",
+        "error_general": "エラーが発生しました。もう一度お試しください。"
       }
+    },
+    "global_page": {
+      "header": {
+        "title": "グローバル展開",
+        "slogan": "大陸を越えたイノベーションの架け橋"
+      },
+      "sider": {
+        "global_clients": "グローバルクライアント",
+        "global_offices": "グローバルオフィス",
+        "employees_worldwide": "世界中の従業員",
+        "countries_territories": "国と地域"
+      }
+    },
+    "weather_table": {
+      "loading": "天気データを読み込んでいます...",
+      "title": "天気",
+      "search_placeholder": "都市名を入力してください...",
+      "search_button": "検索",
+      "current_location": "現在地",
+      "humidity": "湿度",
+      "wind_speed": "風速",
+      "air_quality": "空気の質",
+      "feels_like": "体感温度",
+      "error_message": "位置データを取得できません"
+    },
+    "chart": {
+      "subtitle": "過去90日間",
+      "loading": "請求ステータスデータを読み込んでいます...",
+      "error_message": "請求データを読み込めませんでした",
+      "try_again": "再試行",
+      "no_data": "請求データがありません",
+      "no_data_reasons": {
+        "reason_1": "選択した期間に請求が存在しません",
+        "reason_2": "あなたの役割には請求を表示する権限がありません",
+        "reason_3": "システムがデータを処理中です"
+      },
+      "total_claims": "総請求数",
+      "admin": {
+        "title": "システムの請求分布"
+      },
+      "staff": {
+        "title": "あなたの請求"
+      },
+      "approver": {
+        "title": "あなたの承認ステータス"
+      },
+      "finance": {
+        "title": "あなたの支払いステータス"
+      }
+    },
+    "header": {
+      "claim_actions": "請求アクション",
+      "role_actions": "役割アクション",
+      "view_claims": "請求を表示",
+      "create_claim": "請求を作成",
+      "my_profile": "私のプロフィール",
+      "log_out": "ログアウト",
+      "pending_payment": "支払い保留中",
+      "pending_approval": "承認待ち",
+      "staff_information": "スタッフ情報",
+      "project_information": "プロジェクト情報",
+      "claim_information": "請求情報"
+    },
+    "footer": {
+      "claims": "請求",
+      "create_claim": "請求を作成",
+      "view_claims": "請求を表示",
+      "role_action": "役割アクション",
+      "about_us": "私たちに関しては",
+      "about_us_description": "請求リクエストシステムへようこそ。これはHCM25_CPL_NET_04チーム1が開発したプロジェクトです。",
+      "copyright": "© {{year}} 請求リクエストシステム。全著作権所有。",
+      "staff_information": "スタッフ情報",
+      "project_information": "プロジェクト情報",
+      "claim_information": "請求情報",
+      "pending_payment": "支払い保留中",
+      "pending_approval": "承認待ち"
+    },
+    "chatbot": {
+      "welcome_message": "こんにちは！どのようにお手伝いできますか？",
+      "toggle_button": "チャットボットを切り替える",
+      "icon_alt": "チャットアイコン",
+      "header": "チャットボットアシスタンス",
+      "typing": "入力中...",
+      "input_placeholder": "メッセージを入力してください...",
+      "send_button": "送信",
+      "sending": "送信中...",
+      "error_message": "チャットボット処理エラー"
+    },
+    "staff_list": {
+      "title": "スタッフ管理",
+      "avatar": "アバター",
+      "avatar_alt": "スタッフのアバター",
+      "name": "名前",
+      "email": "メール",
+      "role": "役割",
+      "department": "部署",
+      "salary": "給与 (VND)",
+      "action": "アクション",
+      "search_placeholder": "スタッフを検索...",
+      "add_staff": "スタッフを追加",
+      "filter_by_role": "役割でフィルタリング",
+      "filter_by_department": "部署でフィルタリング",
+      "toast": {
+        "fill_required": "すべての必須項目に入力してください",
+        "invalid_email": "有効なメールアドレスを入力してください",
+        "email_exists": "このメールアドレスは既に使用されています",
+        "email_verify_failed": "メールアドレスの確認に失敗しました",
+        "invalid_salary": "有効な給与額を入力してください",
+        "role_department": {
+          "finance": "財務役割は財務部門に所属する必要があります",
+          "approver": "承認者役割はプロジェクト管理部門またはビジネスリーダー部門に所属する必要があります",
+          "staff": "スタッフ役割はエンジニア部門に所属する必要があります",
+          "admin": "管理者役割は管理部門に所属する必要があります"
+        },
+        "update_success": "スタッフ情報が正常に更新されました",
+        "create_success": "スタッフが正常に作成されました",
+        "save_error": "スタッフ情報の保存中にエラーが発生しました",
+        "delete_success": "スタッフが正常に削除されました",
+        "delete_error": "スタッフの削除中にエラーが発生しました"
+      }
+    },
+    "claim_table": {
+      "name": "名前",
+      "project_name": "プロジェクト名",
+      "created_at": "作成日",
+      "total_working_hours": "総労働時間",
+      "total_claim_amount": "総請求額",
+      "status": "ステータス",
+      "actions": "アクション",
+      "send": "送信",
+      "edit": "編集",
+      "delete": "削除",
+      "cancel": "キャンセル",
+      "of": "の",
+      "items": "項目",
+      "na": "該当なし",
+      "error_fetching_claims": "請求を取得できませんでした",
+      "your_approval_status": "承認ステータス"
+    },
+    "project_list": {
+      "title": "プロジェクト管理",
+      "project_name": "プロジェクト名",
+      "description": "説明",
+      "status": "ステータス",
+      "start_date": "開始日",
+      "end_date": "終了日",
+      "budget": "予算",
+      "project_manager": "プロジェクトマネージャー",
+      "business_unit_leader": "事業部リーダー",
+      "action": "アクション",
+      "assign_staff": "スタッフを割り当てる",
+      "search_placeholder": "プロジェクトを検索",
+      "add_project": "プロジェクトを追加",
+      "confirm_refresh_title": "リフレッシュの確認",
+      "confirm_refresh_content": "ページをリフレッシュしてすべてのフィルターを削除してもよろしいですか？",
+      "staff_name": "スタッフ名",
+      "email": "メール",
+      "department": "部署",
+      "project_role": "プロジェクトの役割",
+      "system_role": "システムの役割",
+      "filter_projects": "プロジェクトをフィルタリング",
+      "edit_project": "プロジェクトを編集",
+      "view_project": "プロジェクトを表示",
+      "confirm_delete": "削除の確認",
+      "confirm_delete_message": "このプロジェクトを削除してもよろしいですか？",
+      "update_success": "プロジェクトが正常に更新されました！",
+      "add_success": "プロジェクトが正常に追加されました！",
+      "edit_staff": "プロジェクトスタッフの更新",
+      "confirm_delete_staff": "このスタッフをプロジェクトから削除してもよろしいですか？",
+      "confirm_delete_staff_message": "このスタッフをプロジェクトから削除してもよろしいですか？この操作は取り消せません。",
+      "staff_removed": "スタッフが正常に削除されました",
+      "staff_assigned": "スタッフが正常に割り当てられました",
+      "staff_updated": "スタッフの役割が正常に更新されました",
+      "error": {
+        "fetch_projects": "プロジェクトの取得に失敗しました",
+        "filter_projects": "プロジェクトのフィルタリングに失敗しました",
+        "fetch_staff": "スタッフリストの取得に失敗しました",
+        "create_project": "プロジェクトの作成に失敗しました",
+        "update_project": "プロジェクトの更新に失敗しました",
+        "delete_project": "プロジェクトの削除に失敗しました",
+        "assign_staff": "プロジェクトへのスタッフの割り当てに失敗しました",
+        "update_staff": "プロジェクト内のスタッフの更新に失敗しました",
+        "remove_staff": "プロジェクトからのスタッフの削除に失敗しました",
+        "load_details": "プロジェクトの詳細の読み込みに失敗しました",
+        "parent_project": "親プロジェクトが見つかりませんでした"
+      }
+    },
+    "common": {
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "update": "更新",
+      "add": "追加",
+      "apply_filters": "フィルターを適用",
+      "reset_filters": "フィルターをリセット",
+      "success": "成功",
+      "ok": "OK",
+      "export_selected": "選択したものをエクスポート",
+      "export_range": "範囲をエクスポート"
+    },
+    "claim_list": {
+      "title": "請求管理",
+      "search_placeholder": "検索",
+      "card_view": "カードビュー",
+      "table_view": "テーブルビュー",
+      "hello": "こんにちは、",
+      "approval_list": "承認リクエスト一覧",
+      "paid_list": "支払い保留一覧",
+      "finance_toast": {
+        "select_claims": "請求をエクスポートするには選択してください",
+        "export_success": "請求のエクスポートが成功しました",
+        "export_error": "請求のエクスポートに失敗しました",
+        "select_date_range": "開始日と終了日を選択してください",
+        "general_error": "エラーが発生しました"
+      }
+    },
+    "date_picker": {
+      "pick_start_date": "開始日を選択",
+      "pick_end_date": "終了日を選択",
+      "clear_dates": "日付をクリア"
+    },
+    "claim_card": {
+      "working_hours": "労働時間",
+      "amount": "金額",
+      "created": "作成日",
+      "of": "の",
+      "items": "項目",
+      "na": "該当なし",
+      "error_message": "請求を取得できませんでした",
+      "submit_claim": "請求を送信",
+      "edit_claim": "請求を編集",
+      "cancel_claim": "請求をキャンセル"
+    },
+    "claim_detail": {
+      "title": "請求詳細",
+      "id": "ID",
+      "claimer_information": "請求者情報",
+      "project_details": "プロジェクト詳細",
+      "project_name": "プロジェクト名",
+      "project_duration": "プロジェクト期間",
+      "project_manager": "プロジェクトマネージャー",
+      "business_unit_leader": "事業部リーダー",
+      "claim_information": "請求情報",
+      "claim_type": "請求タイプ",
+      "working_hours": "労働時間",
+      "amount": "金額",
+      "reason": "理由",
+      "approvers": "承認者",
+      "na": "該当なし",
+      "error_message": "請求詳細を取得できませんでした"
+    },
+    "user_detail": {
+      "loading_user_info": "ユーザー情報を読み込んでいます...",
+      "error_fetch_profile": "ユーザープロファイルを取得できませんでした",
+      "avatar_upload_success": "アバターが正常にアップロードされました",
+      "avatar_upload_error": "アバターのアップロード中にエラーが発生しました",
+      "current_projects": "現在のプロジェクト",
+      "unnamed_project": "名前のないプロジェクト",
+      "status": "ステータス",
+      "budget": "予算",
+      "no_projects": "利用可能なプロジェクトはありません。",
+      "update_profile_photo": "プロフィール写真を更新",
+      "avatar_alt": "アバタープレビュー",
+      "no_user_info": "利用可能なユーザー情報はありません。"
+    },
+    "create_claim": {
+      "title": "新しい請求を作成",
+      "claim_type": "請求タイプ",
+      "select_claim_type": "請求タイプを選択してください",
+      "claim_name": "請求名",
+      "enter_claim_name": "請求名を入力してください",
+      "remark": "備考",
+      "enter_remark": "備考を入力してください",
+      "amount": "金額",
+      "working_hours": "労働時間",
+      "start_date": "開始日",
+      "end_date": "終了日",
+      "project": "プロジェクト",
+      "no_projects_available": "利用可能なプロジェクトはありません。管理者にお問い合わせください。",
+      "submit": "送信",
+      "save_draft": "下書きを保存",
+      "return": "戻る",
+      "success_submit": "請求が正常に送信されました！",
+      "error_submit": "請求を送信できませんでした。もう一度お試しください。",
+      "success_save_draft": "下書きが正常に保存されました！",
+      "error_save_draft": "下書きを保存できませんでした。もう一度お試しください。",
+      "error_fetch_claim_types": "請求タイプを取得できませんでした",
+      "error_claim_type_required": "請求タイプは必須です。",
+      "error_name_required": "請求名は必須です。",
+      "error_remark_required": "備考は必須です。",
+      "error_amount_required": "金額は0より大きくなければなりません。",
+      "error_working_hours_required": "総労働時間は0より大きくなければなりません。",
+      "error_start_date_required": "開始日は必須です。",
+      "error_end_date_required": "終了日は必須です。",
+      "error_project_required": "プロジェクトは必須です。",
+      "select_project": "プロジェクトを選択"
+    },
+    "edit_detail": {
+      "title": "請求を更新",
+      "claim_type": "請求タイプ",
+      "select_claim_type": "請求タイプを選択してください",
+      "claim_name": "請求名",
+      "enter_claim_name": "請求名を入力してください",
+      "remark": "備考",
+      "enter_remark": "備考を入力してください",
+      "amount": "金額",
+      "working_hours": "労働時間",
+      "start_date": "開始日",
+      "end_date": "終了日",
+      "project": "プロジェクト",
+      "select_project": "プロジェクトを選択",
+      "save_draft": "下書きを保存",
+      "return": "戻る",
+      "no_project_selected": "プロジェクトが選択されていません",
+      "validation": {
+        "claim_type_required": "請求タイプは必須です。",
+        "name_required": "請求名は必須です。",
+        "remark_required": "備考は必須です。",
+        "amount_required": "金額は0より大きくなければなりません。",
+        "working_hours_required": "労働時間は0より大きくなければなりません。",
+        "start_date_required": "開始日は必須です。",
+        "end_date_required": "終了日は必須です。",
+        "project_required": "プロジェクトの選択は必須です。"
+      },
+      "toast": {
+        "fetch_error": "データを取得できませんでした",
+        "draft_save_success": "下書きが正常に保存されました！",
+        "draft_save_error": "下書きを保存できませんでした",
+        "draft_save_error_generic": "下書きを保存できませんでした。もう一度お試しください。",
+        "submit_success": "請求が正常に送信されました！",
+        "submit_error": "請求を送信できませんでした",
+        "submit_error_generic": "請求を送信できませんでした。もう一度お試しください。"
+      }
+    },
+    "detail_claimer": {
+      "title": "請求の詳細",
+      "description": "請求リクエスト情報を表示および管理します",
+      "claim_information": "請求情報",
+      "claim_name": "請求名",
+      "claim_type": "請求タイプ",
+      "created_at": "作成日",
+      "total_hours": "総時間",
+      "total_compensation": "総補償額",
+      "remark": "備考",
+      "current_status": "現在のステータス",
+      "approval_progress": "承認の進捗",
+      "project_details": "プロジェクトの詳細",
+      "project_name": "プロジェクト名",
+      "project_duration": "プロジェクト期間",
+      "project_manager": "プロジェクトマネージャー",
+      "business_unit_leader": "事業部リーダー",
+      "change_history": "変更履歴",
+      "back": "戻る",
+      "submit": "送信",
+      "update": "更新",
+      "cancel": "キャンセル",
+      "cancel_claim": "請求をキャンセル",
+      "cancel_reason_prompt": "この請求をキャンセルする理由を入力してください:",
+      "cancel_reason_placeholder": "キャンセル理由を入力",
+      "close": "閉じる",
+      "toast": {
+        "error_general": "エラーが発生しました",
+        "error_cancel_reason_required": "キャンセルの理由を入力してください",
+        "cancel_success": "請求が正常にキャンセルされました！",
+        "confirm_submit": "この請求を送信してもよろしいですか？",
+        "submit_success": "請求が正常に送信されました！",
+        "submit_error": "請求を送信できませんでした",
+        "edit_error": "編集できません：請求IDが見つかりません"
+      }
+    },
+    "claim_detail_loading": {
+      "loading_message": "請求の詳細を読み込んでいます..."
+    },
+    "finance_request_detail": {
+      "title": "請求リクエストの詳細",
+      "description": "請求リクエスト情報を表示および管理します",
+      "status": "ステータス",
+      "approved_by": "承認者",
+      "contact_information": "連絡先情報",
+      "email": "メール",
+      "department": "部署",
+      "project_information": "プロジェクト情報",
+      "project_name": "プロジェクト名",
+      "duration": "期間",
+      "project_manager": "プロジェクトマネージャー",
+      "business_unit_leader": "事業部リーダー",
+      "claim_details": "請求の詳細",
+      "claim_type": "請求タイプ",
+      "work_hours": "労働時間",
+      "created_at": "作成日",
+      "total_compensation": "総補償額",
+      "reason": "理由",
+      "pay": "支払う",
+      "reject": "却下",
+      "paid_successfully": "この請求は正常に支払われました！",
+      "total_amount": "合計金額",
+      "download_claim": "請求をダウンロード",
+      "export_success": "請求のエクスポートが成功しました",
+      "export_fail": "請求のエクスポートに失敗しました",
+      "payment_success": "支払いが正常に処理されました",
+      "payment_fail": "支払い処理に失敗しました",
+      "reject_success": "請求の却下が成功しました",
+      "reject_fail": "請求の却下に失敗しました",
+      "confirm_reject": "この請求を却下してよろしいですか？"
+    },
+    "approve_request_detail": {
+      "title": "請求リクエストの詳細",
+      "description": "請求リクエスト情報を確認して処理する",
+      "claimer_info": {
+        "department": "部署"
+      },
+      "project_details": {
+        "title": "プロジェクト詳細",
+        "project_name": "プロジェクト名",
+        "duration": "期間",
+        "project_manager": "プロジェクトマネージャー",
+        "business_unit_leader": "事業部リーダー"
+      },
+      "claim_info": {
+        "title": "請求情報",
+        "claim_name": "請求名",
+        "claim_type": "請求タイプ",
+        "created_at": "作成日",
+        "total_compensation": "総補償額",
+        "total_working_hours": "総労働時間",
+        "remark": "備考",
+        "approval_progress": "承認の進捗"
+      },
+      "change_history": "変更履歴",
+      "actions": {
+        "approve": "承認",
+        "return": "返却",
+        "reject": "却下"
+      },
+      "toast": {
+        "error_general": "エラーが発生しました",
+        "confirm_approve": "この請求を承認してよろしいですか？",
+        "approve_success": "請求が正常に承認されました",
+        "approve_error": "請求の承認に失敗しました",
+        "confirm_reject": "この請求を却下してよろしいですか？",
+        "reject_success": "請求が正常に却下されました",
+        "reject_error": "請求の却下に失敗しました",
+        "return_reason_prompt": "返却理由を入力してください：",
+        "return_success": "請求が正常に返却されました",
+        "return_error": "請求の返却に失敗しました"
+      }
+    },
+    "forgot_password": {
+      "title": "パスワードをお忘れの方",
+      "reset_title": "パスワードリセット",
+      "email": "メールアドレス",
+      "otp": "ワンタイムパスワード",
+      "new_password": "新しいパスワード",
+      "confirm_password": "パスワードの確認",
+      "send_otp": "OTPを送信",
+      "reset_password": "パスワードをリセット",
+      "back_to_login": "ログインに戻る",
+      "re_enter_email": "メールアドレスを再入力",
+      "resend_otp": "OTPを再送信",
+      "toast": {
+        "otp_sent": "OTPがメールアドレスに送信されました",
+        "passwords_not_match": "パスワードが一致しません",
+        "reset_success": "パスワードのリセットが完了しました",
+        "error_general": "エラーが発生しました"
+      }
+    },
+    "session_expired": "セッションの有効期限が切れました。再度ログインしてください。",
+    "logout_success": "正常にログアウトしました",
+    "not_found": {
+      "title": "404 - ページが見つかりません",
+      "description": "お探しのコンテンツは存在しません。",
+      "go_home": "ホームに戻る"
+    },
+    "view_claims": {
+      "toast": {
+        "error_general": "エラーが発生しました",
+        "confirm_submit": "この請求を送信してもよろしいですか？",
+        "submit_success": "請求が正常に送信されました",
+        "submit_error": "請求を送信できませんでした",
+        "cancel_success": "請求が正常にキャンセルされました",
+        "cancel_error": "請求をキャンセルできませんでした",
+        "cancel_reason_required": "キャンセルの理由を入力してください"
+      },
+      "modal": {
+        "cancel_title": "請求のキャンセル",
+        "cancel_prompt": "この請求をキャンセルする理由を入力してください：",
+        "cancel_placeholder": "キャンセル理由を入力"
+      }
+    },
+    "api": {
+      "timeout_error": "リクエストがタイムアウトしました",
+      "retrying": "再試行中 ({{attempt}}/{{max}})...",
+      "network_error": "ネットワークエラーが発生しました"
     }
   }
 }

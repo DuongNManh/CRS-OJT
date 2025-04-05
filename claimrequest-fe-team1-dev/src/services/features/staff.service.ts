@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import axiosInstance from "@/apis/axiosInstance";
 import {
   ApiResponse,
@@ -71,6 +72,7 @@ export const staffService = {
   // Create - Add new staff
   async createStaff(staffData: any): Promise<ApiResponse<any>> {
     try {
+      console.log("staffData", staffData);
       const response = await axiosInstance.post<ApiResponse<any>>(
         `${this.staffEndpoint}/create`,
         staffData,

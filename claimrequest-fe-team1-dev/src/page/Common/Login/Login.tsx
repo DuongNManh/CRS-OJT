@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useApi } from "@/hooks/useApi";
+import { useTheme } from "@/hooks/use-theme";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,11 +20,20 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { withLoading } = useApi();
+  const { theme } = useTheme();
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await authService.login({ email, password });
+      const response = await withLoading(
+        authService.login({ email, password }),
+        {
+          maxRetries: 3, // Will retry login 3 times
+          delayMs: 1000, // 1 second between retries
+          timeoutMs: 10000, // 10 second timeout
+        },
+      );
       if (response.is_success && response.data) {
         const { token, user, expiration } = response.data;
         authService.setToken(token);
@@ -34,28 +45,29 @@ export default function Login() {
           name: user.name,
           systemRole: user.systemRole,
           department: user.department,
-          avatarUrl: user.avatarUrl, // Add this line to store avatarUrl
+          avatarUrl: user.avatarUrl,
         };
 
         dispatch(setUser(userData)); // Dispatching setUser action
         navigate("/");
-        toast.success(response.message || "Login successful!");
+        toast.success(response.message || t("login_page.toast.login_success"));
       } else {
-        toast.error(response.message || "Login failed");
+        toast.error(response.message || t("login_page.toast.login_failed"));
       }
     } catch (error: unknown) {
-      const errorMessage = (error as Error).message || "An error occurred";
+      const errorMessage =
+        (error as Error).message || t("login_page.toast.error_general");
       toast.error(errorMessage);
     }
   };
 
   return (
-    <div className="flex flex-col items-center md:flex-row min-h-screen bg-gray-100 dark:bg-[#121212]">
+    <div className="flex flex-col items-center md:flex-row min-h-screen bg-gray-50 dark:bg-[#121212]">
       <div className="flex items-center justify-center w-[80%] md:w-1/2">
         {isForgotPassword ? (
           <ForgotPassword setIsForgotPassword={setIsForgotPassword} />
         ) : (
-          <div className="w-full max-w-md p-8 rounded-xl shadow-2xl dark:bg-[#2f3136] dark:text-gray-50">
+          <div className="w-full max-w-md p-8 rounded-xl shadow-2xl bg-gray-100 dark:bg-[#2f3136] dark:text-gray-50 border border-gray-300">
             <h2 className="text-3xl text-[#1169B0] font-bold text-center mb-5">
               {t("login_page.greeting")}
             </h2>
@@ -70,6 +82,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className="bg-gray-50 dark:bg-gray-600 dark:text-gray-50 rounded-[5px]"
                 />
               </div>
               <div>
@@ -82,6 +95,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="bg-gray-50 dark:bg-gray-600 dark:text-gray-50 rounded-[5px]"
                 />
               </div>
               <Button
@@ -104,7 +118,6 @@ export default function Login() {
         )}
       </div>
       <div className="flex flex-col items-center justify-center w-[80%] md:w-1/2 p-5">
-        <LanguageSelector isDarkMode={false} />
         <div className="flex items-center justify-center gap-2">
           <img
             src="/icon.png"
@@ -115,7 +128,7 @@ export default function Login() {
           <p className="text-6xl font-semibold text-[#F27227]">R</p>
           <p className="text-6xl font-semibold text-[#16B14B]">S</p>
         </div>
-        <div className="flex flex-row items-center justify-center gap-2">
+        <div className="flex flex-row items-center justify-center gap-2 pb-3">
           <p className="mt-4 text-2xl text-[#1169B0] text-center">
             {t("login_page.sologan.f.fast")}
           </p>
@@ -129,6 +142,8 @@ export default function Login() {
             {t("login_page.sologan.s")}
           </p>
         </div>
+
+        <LanguageSelector isDarkMode={theme === "dark"} />
       </div>
     </div>
   );

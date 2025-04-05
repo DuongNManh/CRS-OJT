@@ -72,6 +72,18 @@ module.exports = {
         primary: "#3b82f6",
         secondary: "#64748b",
       },
+      height: {
+        'h-100' : '25rem', // Adding custom height greater than h-96
+        'h-112' : '28rem', // Adding custom height greater than h-100
+         'h-128' : '32rem', // Adding custom height greater than h-96
+         'h-144' : '36rem', // Adding custom height greater than h-128
+      },
+      width: {
+        'w-100': '25rem', // Adding custom width greater than w-96
+        'w-112': '28rem', // Adding custom width greater than w-100
+        'w-128' : '32rem', // Adding custom width greater than w-96
+        'w-144' : '36rem', // Adding custom width greater than w-128
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

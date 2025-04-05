@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { format as formatDate } from "date-fns";
 import { XCircle } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface DatePickerProps {
   startDate: Date | null;
@@ -24,6 +25,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
   endDate,
   onDateChange,
 }) => {
+  const { t } = useTranslation();
+
   const handleClear = () => {
     onDateChange(null, null);
   };
@@ -42,7 +45,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             {startDate ? (
               formatDate(startDate, "dd/MM/yyyy")
             ) : (
-              <span>Pick start date</span>
+              <span>{t("date_picker.pick_start_date")}</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -67,7 +70,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             {endDate ? (
               formatDate(endDate, "dd/MM/yyyy")
             ) : (
-              <span>Pick end date</span>
+              <span>{t("date_picker.pick_end_date")}</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -86,7 +89,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           size="icon"
           onClick={handleClear}
           className="h-9 w-9 rounded-full"
-          title="Clear dates"
+          title={t("date_picker.clear_dates")}
         >
           <XCircle className="h-5 w-5 text-muted-foreground hover:text-foreground" />
         </Button>

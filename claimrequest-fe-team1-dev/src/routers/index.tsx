@@ -26,21 +26,20 @@ import CommonLayout from "@/layouts/CommonLayout";
 import PageTransition from "@/components/ui/PageTransition";
 import EditDetail from "@/page/Common/ViewClaims/EditDetail";
 import Chatbot from "@/components/Chatbot/Chatbot";
+import ClaimList from "@/page/Admin/Claim/ClaimList";
+import ClaimDetail from "@/page/Admin/Claim/ClaimDetail";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   // const user = useAppSelector((state) => state.auth.user);
 
   return (
     <AuthGuard>
-      {/* <SidebarProvider> */}
-      {/* {userRole !== SystemRole.STAFF && <AppSidebar userRole={userRole} />} */}
       <main className="w-full">
-        <Header />
+        <Header sticky i18nIsDynamicList />
         <PageTransition>{children}</PageTransition>
         <Chatbot />
         <Footer />
       </main>
-      {/* </SidebarProvider> */}
     </AuthGuard>
   );
 };
@@ -180,6 +179,26 @@ const AppRouter = () => {
               <ProtectedLayout>
                 <AdminLayout>
                   <StaffList />
+                </AdminLayout>
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/admin/claims"
+            element={
+              <ProtectedLayout>
+                <AdminLayout>
+                  <ClaimList />
+                </AdminLayout>
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/admin/claim-detail/:id"
+            element={
+              <ProtectedLayout>
+                <AdminLayout>
+                  <ClaimDetail />
                 </AdminLayout>
               </ProtectedLayout>
             }

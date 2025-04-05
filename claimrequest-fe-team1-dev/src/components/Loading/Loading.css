@@ -1,47 +1,60 @@
-.scoverview__wrap .ovcenter__model-inner {
+/* Base container styles */
+.scoverview__wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ovcenter__model-inner {
   perspective: 500px;
 }
 
-.scoverview__wrap .ovcenter__model-inner .logolist {
+.logolist {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
 }
 
-.scoverview__wrap .ovcenter__model-inner .logolist .item {
+/* Item styles */
+.item {
   width: 45px;
   border-radius: 30% 0% 30% 0%;
-  transform: skewX(-15deg);
   transform-style: preserve-3d;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background: linear-gradient(135deg, #ff7f00, #ffbf00); Gradient for 3D shading */
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3); /* Adds depth */
-  animation: spin 0.5s linear infinite;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.scoverview__wrap .ovcenter__model-inner .logolist .item:nth-child(1) {
+/* Individual item heights and animations */
+.item:nth-child(1) {
   height: 60px;
-  animation-delay: 0s;
+  animation: spin1 0.3s linear infinite;
 }
 
-.scoverview__wrap .ovcenter__model-inner .logolist .item:nth-child(2) {
+.item:nth-child(2) {
   height: 80px;
-  animation-delay: 0.15s;
+  animation: spin2 0.3s linear infinite;
 }
 
-.scoverview__wrap .ovcenter__model-inner .logolist .item:nth-child(3) {
+.item:nth-child(3) {
   height: 60px;
-  animation-delay: 0.35s;
+  animation: spin3 0.3s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: skewX(-15deg) rotateY(0deg);
-  }
-  to {
-    transform: skewX(-15deg) rotateY(360deg);
-  }
+/* Animation keyframes for each item */
+@keyframes spin1 {
+  from { transform: skewX(-15deg) rotateY(0deg); }
+  to { transform:  skewX(-15deg) rotateY(360deg); }
+}
+
+@keyframes spin2 {
+  from { transform:  skewX(-15deg) rotateY(120deg); }
+  to { transform:  skewX(-15deg) rotateY(480deg); }
+}
+
+@keyframes spin3 {
+  from { transform:  skewX(-15deg) rotateY(240deg); }
+  to { transform:  skewX(-15deg) rotateY(600deg); }
 }

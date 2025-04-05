@@ -14,10 +14,14 @@ import {
   ClockCircleOutlined,
   CloseCircleOutlined,
   UserOutlined,
+  AppstoreOutlined,
+  TableOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import ClaimCard from "@/components/ClaimCard/ClaimCard";
 
 const ApproveRequestList: React.FC = () => {
   const [statusCounts, setStatusCounts] = useState<ClaimStatusCountResponse>();
@@ -30,8 +34,12 @@ const ApproveRequestList: React.FC = () => {
   const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
   const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
 
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
+
   const st = startDate ? formatDateToYYYYMMDD(startDate) : "";
   const en = endDate ? formatDateToYYYYMMDD(endDate) : "";
+
+  const { t } = useTranslation();
 
   const handleStatusFilter = (status: string | null) => {
     setTempClaimStatus(status || "");
@@ -96,8 +104,8 @@ const ApproveRequestList: React.FC = () => {
   const getCardClassName = (status: string | null) => {
     const isSelected = tempClaimStatus === (status || "");
     return cn(
-      "bg-white rounded-xl shadow cursor-pointer transition-all duration-200",
-      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg",
+      "bg-white dark:bg-[#272B34] rounded-xl shadow cursor-pointer transition-all duration-200",
+      isSelected ? "ring-2 ring-[#3185ca] ring-offset-2" : "hover:shadow-lg",
     );
   };
 
@@ -113,7 +121,23 @@ const ApproveRequestList: React.FC = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Approve Request List</h1>
+      {/* Header with View Toggle */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {t("claim_list.approval_list")}
+        </h1>
+        <Button
+          icon={viewMode === "table" ? <AppstoreOutlined /> : <TableOutlined />}
+          onClick={() => setViewMode(viewMode === "table" ? "card" : "table")}
+          className="dark:bg-[#272B34] dark:text-gray-300"
+        >
+          {viewMode === "table"
+            ? t("claim_list.card_view")
+            : t("claim_list.table_view")}
+        </Button>
+      </div>
+
+      {/* Status Cards Row */}
       <Row gutter={24} className="mb-6 flex justify-between">
         <Col xs={24} sm={12} md={6}>
           <Card
@@ -126,14 +150,17 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   "bg-[#cee6fa] text-[#3185ca]",
-                  tempClaimStatus === "" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <UserOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Total Claim Request</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Total Claim Request
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
                   {statusCounts?.total}
                 </span>
               </div>
@@ -151,14 +178,17 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Pending,
-                  tempClaimStatus === "Pending" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Pending" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <ClockCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Pending</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Pending
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
                   {statusCounts?.pending}
                 </span>
               </div>
@@ -176,14 +206,17 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Approved,
-                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Approved" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <CheckCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Approved</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Approved
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
                   {statusCounts?.approved}
                 </span>
               </div>
@@ -201,14 +234,17 @@ const ApproveRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Rejected,
-                  tempClaimStatus === "Rejected" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Rejected" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <CloseCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Rejected</span>
-                <span className="text-[30px] font-bold text-[#333]">
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Rejected
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
                   {statusCounts?.rejected}
                 </span>
               </div>
@@ -217,6 +253,7 @@ const ApproveRequestList: React.FC = () => {
         </Col>
       </Row>
 
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <div className="flex-grow">
           <DatePicker
@@ -230,25 +267,36 @@ const ApproveRequestList: React.FC = () => {
           type="primary"
           className="w-full sm:w-auto"
         >
-          Apply Filters
+          {t("common.apply_filters")}
         </Button>
         <Button
           onClick={handleClearFilters}
           type="default"
-          className="w-full sm:w-auto"
-          disabled={!tempStartDate && !tempEndDate && !tempClaimStatus} // Disable button if both dates are not set
+          className="w-full sm:w-auto dark:bg-[#272B34] dark:text-gray-300"
+          disabled={!tempStartDate && !tempEndDate && !claimStatus}
         >
-          Clear Filters
+          {t("common.reset_filters")}
         </Button>
       </div>
 
-      <ClaimTable
-        mode="ApproverMode"
-        claimStatus={claimStatus}
-        startDate={st}
-        endDate={en}
-        onStatusChange={handleStatusFilter}
-      />
+      {/* Conditional Rendering of Table/Card View */}
+      {viewMode === "table" ? (
+        <ClaimTable
+          mode="ApproverMode"
+          claimStatus={claimStatus}
+          startDate={st}
+          endDate={en}
+          onStatusChange={handleStatusFilter}
+        />
+      ) : (
+        <ClaimCard
+          mode="ApproverMode"
+          claimStatus={claimStatus}
+          startDate={st}
+          endDate={en}
+          onStatusChange={handleStatusFilter}
+        />
+      )}
     </div>
   );
 };

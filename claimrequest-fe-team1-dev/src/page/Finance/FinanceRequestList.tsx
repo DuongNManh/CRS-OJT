@@ -1,28 +1,32 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import ClaimTable from "@/components/ClaimTable/ClaimTable";
-import DatePicker from "@/components/DatePicker/DatePicker";
-import { ClaimStatusCountResponse } from "@/interfaces/claim.interface";
-import { cn } from "@/lib/utils";
-import { cacheService } from "@/services/features/cacheService";
-import { CACHE_TAGS } from "@/services/features/cacheService";
-import { claimService } from "@/services/features/claim.service";
-import { formatDateToYYYYMMDD } from "@/utils/dateFormatter";
-import { statusColors } from "@/utils/statusColors";
+
+import React, { useEffect, useState } from "react";
+import { Card, Row, Col, Button } from "antd";
 import {
   UserOutlined,
   CheckCircleOutlined,
   MoneyCollectOutlined,
+  TableOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
-import { Card, Row, Col, Input, Button } from "antd";
-import { saveAs } from "file-saver";
-import React, { useEffect, useState } from "react";
+import { ClaimStatusCountResponse } from "@/interfaces/claim.interface";
 import { toast } from "react-toastify";
+import { claimService } from "@/services/features/claim.service";
+import { statusColors } from "@/utils/statusColors";
+import { formatDateToYYYYMMDD } from "@/utils/dateFormatter";
+import DatePicker from "@/components/DatePicker/DatePicker";
+import { cn } from "@/lib/utils";
+import { cacheService } from "@/services/features/cacheService";
+import ClaimTable from "@/components/ClaimTable/ClaimTable";
+import ClaimCard from "@/components/ClaimCard/ClaimCard";
+import { CACHE_TAGS } from "@/services/features/cacheService";
+import { saveAs } from "file-saver";
+import { useTranslation } from "react-i18next";
 
 const FinanceRequestList: React.FC = () => {
   const [statusCounts, setStatusCounts] = useState<ClaimStatusCountResponse>();
   const [claimStatus, setClaimStatus] = useState<string>("");
-  const [searchText, setSearchText] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -33,9 +37,10 @@ const FinanceRequestList: React.FC = () => {
 
   // Add state for selected rows
   const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
+  const { t } = useTranslation();
 
-  const st = startDate ? formatDateToYYYYMMDD(startDate) : "";
-  const en = endDate ? formatDateToYYYYMMDD(endDate) : "";
+  // Add viewMode state
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
 
   const handleStatusFilter = (status: string | null) => {
     setTempClaimStatus(status || "");
@@ -75,7 +80,8 @@ const FinanceRequestList: React.FC = () => {
         }
       }
     } catch (error: unknown) {
-      const errorMessage = (error as Error).message || "An error occurred";
+      const errorMessage =
+        (error as Error).message || t("claim_list.finance_toast.general_error");
       toast.error(errorMessage);
     }
   };
@@ -98,7 +104,7 @@ const FinanceRequestList: React.FC = () => {
   // Update export handler to match the backend model
   const handleExport = async () => {
     if (selectedClaims.length === 0) {
-      toast.warning("Please select claims to export");
+      toast.warning(t("claim_list.finance_toast.select_claims"));
       return;
     }
 
@@ -108,9 +114,11 @@ const FinanceRequestList: React.FC = () => {
       });
 
       saveAs(blob, "claims-export.xlsx");
-      toast.success("Claims exported successfully");
+      toast.success(t("claim_list.finance_toast.export_success"));
     } catch (error) {
-      toast.error((error as Error).message || "Failed to export claims");
+      toast.error(
+        (error as Error).message || t("claim_list.finance_toast.export_error"),
+      );
     }
   };
 
@@ -123,8 +131,8 @@ const FinanceRequestList: React.FC = () => {
   const getCardClassName = (status: string | null) => {
     const isSelected = tempClaimStatus === (status || "");
     return cn(
-      "bg-white rounded-xl shadow cursor-pointer transition-all duration-200",
-      isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-lg",
+      "bg-white dark:bg-[#272B34] rounded-xl shadow cursor-pointer transition-all duration-200",
+      isSelected ? "ring-2 ring-[#3185ca] ring-offset-2" : "hover:shadow-lg",
     );
   };
 
@@ -140,7 +148,7 @@ const FinanceRequestList: React.FC = () => {
 
   const handleExportByRange = async () => {
     if (!startDate || !endDate) {
-      toast.warning("Please select start and end date");
+      toast.warning(t("claim_list.finance_toast.select_date_range"));
       return;
     }
     const start = formatDateToYYYYMMDD(startDate);
@@ -151,27 +159,33 @@ const FinanceRequestList: React.FC = () => {
 
       // Create a safe filename by removing special characters
       saveAs(blob, "claims-export.xlsx");
-      toast.success("Claims exported successfully");
+      toast.success(t("claim_list.finance_toast.export_success"));
     } catch (error) {
-      toast.error((error as Error).message || "Failed to export claims");
+      toast.error(
+        (error as Error).message || t("claim_list.finance_toast.export_error"),
+      );
     }
   };
 
   return (
     <div className="p-6">
+      {/* Header with View Toggle */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">
-          Finance Request List
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 md:mb-0">
+          {t("claim_list.paid_list")}
         </h1>
-        <Input
-          type="search"
-          placeholder="Search"
-          className="w-full sm:w-[200px]"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
+        <Button
+          icon={viewMode === "table" ? <AppstoreOutlined /> : <TableOutlined />}
+          onClick={() => setViewMode(viewMode === "table" ? "card" : "table")}
+          className="dark:bg-[#272B34] dark:text-gray-300"
+        >
+          {viewMode === "table"
+            ? t("claim_list.card_view")
+            : t("claim_list.table_view")}
+        </Button>
       </div>
 
+      {/* Status Cards */}
       <Row gutter={24} className="mb-6 flex justify-between">
         <Col xs={24} sm={12} md={8}>
           <Card
@@ -184,15 +198,18 @@ const FinanceRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   "bg-[#cee6fa] text-[#3185ca]",
-                  tempClaimStatus === "" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <UserOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Total Claim Request</span>
-                <span className="text-[30px] font-bold text-[#333]">
-                  {statusCounts?.total}
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Total Claim Request
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
+                  {statusCounts?.total || 0}
                 </span>
               </div>
             </div>
@@ -209,15 +226,18 @@ const FinanceRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Approved,
-                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Approved" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <CheckCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Approved Claims</span>
-                <span className="text-[30px] font-bold text-[#333]">
-                  {statusCounts?.approved}
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Approved Claims
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
+                  {statusCounts?.approved || 0}
                 </span>
               </div>
             </div>
@@ -234,15 +254,18 @@ const FinanceRequestList: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Paid,
-                  tempClaimStatus === "Paid" && "ring-2 ring-[#3185ca]",
+                  tempClaimStatus === "Paid" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <MoneyCollectOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] text-xs">Paid Claims</span>
-                <span className="text-[30px] font-bold text-[#333]">
-                  {statusCounts?.paid}
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Paid Claims
+                </span>
+                <span className="text-[30px] font-bold text-[#666] dark:text-gray-300">
+                  {statusCounts?.paid || 0}
                 </span>
               </div>
             </div>
@@ -250,6 +273,7 @@ const FinanceRequestList: React.FC = () => {
         </Col>
       </Row>
 
+      {/* Filters and Export Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <div className="flex-grow">
           <DatePicker
@@ -261,46 +285,56 @@ const FinanceRequestList: React.FC = () => {
         <Button
           onClick={handleApplyFilters}
           type="primary"
-          className="w-full sm:w-auto"
+          className="min-w-[100px]"
         >
-          Apply Filters
+          {t("common.apply_filters")}
         </Button>
         <Button
           onClick={handleClearFilters}
           type="default"
-          className="w-full sm:w-auto"
-          disabled={!tempStartDate && !tempEndDate && !tempClaimStatus}
+          className="min-w-[100px] dark:bg-[#272B34] dark:text-gray-300"
         >
-          Clear Filters
+          {t("common.reset_filters")}
         </Button>
-        {/* Add Export button */}
-        {selectedClaims.length > 0 && (
-          <Button
-            onClick={handleExport}
-            type="primary"
-            className="w-full sm:w-auto"
-          >
-            Export Selected ({selectedClaims.length})
-          </Button>
-        )}
+        <Button
+          onClick={handleExport}
+          type="primary"
+          className="min-w-[100px] bg-[#3185ca]"
+          disabled={selectedClaims.length === 0}
+        >
+          {t("common.export_selected")}
+        </Button>
         <Button
           onClick={handleExportByRange}
           type="primary"
-          className="w-full sm:w-auto"
+          className="min-w-[100px] bg-[#28a772]"
         >
-          Export By Range
+          {t("common.export_range")}
         </Button>
       </div>
 
-      <ClaimTable
-        mode="FinanceMode"
-        claimStatus={claimStatus}
-        startDate={st}
-        endDate={en}
-        onStatusChange={handleStatusFilter}
-        selectedRows={selectedClaims}
-        onSelectionChange={handleSelectionChange}
-      />
+      {/* Conditional Render Table/Card View */}
+      {viewMode === "table" ? (
+        <ClaimTable
+          mode="FinanceMode"
+          claimStatus={claimStatus}
+          startDate={startDate ? formatDateToYYYYMMDD(startDate) : ""}
+          endDate={endDate ? formatDateToYYYYMMDD(endDate) : ""}
+          onStatusChange={handleStatusFilter}
+          selectedRows={selectedClaims}
+          onSelectionChange={handleSelectionChange}
+          searchText=""
+        />
+      ) : (
+        <ClaimCard
+          mode="FinanceMode"
+          claimStatus={claimStatus}
+          startDate={startDate ? formatDateToYYYYMMDD(startDate) : ""}
+          endDate={endDate ? formatDateToYYYYMMDD(endDate) : ""}
+          onStatusChange={handleStatusFilter}
+          searchText=""
+        />
+      )}
     </div>
   );
 };

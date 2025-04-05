@@ -66,7 +66,7 @@ export interface ClaimChangeLogResponse {
 
 export interface ClaimApproverResponse {
   approverId: string;
-  name: string;
+  approver: GetStaffResponse;
   approverStatus: string;
   decisionAt: string;
 }
@@ -96,4 +96,13 @@ export interface ClaimExportResponse {
   fileName: string;
   fileContent: Uint8Array;
   fileContentType: string;
+}
+
+export enum ClaimStatus {
+  PENDING = "Pending",
+  APPROVED = "Approved",
+  REJECTED = "Rejected",
+  DRAFT = "Draft",
+  PAID = "Paid",
+  CANCELLED = "Cancelled",
 }

@@ -1,11 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import ClaimTable from "@/components/ClaimTable/ClaimTable";
+import ClaimCard from "@/components/ClaimCard/ClaimCard";
 import DatePicker from "@/components/DatePicker/DatePicker";
 import { Input } from "@/components/ui/input";
 import { ClaimStatusCountResponse } from "@/interfaces/claim.interface";
 import { cn } from "@/lib/utils";
-// Import ClaimTable
 import { cacheService } from "@/services/features/cacheService";
 import { claimService } from "@/services/features/claim.service";
 import { useAppSelector } from "@/services/store/store";
@@ -19,11 +20,15 @@ import {
   PaperClipOutlined,
   FileExcelOutlined,
   MoneyCollectOutlined,
+  AppstoreOutlined,
+  TableOutlined,
 } from "@ant-design/icons";
 import { Card, Row, Col, Button, Modal } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useApi } from "@/hooks/useApi";
+import { useTranslation } from "react-i18next";
 
 const ViewClaims: React.FC = () => {
   const user = useAppSelector((state) => state.auth.user);
@@ -32,18 +37,19 @@ const ViewClaims: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [cancelRemark, setCancelRemark] = useState<string>("");
-  const [selectedClaimId, setSelectedClaimId] = useState<string>("");
-  // These are temporary states for filters
   const [tempClaimStatus, setTempClaimStatus] = useState<string>("");
   const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
   const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
-  // Thêm state để trigger refresh
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [selectedClaimId, setSelectedClaimId] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [cancelRemark, setCancelRemark] = useState<string>("");
+  const { t } = useTranslation();
 
   const st = startDate ? formatDateToYYYYMMDD(startDate) : "";
   const en = endDate ? formatDateToYYYYMMDD(endDate) : "";
+  const { withLoading } = useApi();
 
   const handleStatusFilter = (status: string | null) => {
     setTempClaimStatus(status || "");
@@ -58,7 +64,6 @@ const ViewClaims: React.FC = () => {
     setClaimStatus(tempClaimStatus);
     setStartDate(tempStartDate);
     setEndDate(tempEndDate);
-    // Fetch status counts immediately when filters are applied
     fetchStatusCounts(
       tempStartDate ? formatDateToYYYYMMDD(tempStartDate) : "",
       tempEndDate ? formatDateToYYYYMMDD(tempEndDate) : "",
@@ -75,7 +80,6 @@ const ViewClaims: React.FC = () => {
     fetchStatusCounts("", "");
   };
 
-  // Move fetchStatusCounts outside useEffect so it can be reused
   const fetchStatusCounts = async (startDate: string, endDate: string) => {
     try {
       const cacheKey = `status_counts_claimer_mode_${startDate}_${endDate}`;
@@ -99,17 +103,16 @@ const ViewClaims: React.FC = () => {
         }
       }
     } catch (error: unknown) {
-      const errorMessage = (error as Error).message || "An error occurred";
+      const errorMessage =
+        (error as Error).message || t("view_claims.toast.error_general");
       toast.error(errorMessage);
     }
   };
 
-  // Initial fetch of status counts
   useEffect(() => {
     fetchStatusCounts("", "");
   }, []);
 
-  // Helper function to get card className based on selection state
   const getCardClassName = (status: string | null) => {
     const isSelected = tempClaimStatus === (status || "");
     return cn(
@@ -118,60 +121,50 @@ const ViewClaims: React.FC = () => {
     );
   };
 
-  // Add these handlers after the handleApplyFilters function
-  const handleCancelClaim = async () => {
-    try {
-      if (!cancelRemark.trim()) {
-        toast.error("Please enter a reason for cancellation");
-        return;
-      }
-
-      await claimService.cancelClaim(selectedClaimId, cancelRemark);
-      toast.success("Claim cancelled successfully!");
-
-      // Clear modal state
-      setIsModalOpen(false);
-      setCancelRemark("");
-      setSelectedClaimId("");
-
-      // Refresh status counts and table data
-      fetchStatusCounts(
-        startDate ? formatDateToYYYYMMDD(startDate) : "",
-        endDate ? formatDateToYYYYMMDD(endDate) : "",
-      );
-
-      // Trigger table refresh
-      setRefreshKey((prev) => prev + 1);
-
-      // Invalidate cache nếu bạn đang sử dụng
-      cacheService.invalidateByTags([
-        "claims",
-        "status-counts",
-        "claimer-mode",
-      ]);
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to cancel claim";
-      toast.error(errorMessage);
-    }
-  };
-
-  const showCancelModal = (claimId: string) => {
+  const handleCancelClaim = async (claimId: string) => {
     setSelectedClaimId(claimId);
     setIsModalOpen(true);
   };
 
+  const handleSubmitClaim = async (claimId: string) => {
+    try {
+      const confirm = window.confirm(t("view_claims.toast.confirm_submit"));
+      if (!confirm) return;
+
+      const response = await withLoading(claimService.submitClaim(claimId));
+
+      if (response.is_success && response.data) {
+        toast.success(t("view_claims.toast.submit_success"));
+        fetchStatusCounts(
+          startDate ? formatDateToYYYYMMDD(startDate) : "",
+          endDate ? formatDateToYYYYMMDD(endDate) : "",
+        );
+        setRefreshKey((prev) => prev + 1);
+        cacheService.invalidateByTags([
+          "claims",
+          "status-counts",
+          "claimer-mode",
+        ]);
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as Error).message || t("view_claims.toast.submit_error");
+      toast.error(errorMessage);
+    }
+  };
+
   return (
-    <div className="min-h-screen p-6 bg-gray-50 dark:bg-[#1C1F26]">
+    <div className="min-h-screen p-6 bg-gray-100 dark:bg-[#1C1F26]">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="m-0 text-2xl font-semibold text-gray-900 dark:text-white">
-          Hello, {user?.name || "User"}!
+          {t("claim_list.hello")}, {user?.name || "User"}!
         </h1>
         <Input
           type="search"
-          placeholder="Search"
+          placeholder={t("claim_list.search_placeholder")}
           className="w-full sm:w-[200px] dark:bg-[#272B34] dark:text-gray-300"
           value={searchText}
+          disabled={true}
           onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
@@ -187,13 +180,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   "bg-[#cee6fa] text-[#3185ca]",
-                  tempClaimStatus === "" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]", // Increased ring visibility in dark mode
+                  tempClaimStatus === "" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4  dark:ring-[#3185ca]",
                 )}
               >
                 <UserOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Total</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Total
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.total}
                 </span>
@@ -212,13 +208,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   `w-[65px] h-[65px] rounded-full flex items-center justify-center`,
                   statusColors.Draft,
-                  tempClaimStatus === "Draft" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
+                  tempClaimStatus === "Draft" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <PaperClipOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Draft</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Draft
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.draft}
                 </span>
@@ -237,13 +236,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Pending,
-                  tempClaimStatus === "Pending" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
+                  tempClaimStatus === "Pending" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <ClockCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Pending</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Pending
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.pending}
                 </span>
@@ -262,13 +264,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Approved,
-                  tempClaimStatus === "Approved" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
+                  tempClaimStatus === "Approved" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <CheckCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Approved</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Approved
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.approved}
                 </span>
@@ -287,13 +292,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Rejected,
-                  tempClaimStatus === "Rejected" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
+                  tempClaimStatus === "Rejected" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <CloseCircleOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Rejected</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Rejected
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.rejected}
                 </span>
@@ -312,13 +320,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Paid,
-                  tempClaimStatus === "Paid" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
+                  tempClaimStatus === "Paid" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <MoneyCollectOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Paid</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Paid
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.paid}
                 </span>
@@ -337,13 +348,16 @@ const ViewClaims: React.FC = () => {
                 className={cn(
                   "w-[65px] h-[65px] rounded-full flex items-center justify-center",
                   statusColors.Cancelled,
-                  tempClaimStatus === "Cancelled" && "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
+                  tempClaimStatus === "Cancelled" &&
+                    "ring-2 ring-[#3185ca] dark:ring-4 dark:ring-[#3185ca]",
                 )}
               >
                 <FileExcelOutlined className="text-[35px]" />
               </div>
               <div className="flex flex-col mt-2">
-                <span className="text-[#666] dark:text-gray-300 text-xs">Cancelled</span>
+                <span className="text-[#666] dark:text-gray-300 text-xs">
+                  Cancelled
+                </span>
                 <span className="text-[30px] font-bold text-gray-900 dark:text-gray-300">
                   {statusCounts?.cancelled}
                 </span>
@@ -366,45 +380,94 @@ const ViewClaims: React.FC = () => {
           type="primary"
           className="w-full sm:w-auto"
         >
-          Apply Filters
+          {t("common.apply_filters")}
         </Button>
         <Button
           onClick={handleClearFilters}
           type="default"
           className="w-full sm:w-auto dark:bg-[#272B34] dark:text-gray-300"
-          disabled={!tempStartDate && !tempEndDate && !claimStatus} // Disable button if both dates are not set
+          disabled={!tempStartDate && !tempEndDate && !claimStatus}
         >
-          Clear Filters
+          {t("common.reset_filters")}
+        </Button>
+        <Button
+          icon={viewMode === "table" ? <AppstoreOutlined /> : <TableOutlined />}
+          onClick={() => setViewMode(viewMode === "table" ? "card" : "table")}
+          className="w-full sm:w-auto"
+        >
+          {viewMode === "table"
+            ? t("claim_list.card_view")
+            : t("claim_list.table_view")}
         </Button>
       </div>
 
-      <ClaimTable
-        mode="ClaimerMode"
-        claimStatus={claimStatus}
-        startDate={st}
-        endDate={en}
-        onStatusChange={handleStatusFilter}
-        onCancelClaim={showCancelModal}
-        refreshKey={refreshKey}
-      />
+      {viewMode === "table" ? (
+        <ClaimTable
+          mode="ClaimerMode"
+          claimStatus={claimStatus}
+          startDate={st}
+          endDate={en}
+          onStatusChange={handleStatusFilter}
+          onCancelClaim={handleCancelClaim}
+          onSubmitClaim={handleSubmitClaim}
+          refreshKey={refreshKey}
+        />
+      ) : (
+        <ClaimCard
+          mode="ClaimerMode"
+          claimStatus={claimStatus}
+          startDate={st}
+          endDate={en}
+          onCancelClaim={handleCancelClaim}
+          onSubmitClaim={handleSubmitClaim}
+          onStatusChange={handleStatusFilter}
+          refreshKey={refreshKey}
+        />
+      )}
 
       <Modal
-        title="Cancel Claim"
+        title={t("view_claims.modal.cancel_title")}
         open={isModalOpen}
-        onOk={handleCancelClaim}
-        onCancel={() => {
-          setIsModalOpen(false);
-          setCancelRemark("");
-          setSelectedClaimId("");
+        onOk={async () => {
+          if (!cancelRemark.trim()) {
+            toast.error(t("view_claims.toast.cancel_reason_required"));
+            return;
+          }
+
+          try {
+            const response = await withLoading(
+              claimService.cancelClaim(selectedClaimId, cancelRemark),
+            );
+
+            if (response.is_success && response.data) {
+              toast.success(t("view_claims.toast.cancel_success"));
+              setRefreshKey((prev) => prev + 1);
+              cacheService.invalidateByTags([
+                "claims",
+                "status-counts",
+                "claimer-mode",
+              ]);
+              fetchStatusCounts(
+                startDate ? formatDateToYYYYMMDD(startDate) : "",
+                endDate ? formatDateToYYYYMMDD(endDate) : "",
+              );
+            }
+          } catch (error) {
+            const errorMessage =
+              (error as Error).message || t("view_claims.toast.cancel_error");
+            toast.error(errorMessage);
+          } finally {
+            setIsModalOpen(false);
+            setCancelRemark("");
+          }
         }}
-        okText="Cancel Claim"
-        cancelText="Close"
+        onCancel={() => setIsModalOpen(false)}
       >
-        <p>Please provide a reason for cancelling this claim:</p>
+        <p>{t("view_claims.modal.cancel_prompt")}</p>
         <TextArea
           value={cancelRemark}
           onChange={(e) => setCancelRemark(e.target.value)}
-          placeholder="Enter cancellation reason"
+          placeholder={t("view_claims.modal.cancel_placeholder")}
           rows={4}
           className="mt-2"
         />
