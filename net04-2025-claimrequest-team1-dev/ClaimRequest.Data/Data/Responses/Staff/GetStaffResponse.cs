@@ -10,5 +10,6 @@ namespace ClaimRequest.DAL.Data.Responses.Staff
         public SystemRole SystemRole { get; set; }
         public Department Department { get; set; }
         public string AvatarUrl { get; set; }
+        public decimal Salary { get; set; }
     }
 }

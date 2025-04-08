@@ -78,13 +78,17 @@ namespace ClaimRequest.DAL.Repositories.Interfaces
 
         #endregion
 
+        #region Insert
         void DeleteAsync(T entity);
         void DeleteRangeAsync(IEnumerable<T> entities);
+        #endregion
 
+        #region queryable
         IQueryable<T> CreateBaseQuery(
         Expression<Func<T, bool>> predicate = null,
         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
         Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
         bool asNoTracking = true);
+        #endregion
     }
 }

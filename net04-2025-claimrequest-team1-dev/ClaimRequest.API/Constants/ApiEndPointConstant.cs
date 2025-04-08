@@ -49,7 +49,7 @@
             public const string GetProjectEndpoint = ProjectEndpoint + "/{id}";
             public const string GetProjectsThroughMemeberIdEndpoint = ProjectsEndpoint + "/member-id/{memberId}";
             public const string GetProjectDetailsEndpoint = ProjectEndpoint + "/{id}/details";
-            public const string GetProjectsWithPaginationEndpoint = ProjectsEndpoint + "/page/{pageNumber}/size/{pageSize}";
+            public const string GetProjectsWithPaginationEndpoint = ProjectsEndpoint + "/list";
             public const string GetProjectsByFilterEndpoint = ProjectsEndpoint + "/filter";
             public const string CreateProjectEndpoint = ProjectEndpoint + "/create";
             public const string UpdateProjectEndpoint = ProjectEndpoint + "/update/{id}";

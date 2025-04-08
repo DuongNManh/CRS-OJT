@@ -168,7 +168,9 @@ namespace ClaimRequest.DAL.Repositories.Implements
         {
             _dbSet.UpdateRange(entities);
         }
+        #endregion
 
+        #region delete
         public void DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
@@ -178,7 +180,9 @@ namespace ClaimRequest.DAL.Repositories.Implements
         {
             _dbSet.RemoveRange(entities);
         }
+        #endregion
 
+        #region queryable
         public virtual IQueryable<T> CreateBaseQuery(
             Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,

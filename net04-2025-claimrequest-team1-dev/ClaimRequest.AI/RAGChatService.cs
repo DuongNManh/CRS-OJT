@@ -5,12 +5,16 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Embeddings;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+
 
 namespace ClaimRequest.AI;
 
 public class RAGChatService(
     IVectorStore vectorStore,
     IChatCompletionService chatCompletionService,
+    Kernel kernel,
     ITextEmbeddingGenerationService textEmbeddingGenerationService)
     : IRAGChatService
 {
@@ -56,36 +60,30 @@ public class RAGChatService(
         return searchResult;
     }
 
-    public async Task<string> Answer(string question)
+    public async Task<string> Answer(UserArugments userArugments, string question)
     {
-        var collectionName = "ojt.docx";
-        var chatHistory = new ChatHistory("You are an AI assistant that helps people find information about Claim Request System. Don't answer out of scope. No need to hightlight keywords.");
-        var stringBuilder = new StringBuilder();
-
+        const string collectionName = "ojt.docx";
+        
         // Find related Information
         var searchResult = await HybridSearchData(collectionName, question);
-
-        await foreach (var result in searchResult.Results)
+        var resultArray = await searchResult.Results.ToListAsync();
+        
+        // Add prompt template
+        var arguments = ClaimRequestPrompt.CreatePromptArugments(userArugments, question, resultArray);
+        
+        var promptTemplateConfig = new PromptTemplateConfig
         {
-            stringBuilder.AppendLine(result.Record.Text);
-        }
-
-        // Add related information to chat history
-        chatHistory.AddUserMessage(question);
-        if (stringBuilder.Length > 0)
-        {
-            stringBuilder.Insert(0, "Here are the top 3 related information:");
-            chatHistory.AddUserMessage(stringBuilder.ToString());
-        }
-        stringBuilder.Clear();
-
-        // Generate response
-        var response = await chatCompletionService.GetChatMessageContentsAsync(chatHistory);
-        foreach (var message in response)
-        {
-            stringBuilder.Append(message);
-        }
-
-        return stringBuilder.ToString();
+            Template = ClaimRequestPrompt.GetPromptTemplate(),
+            TemplateFormat = "handlebars",
+            Name = "ClaimRequestChatPrompt",
+        };
+        
+        // Invoke the prompt function
+        var function = kernel.CreateFunctionFromPrompt(
+            promptTemplateConfig, 
+            new HandlebarsPromptTemplateFactory()); 
+        var templateResponse = await kernel.InvokeAsync(function, arguments);
+        
+        return templateResponse.ToString();
     }
 }

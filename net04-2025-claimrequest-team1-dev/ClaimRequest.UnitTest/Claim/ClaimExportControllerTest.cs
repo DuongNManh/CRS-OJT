@@ -1,6 +1,5 @@
 using ClaimRequest.API.Controllers;
 using ClaimRequest.BLL.Services.Interfaces;
-using ClaimRequest.DAL.Data.Entities;
 using ClaimRequest.DAL.Data.Exceptions;
 using ClaimRequest.DAL.Data.Requests.Claim;
 using ClaimRequest.DAL.Data.Responses.Claim;

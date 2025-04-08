@@ -29,30 +29,24 @@ namespace ClaimRequest.DAL.Data.Requests.Claim
 
         [Required(ErrorMessage = "Start date is required")]
         [JsonConverter(typeof(DateOnlyConverter))]
-        [CustomValidation(typeof(CreateClaimRequest), nameof(ValidateStartDate))]
         public DateOnly StartDate { get; set; }
 
         [Required(ErrorMessage = "End date is required")]
         [JsonConverter(typeof(DateOnlyConverter))]
-        [CustomValidation(typeof(CreateClaimRequest), nameof(ValidateEndDate))]
+        [CustomValidation(typeof(UpdateClaimRequest), nameof(ValidateEndDate))]
         public DateOnly EndDate { get; set; }
 
-        [JsonConverter(typeof(GuidNullableConveter))]
-        public Guid? ProjectId { get; set; }
+        [Required(ErrorMessage = "Project Id is required")]
+        public Guid ProjectId { get; set; }
 
         public static ValidationResult ValidateEndDate(DateOnly endDate, ValidationContext context)
         {
-            var instance = (CreateClaimRequest)context.ObjectInstance;
+            var instance = (UpdateClaimRequest)context.ObjectInstance;
             if (endDate < instance.StartDate)
             {
                 return new ValidationResult("End date must be greater than or equal to start date");
             }
             return ValidationResult.Success;
-        }
-
-        public static ValidationResult? ValidateStartDate(DateOnly startDate)
-        {
-            return startDate < DateOnly.FromDateTime(DateTime.Today) ? new ValidationResult("Start date must be greater than or equal to Today") : ValidationResult.Success;
         }
     }
 }

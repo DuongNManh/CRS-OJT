@@ -1,6 +1,7 @@
 using ClaimRequest.API.Constants;
 using ClaimRequest.API.Extensions;
 using ClaimRequest.BLL.Services.Interfaces;
+using ClaimRequest.DAL.Data.Entities;
 using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Project;
 using ClaimRequest.DAL.Data.Responses.Project;
@@ -86,7 +87,7 @@ namespace ClaimRequest.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Staff, Approver, Finance, Admin")]
-        public async Task<IActionResult> GetProjectsByPage(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetProjectsByPage([FromQuery] int pageNumber,[FromQuery] int pageSize)
         {
             var projects = await _projectService.GetProjectsWithPagination(pageNumber, pageSize);
             return Ok(ApiResponseBuilder.BuildResponse(
@@ -104,10 +105,13 @@ namespace ClaimRequest.API.Controllers
         public async Task<IActionResult> GetProjectsByFilter(
             [FromQuery] string? name,
             [FromQuery] string? description,
+            [FromQuery] ProjectStatus? status,
             [FromQuery] DateOnly? startDateFrom,
             [FromQuery] DateOnly? startDateTo,
             [FromQuery] DateOnly? endDateFrom,
             [FromQuery] DateOnly? endDateTo,
+            [FromQuery] decimal? budgetFrom,
+            [FromQuery] decimal? budgetTo,
             [FromQuery] Guid? projectManagerId,
             [FromQuery] Guid? businessUnitLeaderId)
         {
@@ -115,10 +119,13 @@ namespace ClaimRequest.API.Controllers
             {
                 Name = name,
                 Description = description,
+                Status = status,
                 StartDateFrom = startDateFrom,
                 StartDateTo = startDateTo,
                 EndDateFrom = endDateFrom,
                 EndDateTo = endDateTo,
+                BudgetFrom = budgetFrom,
+                BudgetTo = budgetTo,
                 ProjectManagerId = projectManagerId,
                 BusinessUnitLeaderId = businessUnitLeaderId
             };

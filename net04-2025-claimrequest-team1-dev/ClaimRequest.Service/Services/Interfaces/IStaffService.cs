@@ -11,7 +11,7 @@ namespace ClaimRequest.BLL.Services.Interfaces
         // B2: Tao method CRUD cho Staff
         Task<CreateStaffResponse> CreateStaff(CreateStaffRequest createStaffRequest);
         Task<CreateStaffResponse> GetStaffById(Guid id);
-        Task<PagingResponse<CreateStaffResponse>> GetStaffsPaging(int pageNumber = 1, int pageSize = 10, string? role = null, string? department = null);
+        Task<PagingResponse<GetStaffResponse>> GetStaffsPaging(int pageNumber = 1, int pageSize = 10, string? role = null, string? department = null);
         Task<IEnumerable<CreateStaffResponse>> GetStaffs();
         Task<UpdateStaffResponse> UpdateStaff(Guid id, UpdateStaffRequest updateStaffRequest);
         Task<bool> DeleteStaff(Guid id);

@@ -46,8 +46,7 @@ namespace ClaimRequest.DAL.Mappers
             // mapper cho list staff
             CreateMap<Staff, GetStaffResponse>()
                 .ForMember(dest => dest.SystemRole, opt => opt.MapFrom(src => src.SystemRole))
-                .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department))
-                .ForMember(dest => dest.AvatarUrl, opt => opt.MapFrom(src => src.AvatarUrl));
+                .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department));
             // Staff -> ProfileResponse
             CreateMap<Staff, ProfileResponse>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

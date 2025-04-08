@@ -16,7 +16,8 @@ namespace ClaimRequest.DAL.Data.Entities
         Engineering,          // Covers software development, QA, IT support, DevOps, UI/UX, etc. => Staff
         ProjectManagement,    // Project managers and coordinators => Approver
         Finance,              // Budgeting, accounting, and financial planning => Finance
-        BusinessUnitLeader    // Business unit leaders and department heads => Approver
+        BusinessUnitLeader,    // Business unit leaders and department heads => Approver
+        Administration,       // Administrative and HR roles => Admin
     }
 
 

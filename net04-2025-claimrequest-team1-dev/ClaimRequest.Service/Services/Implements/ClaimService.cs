@@ -19,7 +19,8 @@ namespace ClaimRequest.BLL.Services.Implements
         {
             ApproverMode,
             FinanceMode,
-            ClaimerMode
+            ClaimerMode,
+            AdminMode
         }
 
         private readonly IEmailServiceFactory _emailServiceFactory;
@@ -49,32 +50,24 @@ namespace ClaimRequest.BLL.Services.Implements
                     // Map request to entity
                     newClaim.ClaimerId = currentUserId;
                     newClaim.Status = ClaimStatus.Draft;
-                    newClaim.CreateAt = DateTime.UtcNow;
+                    newClaim.CreateAt = DateTime.UtcNow.AddHours(7);
+                    var project = await _unitOfWork.GetRepository<Project>()
+                                      .FirstOrDefaultAsync(
+                                          predicate: p => p.Id == newClaim.ProjectId,
+                                          orderBy: null,
+                                          include: null) ??
+                                  throw new BusinessException($"Project with ID {newClaim.ProjectId} not found");
 
-                    // Validate project exists
-                    if (newClaim.ProjectId != null)
-                    {
-                        var project = await _unitOfWork.GetRepository<Project>()
-                                          .FirstOrDefaultAsync(
-                                              predicate: p => p.Id == newClaim.ProjectId,
-                                              orderBy: null,
-                                              include: null) ??
-                                      throw new BusinessException($"Project with ID {newClaim.ProjectId} not found");
+                    // Check if user is part of the project (as staff, PM, or BUL)
+                    var isStaffInProject = await _unitOfWork.GetRepository<ProjectStaff>()
+                        .CountAsync(ps => ps.ProjectId == newClaim.ProjectId && ps.StaffId == currentUserId) > 0;
+                    var isProjectManager = project.ProjectManagerId == currentUserId;
+                    var isBusinessUnitLeader = project.BusinessUnitLeaderId == currentUserId;
 
-                        // Check if user is part of the project (as staff, PM, or BUL)
-                        var isStaffInProject = await _unitOfWork.GetRepository<ProjectStaff>()
-                            .CountAsync(ps => ps.ProjectId == newClaim.ProjectId && ps.StaffId == currentUserId) > 0;
-                        var isProjectManager = project.ProjectManagerId == currentUserId;
-                        var isBusinessUnitLeader = project.BusinessUnitLeaderId == currentUserId;
-
-                        if (!isStaffInProject && !isProjectManager && !isBusinessUnitLeader)
-                            throw new BusinessException("You must be a member of this project to create a claim.");
-                    }
-
+                    if (!isStaffInProject && !isProjectManager && !isBusinessUnitLeader)
+                        throw new BusinessException("You must be a member of this project to create a claim.");
                     // Insert new claim
                     await _unitOfWork.GetRepository<Claim>().InsertAsync(newClaim);
-
-
                     // Add change log
                     await AddChangeLog(newClaim.Id, "Claim created", currentUserEmail, newClaim.CreateAt);
                     return newClaim;
@@ -164,21 +157,29 @@ namespace ClaimRequest.BLL.Services.Implements
             {
                 var currentUserRole = GetCurrentUserRole();
 
+                var startDateUtc = GetStartOfUtcDay(startDate);
+                var endDateUtc = GetEndOfUtcDay(endDate);
+
                 if (viewMode == ViewMode.ClaimerMode.ToString())
                 {
-                    return await GetClaimsForClaimerAndFinance(pageNumber, pageSize, claimStatus, viewMode, startDate,
-                        endDate);
+                    return await GetClaimsForClaimerAndFinance(pageNumber, pageSize, claimStatus, viewMode, startDateUtc,
+                        endDateUtc);
                 }
                 else if (viewMode == ViewMode.FinanceMode.ToString() &&
                          currentUserRole == SystemRole.Finance.ToString())
                 {
-                    return await GetClaimsForClaimerAndFinance(pageNumber, pageSize, claimStatus, viewMode, startDate,
-                        endDate);
+                    return await GetClaimsForClaimerAndFinance(pageNumber, pageSize, claimStatus, viewMode, startDateUtc,
+                        endDateUtc);
                 }
                 else if (viewMode == ViewMode.ApproverMode.ToString() &&
                          currentUserRole == SystemRole.Approver.ToString())
                 {
-                    return await GetClaimsForApprover(pageNumber, pageSize, claimStatus, startDate, endDate);
+                    return await GetClaimsForApprover(pageNumber, pageSize, claimStatus, startDateUtc, endDateUtc);
+                }
+                else if (viewMode == ViewMode.AdminMode.ToString() &&
+                         currentUserRole == SystemRole.Admin.ToString())
+                {
+                    return await GetClaimsForAdmin(pageNumber, pageSize, claimStatus, startDateUtc, endDateUtc);
                 }
 
                 throw new InvalidOperationException("Invalid view mode or user role.");
@@ -199,10 +200,6 @@ namespace ClaimRequest.BLL.Services.Implements
                 // Validate input parameters
                 ValidateInputParameters(viewMode, status, null, startDate, endDate);
 
-                // Check if startDate and endDate have values before converting to UTC
-                var startDateUtc = ChangeToDateTimeUtc(startDate);
-                var endDateUtc = ChangeToDateTimeUtc(endDate);
-
                 var currentUserId = GetCurrentUserId();
                 ClaimStatus? parsedStatus = null;
                 if (!string.IsNullOrEmpty(status))
@@ -213,8 +210,8 @@ namespace ClaimRequest.BLL.Services.Implements
                 var baseQuery = _unitOfWork.GetRepository<Claim>().CreateBaseQuery(
                     include: query => query.Include(c => c.Project),
                     predicate: c => (parsedStatus == null || c.Status == parsedStatus) &&
-                                    (startDateUtc == null || c.CreateAt >= startDateUtc) &&
-                                    (endDateUtc == null || c.CreateAt <= endDateUtc));
+                                    (startDate == null || c.CreateAt >= endDate) &&
+                                    (startDate == null || c.CreateAt <= endDate));
 
                 if (viewMode == ViewMode.ClaimerMode.ToString())
                 {
@@ -260,18 +257,6 @@ namespace ClaimRequest.BLL.Services.Implements
             // validate input parameters
             ValidateInputParameters(null, null, approveStatus, startDate, endDate);
 
-            // Check if startDate and endDate have values before converting to UTC
-            var startDateUtc = startDate.HasValue
-                ? (startDate.Value.Kind == DateTimeKind.Unspecified
-                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
-                    : startDate.Value.ToUniversalTime())
-                : (DateTime?)null;
-            var endDateUtc = endDate.HasValue
-                ? (endDate.Value.Kind == DateTimeKind.Unspecified
-                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
-                    : endDate.Value.ToUniversalTime())
-                : (DateTime?)null;
-
             var allowedStatuses = new[] {
                 ClaimStatus.Approved,
                 ClaimStatus.Pending,
@@ -288,14 +273,47 @@ namespace ClaimRequest.BLL.Services.Implements
             var response = await _unitOfWork.GetRepository<Claim>().GetPagingListAsync(
                 selector: c => _mapper.Map<GetClaimResponse>(c),
                 predicate: c => allowedStatuses.Contains(c.Status) &&
-                                (startDateUtc == null || c.CreateAt >= startDateUtc) &&
-                                (endDateUtc == null || c.CreateAt <= endDateUtc) &&
+                                (startDate == null || c.CreateAt >= startDate) &&
+                                (endDate == null || c.CreateAt <= endDate) &&
                                 c.ClaimApprovers.Any(ca => ca.ApproverId == currentUserId &&
                                                            (approveStatus == null || ca.ApproverStatus == parsedApproveStatus)),
                 orderBy: q => q.OrderByDescending(c => c.CreateAt),
                 include: q => q.Include(c => c.Project)
                     .Include(c => c.ClaimApprovers.Where(ca => ca.ApproverId == currentUserId))
                     .ThenInclude(ca => ca.Approver),
+                page: pageNumber,
+                size: pageSize);
+            return response;
+        }
+
+        private async Task<PagingResponse<GetClaimResponse>> GetClaimsForAdmin(
+            int pageNumber = 1, int pageSize = 20, string? status = null, DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            var currentUserRole = GetCurrentUserRole();
+
+            // Ensure the user is an approver
+            if (currentUserRole != SystemRole.Admin.ToString())
+            {
+                throw new UnauthorizedException("User is not authorized to view claims as an approver.");
+            }
+
+            // validate input parameters
+            ValidateInputParameters(null, status, null, startDate, endDate);
+
+            ClaimStatus? parsedStatus = null;
+            if (!string.IsNullOrEmpty(status))
+            {
+                parsedStatus = Enum.Parse<ClaimStatus>(status);
+            }
+
+            var response = await _unitOfWork.GetRepository<Claim>().GetPagingListAsync(
+                selector: c => _mapper.Map<GetClaimResponse>(c),
+                predicate: c => (parsedStatus == null || c.Status == parsedStatus) &&
+                                     (startDate == null || c.CreateAt >= startDate) &&
+                                 (endDate == null || c.CreateAt <= endDate),
+                orderBy: q => q.OrderByDescending(c => c.CreateAt),
+                include: null,
                 page: pageNumber,
                 size: pageSize);
             return response;
@@ -324,13 +342,12 @@ namespace ClaimRequest.BLL.Services.Implements
                     // Validate claim
                     ValidateClaimAndProject(existingClaim, ClaimStatus.Draft, "updated");
 
-                    var currentTime = DateTime.UtcNow;
-
                     // Update the claim properties
                     _mapper.Map(updateClaimRequest, existingClaim);
+                    existingClaim.UpdateAt = DateTime.UtcNow.AddHours(7);
 
                     // Create audit trail entry with detailed update message
-                    await AddChangeLog(existingClaim.Id, "Updated", currentUserEmail, DateTime.UtcNow);
+                    await AddChangeLog(existingClaim.Id, "Updated", currentUserEmail, existingClaim.UpdateAt);
 
                     // Update the claim
                     _unitOfWork.GetRepository<Claim>().UpdateAsync(existingClaim);
@@ -371,7 +388,7 @@ namespace ClaimRequest.BLL.Services.Implements
                     await AddChangeLog(claim.Id, "Cancelled", currentUserEmail);
 
                     var emailService = _emailServiceFactory.Create();
-                    await emailService.SendEmail(claim.Id, EmailTemplate.ClaimSubmitted);
+                    await emailService.SendEmail(claim.Id, EmailTemplate.ClaimReturned);
                     return true;
                 });
             }
@@ -407,9 +424,11 @@ namespace ClaimRequest.BLL.Services.Implements
                     var approver = ValidateAndGetApprover(claim, currentUserId, ClaimStatus.Pending, "approved");
                     await UpdateClaimStatus(claim, approver, ApproverStatus.Approved, "Approved", currentUserEmail);
 
-                    // Send email notification
-                    var emailService = _emailServiceFactory.Create();
-                    await emailService.SendEmail(claimId, EmailTemplate.ManagerApproved);
+                    if (claim.FinanceId != null)
+                    {
+                        var emailService = _emailServiceFactory.Create();
+                        await emailService.SendEmail(claimId, EmailTemplate.ManagerApproved);
+                    }
                     return true;
                 });
             }
@@ -479,11 +498,12 @@ namespace ClaimRequest.BLL.Services.Implements
 
                     claim.Status = ClaimStatus.Draft;
                     claim.Remark = request.Remark;
+                    claim.UpdateAt = DateTime.UtcNow.AddHours(7);
 
                     _unitOfWork.GetRepository<Claim>().UpdateAsync(claim);
 
                     // Add to change history
-                    await AddChangeLog(claim.Id, "Returned", currentUserEmail, DateTime.UtcNow);
+                    await AddChangeLog(claim.Id, "Returned", currentUserEmail, claim.UpdateAt);
 
                     // Send email notification
                     var emailService = _emailServiceFactory.Create();
@@ -523,10 +543,11 @@ namespace ClaimRequest.BLL.Services.Implements
                     }
 
                     existingClaim.Status = ClaimStatus.Paid;
+                    existingClaim.UpdateAt = DateTime.UtcNow.AddHours(7);
                     _unitOfWork.GetRepository<Claim>().UpdateAsync(existingClaim);
 
                     // Add to change history
-                    await AddChangeLog(existingClaim.Id, "Paid", currentUserEmail, DateTime.UtcNow);
+                    await AddChangeLog(existingClaim.Id, "Paid", currentUserEmail, existingClaim.UpdateAt);
 
                     // Send email notification
                     var emailService = _emailServiceFactory.Create();
@@ -554,8 +575,20 @@ namespace ClaimRequest.BLL.Services.Implements
                     var claim = await _unitOfWork.GetRepository<Claim>()
                         .FirstOrDefaultAsync(
                             predicate: c => c.Id == claimId,
-                            include: q => q.Include(c => c.ClaimApprovers)
+                            include: q => q
+                                .Include(c => c.ClaimApprovers)
+                                .Include(c => c.Finance)
                         );
+
+                    if (claim.Status == ClaimStatus.Approved)
+                    {
+                        claim.Status = ClaimStatus.Rejected;
+                        claim.UpdateAt = DateTime.UtcNow.AddHours(7);
+                        _unitOfWork.GetRepository<Claim>().UpdateAsync(claim);
+                        await AddChangeLog(claim.Id, "Rejected", currentUserEmail, claim.UpdateAt);
+                        return true;
+
+                    }
 
                     var approver = ValidateAndGetApprover(claim, currentUserId, ClaimStatus.Pending, "rejected");
                     await UpdateClaimStatus(claim, approver, ApproverStatus.Rejected, "Rejected", currentUserEmail);
@@ -617,22 +650,13 @@ namespace ClaimRequest.BLL.Services.Implements
                             claim.ClaimApprovers = await AssignApproversAutomatically(claim.ProjectId.Value, claim.ClaimerId);
                         }
                         claim.Status = ClaimStatus.Pending;
-                    }
-                    // Handle non-project claims
-                    else
-                    {
-                        if (claim.Finance == null)
-                        {
-                            claim.Finance = await AssignRandomFinance(claim.ClaimerId);
-                            claim.FinanceId = claim.Finance.Id;
-                        }
-                        claim.Status = ClaimStatus.Approved;
+                        claim.UpdateAt = DateTime.UtcNow.AddHours(7);
                     }
 
                     _unitOfWork.GetRepository<Claim>().UpdateAsync(claim);
 
                     // Add to change history
-                    await AddChangeLog(claim.Id, "Submitted", currentUserEmail, DateTime.UtcNow);
+                    await AddChangeLog(claim.Id, "Submitted", currentUserEmail, claim.UpdateAt);
 
                     var emailService = _emailServiceFactory.Create();
                     await emailService.SendEmail(claim.Id, EmailTemplate.ClaimSubmitted);
@@ -707,8 +731,8 @@ namespace ClaimRequest.BLL.Services.Implements
             {
                 HistoryId = Guid.NewGuid(),
                 ClaimId = claimId,
-                Message = $"{action} by {userEmail} on {changeTime ?? DateTime.UtcNow:g}",
-                ChangedAt = changeTime ?? DateTime.UtcNow,
+                Message = $"{action} by {userEmail} on {changeTime ?? DateTime.UtcNow.AddHours(7):g}",
+                ChangedAt = changeTime ?? DateTime.UtcNow.AddHours(7),
                 ChangedBy = userEmail
             };
 
@@ -754,7 +778,7 @@ namespace ClaimRequest.BLL.Services.Implements
         private async Task UpdateClaimStatus(Claim claim, ClaimApprover approver, ApproverStatus newStatus,
             string action, string userEmail)
         {
-            var currentTime = DateTime.UtcNow;
+            var currentTime = DateTime.UtcNow.AddHours(7);
 
             approver.ApproverStatus = newStatus;
             approver.DecisionAt = currentTime;
@@ -795,19 +819,27 @@ namespace ClaimRequest.BLL.Services.Implements
                 var currentUserId = GetCurrentUserId();
                 var currentUserRole = GetCurrentUserRole();
 
+                var startDateUtc = GetStartOfUtcDay(startDate);
+                var endDateUtc = GetEndOfUtcDay(endDate);
+
                 if (viewMode == ViewMode.ClaimerMode.ToString())
                 {
-                    return await GetClaimStatusCountForClaimer(currentUserId, startDate, endDate);
+                    return await GetClaimStatusCountForClaimer(currentUserId, startDateUtc, endDateUtc);
                 }
                 else if (viewMode == ViewMode.FinanceMode.ToString() &&
                          currentUserRole == SystemRole.Finance.ToString())
                 {
-                    return await GetClaimStatusCountForFinance(currentUserId, startDate, endDate);
+                    return await GetClaimStatusCountForFinance(currentUserId, startDateUtc, endDateUtc);
                 }
                 else if (viewMode == ViewMode.ApproverMode.ToString() &&
                          currentUserRole == SystemRole.Approver.ToString())
                 {
-                    return await GetClaimStatusCountForApprover(currentUserId, startDate, endDate);
+                    return await GetClaimStatusCountForApprover(currentUserId, startDateUtc, endDateUtc);
+                }
+                else if (viewMode == ViewMode.AdminMode.ToString() &&
+                         currentUserRole == SystemRole.Admin.ToString())
+                {
+                    return await GetClaimStatusCountForAdmin(currentUserId, startDateUtc, endDateUtc);
                 }
 
                 throw new InvalidOperationException("Invalid view mode or user role.");
@@ -821,13 +853,11 @@ namespace ClaimRequest.BLL.Services.Implements
 
         private async Task<ClaimStatusCountResponse> GetClaimStatusCountForClaimer(Guid currentUserId, DateTime? startDate, DateTime? endDate)
         {
-            var startDateUtc = ChangeToDateTimeUtc(startDate);
-            var endDateUtc = ChangeToDateTimeUtc(endDate);
 
             var claims = await _unitOfWork.GetRepository<Claim>().GetListAsync(
                 include: null,
                 predicate: c => c.ClaimerId == currentUserId &&
-                                (startDateUtc == null || c.CreateAt >= startDateUtc) && (endDate == null || c.CreateAt <= endDateUtc),
+                                (startDate == null || c.CreateAt >= startDate) && (endDate == null || c.CreateAt <= endDate),
                 orderBy: null,
                 selector: c => c.Status
             );
@@ -846,8 +876,6 @@ namespace ClaimRequest.BLL.Services.Implements
 
         private async Task<ClaimStatusCountResponse> GetClaimStatusCountForFinance(Guid currentUserId, DateTime? startDate, DateTime? endDate)
         {
-            var startDateUtc = ChangeToDateTimeUtc(startDate);
-            var endDateUtc = ChangeToDateTimeUtc(endDate);
 
             var claims = await _unitOfWork.GetRepository<Claim>().GetListAsync(
                 include: null,
@@ -856,7 +884,7 @@ namespace ClaimRequest.BLL.Services.Implements
                                 c.Status != ClaimStatus.Cancelled &&
                                 c.Status != ClaimStatus.Pending &&
                                 c.Status != ClaimStatus.Rejected &&
-                                (startDateUtc == null || c.CreateAt >= startDateUtc) && (endDate == null || c.CreateAt <= endDateUtc),
+                                (startDate == null || c.CreateAt >= startDate) && (endDate == null || c.CreateAt <= endDate),
                 orderBy: null,
                 selector: c => c.Status
             );
@@ -875,15 +903,13 @@ namespace ClaimRequest.BLL.Services.Implements
 
         private async Task<ClaimStatusCountResponse> GetClaimStatusCountForApprover(Guid currentUserId, DateTime? startDate, DateTime? endDate)
         {
-            var startDateUtc = ChangeToDateTimeUtc(startDate);
-            var endDateUtc = ChangeToDateTimeUtc(endDate);
 
             var claims = await _unitOfWork.GetRepository<Claim>().CreateBaseQuery(
                 include: query => query.Include(c => c.ClaimApprovers.Where(ca => ca.ApproverId == currentUserId)),
                 predicate: c => c.Status != ClaimStatus.Paid &&
                                 c.Status != ClaimStatus.Draft &&
                                 c.Status != ClaimStatus.Cancelled &&
-                                (startDateUtc == null || c.CreateAt >= startDateUtc) && (endDate == null || c.CreateAt <= endDateUtc)
+                                (startDate == null || c.CreateAt >= startDate) && (endDate == null || c.CreateAt <= endDate)
             ).ToListAsync();
 
             var approverStatuses = claims.SelectMany(c => c.ClaimApprovers)
@@ -899,6 +925,29 @@ namespace ClaimRequest.BLL.Services.Implements
                 Total = approverStatuses.Count
             };
         }
+
+        private async Task<ClaimStatusCountResponse> GetClaimStatusCountForAdmin(Guid currentUserId, DateTime? startDate, DateTime? endDate)
+        {
+
+            var claims = await _unitOfWork.GetRepository<Claim>().GetListAsync(
+                include: null,
+                predicate: c => (startDate == null || c.CreateAt >= startDate) && (endDate == null || c.CreateAt <= endDate),
+                orderBy: null,
+                selector: c => c.Status
+            );
+
+            return new ClaimStatusCountResponse
+            {
+                Draft = claims.Count(c => c == ClaimStatus.Draft),
+                Pending = claims.Count(c => c == ClaimStatus.Pending),
+                Approved = claims.Count(c => c == ClaimStatus.Approved),
+                Rejected = claims.Count(c => c == ClaimStatus.Rejected),
+                Paid = claims.Count(c => c == ClaimStatus.Paid),
+                Cancelled = claims.Count(c => c == ClaimStatus.Cancelled),
+                Total = claims.Count
+            };
+        }
+
         private DateTime? ChangeToDateTimeUtc(DateTime? dateTime)
         {
             return dateTime.HasValue
@@ -906,6 +955,22 @@ namespace ClaimRequest.BLL.Services.Implements
                     ? DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc)
                     : dateTime.Value.ToUniversalTime())
                 : (DateTime?)null;
+        }
+
+        private DateTime? GetStartOfUtcDay(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue) return null;
+
+            var utc = ChangeToDateTimeUtc(dateTime);
+            return new DateTime(utc.Value.Year, utc.Value.Month, utc.Value.Day, 0, 0, 0, DateTimeKind.Utc);
+        }
+
+        private DateTime? GetEndOfUtcDay(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue) return null;
+
+            var utc = ChangeToDateTimeUtc(dateTime);
+            return new DateTime(utc.Value.Year, utc.Value.Month, utc.Value.Day, 23, 59, 59, 999, DateTimeKind.Utc);
         }
 
         public async Task<SubmitClaimResponse> SubmitV2(CreateClaimRequest createClaimRequest)
@@ -917,40 +982,29 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 var newClaim = _mapper.Map<Claim>(createClaimRequest);
                 newClaim.ClaimerId = currentUserId;
-                newClaim.CreateAt = DateTime.UtcNow;
+                newClaim.CreateAt = DateTime.UtcNow.AddHours(7); // Adjust to UTC+7
 
                 await _unitOfWork.ExecuteInTransactionAsync(async () =>
                 {
-                    // Validate project exists
-                    if (newClaim.ProjectId != null)
-                    {
-                        var project = await _unitOfWork.GetRepository<Project>()
-                                          .FirstOrDefaultAsync(
-                                              predicate: p => p.Id == newClaim.ProjectId,
-                                              orderBy: null,
-                                              include: null) ??
-                                      throw new BusinessException($"Project with ID {newClaim.ProjectId} not found");
+                    var project = await _unitOfWork.GetRepository<Project>()
+                                      .FirstOrDefaultAsync(
+                                          predicate: p => p.Id == newClaim.ProjectId,
+                                          orderBy: null,
+                                          include: null) ??
+                                  throw new BusinessException($"Project with ID {newClaim.ProjectId} not found");
 
-                        // Check if user is part of the project (as staff, PM, or BUL)
-                        var isStaffInProject = await _unitOfWork.GetRepository<ProjectStaff>()
-                            .CountAsync(ps => ps.ProjectId == newClaim.ProjectId && ps.StaffId == currentUserId) > 0;
-                        var isProjectManager = project.ProjectManagerId == currentUserId;
-                        var isBusinessUnitLeader = project.BusinessUnitLeaderId == currentUserId;
+                    // Check if user is part of the project (as staff, PM, or BUL)
+                    var isStaffInProject = await _unitOfWork.GetRepository<ProjectStaff>()
+                        .CountAsync(ps => ps.ProjectId == newClaim.ProjectId && ps.StaffId == currentUserId) > 0;
+                    var isProjectManager = project.ProjectManagerId == currentUserId;
+                    var isBusinessUnitLeader = project.BusinessUnitLeaderId == currentUserId;
 
-                        if (!isStaffInProject && !isProjectManager && !isBusinessUnitLeader)
-                            throw new BusinessException("You must be a member of this project to create a claim.");
+                    if (!isStaffInProject && !isProjectManager && !isBusinessUnitLeader)
+                        throw new BusinessException("You must be a member of this project to create a claim.");
 
-                        // Assign approvers automatically
-                        newClaim.ClaimApprovers = await AssignApproversAutomatically(newClaim.ProjectId.Value, currentUserId);
-                        newClaim.Status = ClaimStatus.Pending;
-                    }
-                    else
-                    {
-                        // Assign finance automatically
-                        newClaim.Finance = await AssignRandomFinance(currentUserId);
-                        newClaim.FinanceId = newClaim.Finance.Id;
-                        newClaim.Status = ClaimStatus.Approved;
-                    }
+                    // Assign approvers automatically
+                    newClaim.ClaimApprovers = await AssignApproversAutomatically(newClaim.ProjectId.Value, currentUserId);
+                    newClaim.Status = ClaimStatus.Pending;
 
                     // Insert new claim
                     await _unitOfWork.GetRepository<Claim>().InsertAsync(newClaim);

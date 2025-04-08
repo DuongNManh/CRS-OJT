@@ -2,7 +2,6 @@ using ClaimRequest.API.Constants;
 using ClaimRequest.API.Extensions;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
-using ClaimRequest.DAL.Data.Exceptions;
 using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Claim;
 using ClaimRequest.DAL.Data.Responses.Claim;
@@ -32,7 +31,7 @@ namespace ClaimRequest.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [ValidateModelAttributes]
-        [Authorize(Roles = "Staff, Approver, Finance, Admin")]
+        [Authorize(Roles = "Staff, Approver")]
         public async Task<IActionResult> CreateClaim([FromBody] CreateClaimRequest createClaimRequest)
         {
             var response = await _claimService.CreateClaim(createClaimRequest);
@@ -75,7 +74,7 @@ namespace ClaimRequest.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.Claim.CancelClaimEndoint)]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff, Approver")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -83,27 +82,16 @@ namespace ClaimRequest.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CancelClaim([FromQuery] Guid id, string remark)
         {
-            try
-            {
-                var result = await _claimService.CancelClaim(id, remark);
-                return Ok(ApiResponseBuilder.BuildResponse(
-                    StatusCodes.Status200OK,
-                    "Claim Request Cancel Successfully",
-                    result
-                ));
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
+            var result = await _claimService.CancelClaim(id, remark);
+            return Ok(ApiResponseBuilder.BuildResponse(
+                StatusCodes.Status200OK,
+                "Claim Request Cancel Successfully",
+                result
+            ));
         }
 
         [HttpPut(ApiEndPointConstant.Claim.RejectClaimEndpoint)]
-        [Authorize(Roles = "Approver")]
+        [Authorize(Roles = "Approver, Finance")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -141,7 +129,7 @@ namespace ClaimRequest.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [ValidateModelAttributes]
-        [Authorize(Roles = "Staff, Approver, Finance")]
+        [Authorize(Roles = "Staff, Approver")]
         public async Task<IActionResult> UpdateClaim([FromQuery] Guid id, [FromBody] UpdateClaimRequest request)
         {
             var response = await _claimService.UpdateClaim(id, request);
@@ -186,7 +174,7 @@ namespace ClaimRequest.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.Claim.SubmitClaimsEndpoint)]
-        [Authorize(Roles = "Staff, Approver, Finance, Admin")]
+        [Authorize(Roles = "Staff, Approver")]
         [ProducesResponseType(typeof(ApiResponse<List<SubmitClaimResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -226,8 +214,8 @@ namespace ClaimRequest.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.Claim.SubmitV2Endpoint)]
-        [Authorize(Roles = "Staff, Approver, Finance, Admin")]
-        [ProducesResponseType(typeof(ApiResponse<SubmitClaimResponse>), StatusCodes.Status200OK)]
+        [Authorize(Roles = "Staff, Approver")]
+        [ProducesResponseType(typeof(ApiResponse<CreateClaimResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ValidateModelAttributes]

@@ -7,6 +7,9 @@ public class DataModel
     [VectorStoreRecordKey]
     public required string Key { get; init; }
     
+    [VectorStoreRecordData]
+    public required string Title { get; init; }
+    
     [VectorStoreRecordData(IsFullTextSearchable = true)]
     public required string Text { get; init; }
     

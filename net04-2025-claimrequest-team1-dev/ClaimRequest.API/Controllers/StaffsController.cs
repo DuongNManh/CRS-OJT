@@ -39,7 +39,7 @@ namespace ClaimRequest.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Staff.StaffsPagingEndpoint)] // get all staffs
-        [ProducesResponseType(typeof(ApiResponse<PagingResponse<CreateStaffResponse>>), StatusCodes.Status200OK)] // tra ve response 200 OK
+        [ProducesResponseType(typeof(ApiResponse<PagingResponse<GetStaffResponse>>), StatusCodes.Status200OK)] // tra ve response 200 OK
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)] // tra ve response 500 neu co loi
         [Authorize(Roles = "Admin, Approver, Finance")] // chi co Admin, ProjectManager, Finance moi co quyen truy cap
         public async Task<IActionResult> GetStaffsPaging([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? role = null, [FromQuery] string? department = null)

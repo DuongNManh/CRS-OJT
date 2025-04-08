@@ -1,6 +1,5 @@
 ﻿//#define SMTP
 #define SMTP
-#define URL1
 using AutoMapper;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.Entities;
@@ -62,6 +61,9 @@ namespace ClaimRequest.BLL.Services.Implements
 
         }
 
+        static string _primaryUrl = "http://localhost:5173/claim-detail/";
+        static string _fallbackUrl = "https://crs-rust.vercel.app/claim-detail/";
+
         public async Task SendEmail(Guid claimId, EmailTemplate template)
         {
             try
@@ -107,7 +109,8 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 string templatePath = Path.Combine(AppContext.BaseDirectory, "Services", "Templates", "ClaimReturnedEmailTemplate.html");
                 string body = await File.ReadAllTextAsync(templatePath);
-                string url = $"http://localhost:5173/claim-detail/{claim.Id}";
+                string url = await GetAvailableUrl(_primaryUrl, _fallbackUrl);
+                url = $"{url}{claim.Id}";
                 body = body.Replace("{ClaimerName}", claimer.Name)
                            .Replace("{ProjectName}", projectName)
                            .Replace("{ClaimerId}", claimer.Id.ToString())
@@ -142,7 +145,8 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 string templatePath = Path.Combine(AppContext.BaseDirectory, "Services", "Templates", "ManagerApprovedEmailTemplate.html");
                 string body = await File.ReadAllTextAsync(templatePath);
-                string url = $"http://localhost:5173/claim-detail/{claim.Id}";
+                string url = await GetAvailableUrl(_primaryUrl, _fallbackUrl);
+                url = $"{url}{claim.Id}";
                 body = body.Replace("{ClaimerName}", claimer.Name)
                            .Replace("{ProjectName}", projectName)
                            .Replace("{ClaimerId}", claimer.Id.ToString())
@@ -183,7 +187,8 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 string templatePath = Path.Combine(AppContext.BaseDirectory, "Services", "Templates", "ClaimSubmittedEmailTemplate.html");
                 string body = await File.ReadAllTextAsync(templatePath);
-                string url = $"http://localhost:5173/claim-detail/{claim.Id}";
+                string url = await GetAvailableUrl(_primaryUrl, _fallbackUrl);
+                url = $"{url}{claim.Id}";
                 body = body.Replace("{ProjectManagerName}", projectManagerName)
                             .Replace("{ClaimerName}", claimer.Name)
                            .Replace("{ProjectName}", projectName)
@@ -216,7 +221,8 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 string templatePath = Path.Combine(AppContext.BaseDirectory, "Services", "Templates", "ClaimApprovedEmailTemplate.html");
                 string body = await File.ReadAllTextAsync(templatePath);
-                string url = $"http://localhost:5173/claim-detail/{claim.Id}";
+                string url = await GetAvailableUrl(_primaryUrl, _fallbackUrl);
+                url = $"{url}{claim.Id}";
                 body = body.Replace("{ClaimerName}", claimer.Name)
                            .Replace("{ProjectName}", projectName)
                            .Replace("{ClaimerId}", claimer.Id.ToString())
@@ -247,7 +253,7 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 string templatePath = Path.Combine(AppContext.BaseDirectory, "Services", "Templates", "TemplateSendMailReminder.html");
                 string templateOriginal = await File.ReadAllTextAsync(templatePath);
-                string url = "";
+                string url = await GetAvailableUrl(_primaryUrl, _fallbackUrl);
                 var emailTasks = new List<Task>();
                 foreach (var claim in claims)
                 {
@@ -264,7 +270,7 @@ namespace ClaimRequest.BLL.Services.Implements
                                 continue; // Skip approvers with null values
                             }
                             string template = templateOriginal;
-                            url = $"http://localhost:5173/claim-detail/{claim.Id}";
+                            url = $"{url}{claim.Id}";
                             template = template.Replace("{Name}", approver.Approver.Name)
                                 .Replace("{StaffName}", claim.Claimer.Name)
                                 .Replace("{ProjectName}", claim.Project.Name)
@@ -276,11 +282,7 @@ namespace ClaimRequest.BLL.Services.Implements
                     if (claim.FinanceId != null && claim.Status == ClaimStatus.Approved)
                     {
                         string template = templateOriginal;
-#if URL1
-                        url = $"http://localhost:5173/claim-detail/{claim.Id}";
-#else
-                        url = $"https://crs-rust.vercel.app/claim-detail/{claim.Id}";
-#endif
+                        url = $"{url}{claim.Id}";
                         template = template.Replace("{Name}", claim.Finance.Name)
                         .Replace("{StaffName}", claim.Claimer.Name)
                         .Replace("{ProjectName}", claim.Project.Name)
@@ -398,5 +400,43 @@ namespace ClaimRequest.BLL.Services.Implements
             }
         }
 #endif
+        private async Task<bool> IsUrlAlive(string url)
+        {
+            try
+            {
+                using var client = new HttpClient();
+                client.Timeout = TimeSpan.FromSeconds(10);
+                var request = new HttpRequestMessage(HttpMethod.Head, url);
+                var response = await client.GetAsync(url);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        private async Task<string> GetAvailableUrl(string primaryUrl, string fallbackUrl)
+        {
+            try
+            {
+                if (await IsUrlAlive(primaryUrl))
+                {
+                    return primaryUrl; // Trả về primary nếu hoạt động
+                }
+                else if (await IsUrlAlive(fallbackUrl))
+                {
+                    return fallbackUrl; // Trả về fallback nếu hoạt động
+                }
+                else
+                {
+                    return "No working URL found";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred while checking URLs: {ex.Message}");
+                return "Error checking URLs"; // Trả về thông báo lỗi
+            }
+        }
     }
 }

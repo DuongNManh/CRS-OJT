@@ -39,8 +39,8 @@ namespace ClaimRequest.DAL.Mappers
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
-                .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(src => src.ProjectManager.Name))
-                .ForMember(dest => dest.BusinessUnitLeader, opt => opt.MapFrom(src => src.BusinessUnitLeader.Name));
+                .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(src => src.ProjectManager))
+                .ForMember(dest => dest.BusinessUnitLeader, opt => opt.MapFrom(src => src.BusinessUnitLeader));
 
             // Project --> GetProjectDetailsResponse
             CreateMap<Project, GetProjectDetailsResponse>()

@@ -12,6 +12,6 @@ public class ClaimApproverMapper : Profile
             .ForMember(dest => dest.ApproverId, opt => opt.MapFrom(src => src.ApproverId))
             .ForMember(dest => dest.ApproverStatus, opt => opt.MapFrom(src => src.ApproverStatus))
             .ForMember(dest => dest.DecisionAt, opt => opt.MapFrom(src => src.DecisionAt))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Approver.Name));
+            .ForMember(dest => dest.Approver, opt => opt.MapFrom(src => src.Approver));
     }
 }

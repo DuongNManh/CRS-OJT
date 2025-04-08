@@ -1,4 +1,4 @@
-﻿using ClaimRequest.API.Controllers;
+using ClaimRequest.API.Controllers;
 using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Project;
@@ -84,7 +84,8 @@ namespace ClaimRequest.UnitTest.Project
             var projectId = Guid.NewGuid();
             var request = new UpdateProjectRequest();
             var updatedProject = new CreateProjectResponse();
-            _mockProjectService.Setup(service => service.UpdateProject(projectId, request)).ReturnsAsync(updatedProject);
+            _mockProjectService.Setup(service => service.UpdateProject(projectId, request))
+                .ReturnsAsync(updatedProject);
 
             // Act
             var result = await _controller.UpdateProject(projectId, request);
@@ -122,7 +123,8 @@ namespace ClaimRequest.UnitTest.Project
             var projectId = Guid.NewGuid();
             var request = new AssignStaffRequest();
             var updatedRequest = new AssignStaffResponse();
-            _mockProjectService.Setup(service => service.AssignStaffToProject(projectId, request)).ReturnsAsync(updatedRequest);
+            _mockProjectService.Setup(service => service.AssignStaffToProject(projectId, request))
+                .ReturnsAsync(updatedRequest);
 
             // Act
             var result = await _controller.AssignStaffToProject(projectId, request);
@@ -205,10 +207,13 @@ namespace ClaimRequest.UnitTest.Project
             var result = await _controller.GetProjectsByFilter(
                 filter.Name,
                 filter.Description,
+                filter.Status,
                 filter.StartDateFrom,
                 filter.StartDateTo,
                 filter.EndDateFrom,
                 filter.EndDateTo,
+                filter.BudgetFrom,
+                filter.BudgetTo,
                 filter.ProjectManagerId,
                 filter.BusinessUnitLeaderId
             );
@@ -246,7 +251,7 @@ namespace ClaimRequest.UnitTest.Project
             var staffId = Guid.NewGuid();
             var response = new RemoveStaffResponse(staffId, true, "Staff removed from project successfully.");
             _mockProjectService.Setup(service => service.RemoveStaffFromProject(projectId, staffId))
-               .ReturnsAsync(response);
+                .ReturnsAsync(response);
 
             // Act
             var result = await _controller.RemoveStaffFromProject(projectId, staffId);
@@ -277,4 +282,3 @@ namespace ClaimRequest.UnitTest.Project
         }
     }
 }
-

@@ -98,7 +98,7 @@ builder.Services.AddHangfire(config => config
     SchemaName = "hangfire",
     PrepareSchemaIfNecessary = true,
     JobExpirationCheckInterval = TimeSpan.FromHours(4),
-    InvisibilityTimeout = TimeSpan.FromDays(1), //?n job trong vòng 24 ti?ng
+    InvisibilityTimeout = TimeSpan.FromDays(1),
 }))
 .UseFilter(new AutomaticRetryAttribute { Attempts = 3 }));
 
@@ -131,6 +131,7 @@ builder.Services.AddScoped<IPasswordRecoveryService, PasswordRecoveryService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailServiceFactory, EmailServiceFactory>();
 
+builder.Services.AddScoped<IChatbotService, ChatbotService>();
 // Convert enum to string 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -158,7 +159,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuers = builder.Configuration.GetSection("Jwt:ValidIssuers").Get<string[]>()
                            ?? new[] { "http://localhost:5000", "https://localhost:5001", "http://localhost:5173", "https://crsojt.azurewebsites.net" },
             ValidAudiences = builder.Configuration.GetSection("Jwt:ValidAudiences").Get<string[]>()
-                             ?? new[] { "http://localhost:5000", "https://localhost:5001", "http://localhost:5173", "https://crs-rust.vercel.app" },
+                             ?? new[] { "http://localhost:5000", "https://localhost:5001", "http://localhost:5173", "https://crs-rust.vercel.app", "https://crs-ojt.vercel.app/" },
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
@@ -193,19 +194,6 @@ kernelBuilder.Services.AddMongoDBVectorStore(
     );
 
 kernelBuilder.Services.AddScoped<IRAGChatService, RAGChatService>();
-// Update the Kestrel configuration
-//builder.WebHost.ConfigureKestrel(serverOptions =>
-//{
-//    if (builder.Environment.IsDevelopment())
-//    {
-//        // Development configuration (including Docker)
-//        serverOptions.ListenAnyIP(5000); // HTTP
-//        serverOptions.ListenAnyIP(5001, listenOptions =>
-//        {
-//            listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
-//        });
-//    }
-//});
 
 var app = builder.Build();
 
@@ -233,7 +221,7 @@ app.UseHttpsRedirection();
 app.UseCors(options =>
 {
     options.SetIsOriginAllowed(origin =>
-            origin.StartsWith("http://localhost:") || origin.StartsWith("https://localhost:") || origin == "https://crs-rust.vercel.app")
+            origin.StartsWith("http://localhost:") || origin.StartsWith("https://localhost:") || origin == "https://crs-rust.vercel.app" || origin == "https://crs-ojt.vercel.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
@@ -241,7 +229,7 @@ app.UseCors(options =>
 
 app.UseHangfireDashboard("/hangfire");
 
-RecurringJob.AddOrUpdate<EmailService>(emailJob => emailJob.SendEmailReminder(), Cron.Daily(1));
+RecurringJob.AddOrUpdate<EmailService>(emailJob => emailJob.SendEmailReminder(), Cron.Daily(18));
 
 
 app.UseAuthentication();

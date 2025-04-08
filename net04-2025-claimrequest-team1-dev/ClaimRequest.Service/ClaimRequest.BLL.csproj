@@ -32,6 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\ClaimRequest.AI\ClaimRequest.AI.csproj" />
 		<ProjectReference Include="..\ClaimRequest.Data\ClaimRequest.DAL.csproj" />
 	</ItemGroup>
 

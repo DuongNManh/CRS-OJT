@@ -165,7 +165,7 @@ namespace ClaimRequest.BLL.Services.Implements
 
 
         // method cho endpoint get all staffs
-        public async Task<PagingResponse<CreateStaffResponse>> GetStaffsPaging(int pageNumber = 1, int pageSize = 10, string? role = null, string? department = null)
+        public async Task<PagingResponse<GetStaffResponse>> GetStaffsPaging(int pageNumber = 1, int pageSize = 10, string? role = null, string? department = null)
         {
             try
             {
@@ -199,9 +199,9 @@ namespace ClaimRequest.BLL.Services.Implements
                 // Appy paging
                 staffs = staffs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-                return new PagingResponse<CreateStaffResponse>
+                return new PagingResponse<GetStaffResponse>
                 {
-                    Items = _mapper.Map<IEnumerable<CreateStaffResponse>>(staffs),
+                    Items = _mapper.Map<IEnumerable<GetStaffResponse>>(staffs),
                     Meta = metadata
                 };
             }

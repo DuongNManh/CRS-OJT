@@ -30,20 +30,20 @@ namespace ClaimRequest.DAL.Data.Requests.Claim
 
         [Required(ErrorMessage = "Start date is required")]
         [JsonConverter(typeof(DateOnlyConverter))]
-        [CustomValidation(typeof(UpdateClaimRequest), nameof(ValidateStartDate))]
+        [CustomValidation(typeof(CreateClaimRequest), nameof(ValidateStartDate))]
         public DateOnly StartDate { get; set; }
 
         [Required(ErrorMessage = "End date is required")]
         [JsonConverter(typeof(DateOnlyConverter))]
-        [CustomValidation(typeof(UpdateClaimRequest), nameof(ValidateEndDate))]
+        [CustomValidation(typeof(CreateClaimRequest), nameof(ValidateEndDate))]
         public DateOnly EndDate { get; set; }
 
-        [JsonConverter(typeof(GuidNullableConveter))]
-        public Guid? ProjectId { get; set; }
+        [Required(ErrorMessage = "Project Id is required")]
+        public Guid ProjectId { get; set; }
 
         public static ValidationResult ValidateEndDate(DateOnly endDate, ValidationContext context)
         {
-            var instance = (UpdateClaimRequest)context.ObjectInstance;
+            var instance = (CreateClaimRequest)context.ObjectInstance;
             if (endDate < instance.StartDate)
             {
                 return new ValidationResult("End date must be greater than or equal to start date");

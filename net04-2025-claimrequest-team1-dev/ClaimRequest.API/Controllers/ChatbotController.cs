@@ -1,5 +1,6 @@
 ﻿using ClaimRequest.AI;
 using ClaimRequest.API.Constants;
+using ClaimRequest.BLL.Services.Interfaces;
 using ClaimRequest.DAL.Data.MetaDatas;
 using ClaimRequest.DAL.Data.Requests.Chatbot;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClaimRequest.API.Controllers;
 
-public class ChatbotController(ILogger<ClaimController> logger, IRAGChatService ragChatService) : BaseController<ClaimController>(logger)
+public class ChatbotController(ILogger<ClaimController> logger, IChatbotService chatbotService) : BaseController<ClaimController>(logger)
 {
     [HttpPost(ApiEndPointConstant.Chatbot.AnswerEndpoint)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status201Created)]
@@ -16,7 +17,7 @@ public class ChatbotController(ILogger<ClaimController> logger, IRAGChatService 
     [Authorize(Roles = "Staff, Approver, Finance, Admin")]
     public async Task<IActionResult> Answer([FromBody] ChatbotAnswerRequest request)
     {
-        var response = await ragChatService.Answer(request.Question.Trim());
+        var response = await chatbotService.HandleAnswer(request.Question);
         return Ok(ApiResponseBuilder.BuildResponse(
             StatusCodes.Status200OK,
             "Answer retrieved",

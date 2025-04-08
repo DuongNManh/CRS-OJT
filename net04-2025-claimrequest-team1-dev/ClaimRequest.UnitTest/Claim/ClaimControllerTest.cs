@@ -321,9 +321,10 @@ namespace ClaimRequest.UnitTest.Claim
             _mockClaimService.Setup(s => s.CancelClaim(claimId, remark))
                 .ThrowsAsync(new NotFoundException($"Claim with ID {claimId} not found"));
 
-            var result = await _controller.CancelClaim(claimId, remark);
-            var notFoundResult = Assert.IsType<NotFoundResult>(result);
-            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NotFoundException>(
+                () => _controller.CancelClaim(claimId, remark));
+            Assert.Contains(claimId.ToString(), exception.Message);
         }
 
         [Fact]
@@ -338,12 +339,11 @@ namespace ClaimRequest.UnitTest.Claim
                 Status = ClaimStatus.Draft,
             };
             _mockClaimService.Setup(s => s.GetClaimByIdAsync(claimId)).ReturnsAsync(claim);
-            _mockClaimService.Setup(s => s.CancelClaim(claimId, remark)).ThrowsAsync(new UnauthorizedAccessException("You do not have permission to cancel this claim"));
+            _mockClaimService.Setup(s => s.CancelClaim(claimId, remark)).ThrowsAsync(new UnauthorizedException("You do not have permission to cancel this claim"));
 
-            var result = await _controller.CancelClaim(claimId, remark);
-
-            var unauthorizedResult = Assert.IsType<UnauthorizedResult>(result);
-            Assert.Equal(StatusCodes.Status401Unauthorized, unauthorizedResult.StatusCode);
+            var exception = await Assert.ThrowsAsync<UnauthorizedException>(
+                () => _controller.CancelClaim(claimId, remark));
+            Assert.Equal("You do not have permission to cancel this claim", exception.Message);
         }
 
         [Fact]
@@ -359,7 +359,7 @@ namespace ClaimRequest.UnitTest.Claim
             };
 
             _mockClaimService.Setup(s => s.CancelClaim(claimId, remark))
-                .ThrowsAsync(new BadRequestException("Only claims in Draft status can be cancelled"));
+                .ThrowsAsync(new BadRequestException("Only claims in Pending status can be cancelled"));
 
             var exception = await Assert.ThrowsAsync<BadRequestException>(
                 () => _controller.CancelClaim(claimId, remark));
@@ -529,19 +529,6 @@ namespace ClaimRequest.UnitTest.Claim
         }
 
         [Fact]
-        public async Task GetClaimStatusCount_ShouldReturnBadRequest_WhenInvalidViewMode()
-        {
-            // Arrange
-            var viewMode = "InvalidMode";
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => _controller.GetClaimStatusCount(viewMode, null, null));
-
-            Assert.Equal("Invalid view mode or user role.", exception.Message);
-        }
-
-        [Fact]
         public async Task GetClaimStatusCount_ShouldReturnProblem_WhenServiceThrowsException()
         {
             // Arrange
@@ -627,7 +614,7 @@ namespace ClaimRequest.UnitTest.Claim
             // Arrange
             var claimId = Guid.NewGuid();
             var expectedResponse = new SubmitClaimResponse
-            
+
             {
                 ClaimId = claimId,
                 Status = ClaimStatus.Pending.ToString(),
@@ -838,7 +825,7 @@ namespace ClaimRequest.UnitTest.Claim
             // Arrange
             var createClaimRequest = new CreateClaimRequest
             {
-                ProjectId = null,
+                ProjectId = Guid.NewGuid(),
                 Name = "Non-Project Claim",
                 ClaimType = ClaimType.Other,
                 Amount = 100,
@@ -850,7 +837,7 @@ namespace ClaimRequest.UnitTest.Claim
             {
                 ClaimId = Guid.NewGuid(),
                 Status = ClaimStatus.Approved.ToString(),
-          
+
             };
 
             _mockClaimService
@@ -923,6 +910,52 @@ namespace ClaimRequest.UnitTest.Claim
             // Act & Assert
             await Assert.ThrowsAsync<Exception>(() => _controller.SubmitV2(createClaimRequest));
         }
-        
+
+        [Fact]
+        public async Task PaidClaim_ShouldReturnOk_WhenClaimIsPaidSuccessfully()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            _mockClaimService
+                .Setup(service => service.PaidClaim(claimId))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.PayClaim(claimId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var apiResponse = Assert.IsType<ApiResponse<bool>>(okResult.Value);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.Equal("Claim paid successfully.", apiResponse.Message);
+        }
+
+        [Fact]
+        public async Task PayClaim_ShouldReturnUnauthorized_UserDoNotHavePermission()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+            _mockClaimService
+                .Setup(service => service.PaidClaim(claimId))
+                .ThrowsAsync(new UnauthorizedException("You do not have permission to pay this claim."));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<UnauthorizedException>(
+                () => _controller.PayClaim(claimId));
+            Assert.Equal("You do not have permission to pay this claim.", exception.Message);
+        }
+
+        [Fact]
+        public async Task PayClaim_ShouldReturnNotFound_WhenClaimDoesNotExist()
+        {
+            // Arrange
+            var claimId = Guid.NewGuid();
+
+            _mockClaimService
+                .Setup(service => service.PaidClaim(claimId))
+                .ThrowsAsync(new NotFoundException($"Claim with ID {claimId} not found"));
+            // Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => _controller.PayClaim(claimId));
+        }
     }
 }

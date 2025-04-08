@@ -2,5 +2,5 @@
 
 public interface IRAGChatService
 {
-    public  Task<string> Answer(string question);
+    public  Task<string> Answer(UserArugments userArugments, string question);
 }

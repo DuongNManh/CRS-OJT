@@ -1,4 +1,5 @@
 ﻿using ClaimRequest.DAL.Data.Entities;
+using ClaimRequest.DAL.Data.Responses.Staff;
 
 namespace ClaimRequest.DAL.Data.Responses.Project
 {
@@ -11,7 +12,7 @@ namespace ClaimRequest.DAL.Data.Responses.Project
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public decimal Budget { get; set; }
-        public string? ProjectManager { get; set; }
-        public string? BusinessUnitLeader { get; set; }
+        public GetStaffResponse? ProjectManager { get; set; }
+        public GetStaffResponse? BusinessUnitLeader { get; set; }
     }
 }

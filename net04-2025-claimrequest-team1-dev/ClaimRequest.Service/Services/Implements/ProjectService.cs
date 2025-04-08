@@ -22,8 +22,6 @@ namespace ClaimRequest.BLL.Services.Implements
              : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
         }
-
-
         private async Task Validation(CreateProjectRequest request)
 
         {
@@ -256,6 +254,7 @@ namespace ClaimRequest.BLL.Services.Implements
                 var projects = await _unitOfWork.GetRepository<Project>()
                     .GetListAsync(
                         predicate: p => p.ProjectManagerId == memberId ||
+                                        p.BusinessUnitLeaderId == memberId ||
                                         p.ProjectStaffs.Any(ps => ps.StaffId == memberId),
                         include: q => q.AsNoTracking()
                             .Include(p => p.ProjectManager)
@@ -368,18 +367,22 @@ namespace ClaimRequest.BLL.Services.Implements
                 var projects = await _unitOfWork.GetRepository<Project>()
                     .GetListAsync(
                         predicate: p =>
-                            (string.IsNullOrEmpty(filter.Name.ToLower()) || p.Name.Contains(filter.Name.ToLower())) &&
-                            (string.IsNullOrEmpty(filter.Description.ToLower()) || p.Description.Contains(filter.Description.ToLower())) &&
+                            (string.IsNullOrEmpty(filter.Name) || p.Name.ToLower().Contains(filter.Name.ToLower())) &&
+                            (string.IsNullOrEmpty(filter.Description) || p.Description.ToLower().Contains(filter.Description.ToLower())) &&
+                            (!filter.Status.HasValue || p.Status == filter.Status) &&  // Add Status check
                             (!filter.StartDateFrom.HasValue || p.StartDate >= filter.StartDateFrom) &&
                             (!filter.StartDateTo.HasValue || p.StartDate <= filter.StartDateTo) &&
                             (!filter.EndDateFrom.HasValue || p.EndDate >= filter.EndDateFrom) &&
                             (!filter.EndDateTo.HasValue || p.EndDate <= filter.EndDateTo) &&
+                            (!filter.BudgetFrom.HasValue || p.Budget >= filter.BudgetFrom) &&  // Fix Budget checks
+                            (!filter.BudgetTo.HasValue || p.Budget <= filter.BudgetTo) &&      // Fix Budget checks
                             (!filter.ProjectManagerId.HasValue || p.ProjectManagerId == filter.ProjectManagerId) &&
-                            (!filter.BusinessUnitLeaderId.HasValue || p.BusinessUnitLeaderId == filter.BusinessUnitLeaderId),
-                        include: q => q.AsNoTracking()
-                            .Include(p => p.ProjectManager)
-                            .Include(p => p.BusinessUnitLeader)
-                            .Include(p => p.ProjectStaffs)
+                            (!filter.BusinessUnitLeaderId.HasValue || p.BusinessUnitLeaderId == filter.BusinessUnitLeaderId) &&
+                            p.IsActive == true,
+                                include: q => q.AsNoTracking()
+                                    .Include(p => p.ProjectManager)
+                                    .Include(p => p.BusinessUnitLeader)
+                                    .Include(p => p.ProjectStaffs)
                     );
 
                 if (!projects.Any())
