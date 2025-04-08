@@ -131,7 +131,7 @@
       "filter_by_role": "Filter by Role",
       "filter_by_department": "Filter by Department",
       "edit_modal_title": "Edit Staff Information",
-        "create_modal_title":  "Create New Staff",
+      "create_modal_title": "Create New Staff",
       "toast": {
         "fill_required": "Please fill in all required fields",
         "invalid_email": "Please enter a valid email address",
@@ -205,6 +205,7 @@
       "staff_removed": "Staff removed successfully",
       "staff_assigned": "Staff assigned successfully",
       "staff_updated": "Staff role updated successfully",
+      "total_items": "Total Projects",
       "error": {
         "fetch_projects": "Failed to fetch projects",
         "filter_projects": "Failed to filter projects",

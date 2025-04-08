@@ -1,50 +1,155 @@
-# React + TypeScript + Vite
+# Claim Request System (CRS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive financial claim management system built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔐 Multi-role support (Admin, Finance, Approver, Staff)
+- 🌐 Internationalization (English, Japanese, Vietnamese)
+- 📱 Responsive design with modern UI
+- 📊 Real-time data visualization
+- 🔄 Workflow approval process
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend Framework**: React 18 + TypeScript
+- **Build Tool**: Vite 5
+- **UI Library**: Ant Design
+- **State Management**: React Context + Hooks
+- **HTTP Client**: Axios
+- **Internationalization**: i18next
+- **Charts**: Recharts
+- **Code Quality**: ESLint + Prettier
 
-- Configure the top-level `parserOptions` property like this:
+## Prerequisites
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+```bash
+node -v # v20.x or later
+pnpm -v # 8.x or later
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Getting Started
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+### Installation
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
+```bash
+# Clone the repository
+git clone <repository-url>
+cd ClaimProject
+
+# Install dependencies
+pnpm install
 ```
+
+### Development
+
+```bash
+# Start development server
+pnpm dev
+
+# The app will be available at http://localhost:5173
+```
+
+### Production Build
+
+```bash
+# Create production build
+pnpm build
+
+# Preview production build
+pnpm preview
+```
+
+### Docker Support
+
+```bash
+# Development environment
+docker compose up vite-dev
+
+# Production environment
+docker compose up vite-prod
+
+# Stop containers
+docker compose down
+```
+
+## Project Structure
+
+```
+ClaimProject/
+├── src/
+│   ├── apis/          # API configurations and services
+│   ├── components/    # Reusable React components
+│   ├── hooks/         # Custom React hooks
+│   ├── interfaces/    # TypeScript interfaces
+│   ├── locales/       # i18n translation files
+│   ├── pages/         # Page components
+│   ├── services/      # Business logic
+│   └── utils/         # Utility functions
+├── public/            # Static assets
+└── package.json       # Project dependencies and scripts
+```
+
+## Available Scripts
+
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `pnpm dev`          | Start development server |
+| `pnpm build`        | Create production build  |
+| `pnpm preview`      | Preview production build |
+| `pnpm lint`         | Run ESLint               |
+| `pnpm prettier:fix` | Fix code formatting      |
+
+## Environment Configuration
+
+### Development
+
+```env
+VITE_API_URL=https://localhost:5001/api/v1
+VITE_ENV=development
+```
+
+### Production
+
+```env
+VITE_API_URL=https://crsojt.azurewebsites.net/api/v1
+VITE_ENV=production
+```
+
+## Features by Role
+
+### Admin
+
+- Staff management
+- Project management
+- System configuration
+
+### Finance
+
+- Process claim payments
+- Export financial reports
+- Review claim history
+
+### Approver
+
+- Review claim requests
+- Approve/Reject claims
+- Return claims for revision
+
+### Staff
+
+- Submit claims
+- Track claim status
+- View claim history
+
+## Contributing
+
+1. Follow the ESLint configuration
+2. Use TypeScript types
+3. Follow the i18n pattern for new texts
+4. Write clean, documented code
+5. Create meaningful commit messages
+
+## Authors
+
+Team 1 HCM25_CPL_NET_04

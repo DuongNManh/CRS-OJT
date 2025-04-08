@@ -847,12 +847,13 @@ const ProjectList: React.FC = () => {
             fetchProjects(page, pageSize);
           },
           showSizeChanger: true,
-          showTotal: (total) => `${t("common.total_items", { total })}`,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} ${t("claim_card.of")} ${total} ${t(
+              "claim_card.items",
+            )}`,
         }}
         className="bg-white dark:bg-[#121212] rounded-lg shadow-md"
       />
-
-      {/* FILTER PROJECTS MODAL */}
 
       <Modal
         title={t("project_list.filter_projects")}
@@ -940,7 +941,7 @@ const ProjectList: React.FC = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={t("project_list.start_date_range")}>
+              <Form.Item label={t("project_list.start_date")}>
                 <RangePicker
                   value={[
                     filterForm.startDateFrom
@@ -967,7 +968,7 @@ const ProjectList: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label={t("project_list.end_date_range")}>
+              <Form.Item label={t("project_list.end_date")}>
                 <RangePicker
                   value={[
                     filterForm.endDateFrom
@@ -993,7 +994,7 @@ const ProjectList: React.FC = () => {
             </Col>
           </Row>
 
-          <Form.Item label={t("project_list.budget_range")}>
+          <Form.Item label={t("project_list.budget")}>
             <Slider
               range
               min={1000000}

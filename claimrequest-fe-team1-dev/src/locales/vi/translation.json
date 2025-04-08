@@ -207,6 +207,7 @@
       "staff_removed": "Đã xóa nhân viên thành công",
       "staff_assigned": "Đã phân công nhân viên thành công",
       "staff_updated": "Đã cập nhật vai trò nhân viên thành công",
+      "total_items": "Tổng số dự án",
       "error": {
         "fetch_projects": "Không thể tải danh sách dự án",
         "filter_projects": "Không thể lọc dự án",
