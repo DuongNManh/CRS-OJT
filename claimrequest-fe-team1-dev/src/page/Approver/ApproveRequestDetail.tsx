@@ -83,7 +83,7 @@ const ApproveRequestDetail: React.FC = () => {
       if (!confirmApprove) return;
 
       const response = await withLoading(claimService.approveClaim(id));
-      if (!response.is_success) {
+      if (response.is_success) {
         toast.success(t("approve_request_detail.toast.approve_success"));
         cacheService.invalidateByTags([
           CACHE_TAGS.CLAIMS,

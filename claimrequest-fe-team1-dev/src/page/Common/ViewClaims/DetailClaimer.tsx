@@ -215,7 +215,10 @@ const DetailClaimer: React.FC = () => {
                       {t("detail_claimer.total_compensation")}
                     </p>
                     <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      {claim.amount} VND
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(claim.amount)}
                     </p>
                   </div>
 

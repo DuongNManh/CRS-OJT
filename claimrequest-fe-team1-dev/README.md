@@ -152,4 +152,4 @@ VITE_ENV=production
 
 ## Authors
 
-Team 1 HCM25_CPL_NET_04
+From Team 1 HCM25_CPL_NET_04 with LUV
