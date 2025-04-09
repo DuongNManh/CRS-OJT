@@ -162,14 +162,12 @@ namespace ClaimRequest.BLL.Services.Implements
 
                 if (viewMode == ViewMode.ClaimerMode.ToString())
                 {
-                    return await GetClaimsForClaimerAndFinance(pageNumber, pageSize, claimStatus, viewMode, startDateUtc,
-                        endDateUtc);
+                    return await GetClaimsForClaimer(pageNumber, pageSize, claimStatus, startDateUtc, endDateUtc);
                 }
                 else if (viewMode == ViewMode.FinanceMode.ToString() &&
                          currentUserRole == SystemRole.Finance.ToString())
                 {
-                    return await GetClaimsForClaimerAndFinance(pageNumber, pageSize, claimStatus, viewMode, startDateUtc,
-                        endDateUtc);
+                    return await GetClaimsForFinance(pageNumber, pageSize, claimStatus, startDateUtc, endDateUtc);
                 }
                 else if (viewMode == ViewMode.ApproverMode.ToString() &&
                          currentUserRole == SystemRole.Approver.ToString())
@@ -210,8 +208,8 @@ namespace ClaimRequest.BLL.Services.Implements
                 var baseQuery = _unitOfWork.GetRepository<Claim>().CreateBaseQuery(
                     include: query => query.Include(c => c.Project),
                     predicate: c => (parsedStatus == null || c.Status == parsedStatus) &&
-                                    (startDate == null || c.CreateAt >= endDate) &&
-                                    (startDate == null || c.CreateAt <= endDate));
+                                    (startDate == null || c.CreateAt >= startDate) &&
+                                    (endDate == null || c.CreateAt <= endDate));
 
                 if (viewMode == ViewMode.ClaimerMode.ToString())
                 {
@@ -228,6 +226,83 @@ namespace ClaimRequest.BLL.Services.Implements
                     baseQuery = baseQuery.Where(c => c.FinanceId == currentUserId &&
                                                      (allowedStatuses.Contains(c.Status)));
                 }
+                // Return the paginated response
+                return await baseQuery
+                    .OrderByDescending(c => c.CreateAt)
+                    .Select(c => _mapper.Map<GetClaimResponse>(c))
+                    .ToPagingResponse(pageNumber, pageSize, 1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting claims: {Message}", ex.Message);
+                throw;
+            }
+        }
+
+        private async Task<PagingResponse<GetClaimResponse>> GetClaimsForFinance(
+            int pageNumber = 1, int pageSize = 20, string? status = null,
+            DateTime? startDate = null, DateTime? endDate = null)
+        {
+            try
+            {
+                // Validate input parameters
+                ValidateInputParameters(null, status, null, startDate, endDate);
+
+                var currentUserId = GetCurrentUserId();
+                ClaimStatus? parsedStatus = null;
+                if (!string.IsNullOrEmpty(status))
+                {
+                    parsedStatus = Enum.Parse<ClaimStatus>(status);
+                }
+
+                var allowedStatuses = new[] {
+                    ClaimStatus.Approved,
+                    ClaimStatus.Paid
+                };
+
+                var baseQuery = _unitOfWork.GetRepository<Claim>().CreateBaseQuery(
+                    include: query => query.Include(c => c.Project),
+                    predicate: c => (c.FinanceId == currentUserId) && (allowedStatuses.Contains(c.Status)) &&
+                                    (parsedStatus == null || c.Status == parsedStatus) &&
+                                    (startDate == null || c.CreateAt >= startDate) &&
+                                    (endDate == null || c.CreateAt <= endDate));
+
+                // Return the paginated response
+                return await baseQuery
+                    .OrderByDescending(c => c.CreateAt)
+                    .Select(c => _mapper.Map<GetClaimResponse>(c))
+                    .ToPagingResponse(pageNumber, pageSize, 1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting claims: {Message}", ex.Message);
+                throw;
+            }
+        }
+
+        private async Task<PagingResponse<GetClaimResponse>> GetClaimsForClaimer(
+                int pageNumber = 1, int pageSize = 20, string? status = null,
+                DateTime? startDate = null, DateTime? endDate = null)
+        {
+            try
+            {
+                // Validate input parameters
+                ValidateInputParameters(null, status, null, startDate, endDate);
+
+                var currentUserId = GetCurrentUserId();
+                ClaimStatus? parsedStatus = null;
+                if (!string.IsNullOrEmpty(status))
+                {
+                    parsedStatus = Enum.Parse<ClaimStatus>(status);
+                }
+
+                var baseQuery = _unitOfWork.GetRepository<Claim>().CreateBaseQuery(
+                    include: query => query.Include(c => c.Project),
+                    predicate: c => (c.ClaimerId == currentUserId) &&
+                                    (parsedStatus == null || c.Status == parsedStatus) &&
+                                    (startDate == null || c.CreateAt >= startDate) &&
+                                    (endDate == null || c.CreateAt <= endDate));
+
                 // Return the paginated response
                 return await baseQuery
                     .OrderByDescending(c => c.CreateAt)
@@ -876,7 +951,6 @@ namespace ClaimRequest.BLL.Services.Implements
 
         private async Task<ClaimStatusCountResponse> GetClaimStatusCountForFinance(Guid currentUserId, DateTime? startDate, DateTime? endDate)
         {
-
             var claims = await _unitOfWork.GetRepository<Claim>().GetListAsync(
                 include: null,
                 predicate: c => c.FinanceId == currentUserId &&
