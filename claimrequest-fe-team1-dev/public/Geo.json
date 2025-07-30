@@ -1,118 +1,118 @@
 [
   {
-    "name": "FPT USA Headquarters",
+    "name": "USA Headquarters",
     "address": "801 East Campbell Rd., Suite 525, Richardson, Texas 75081, USA",
     "lat": 32.9756,
     "lng": -96.7212,
     "size": 0.1
   },
   {
-    "name": "FPT Automotive",
+    "name": "Automotive",
     "address": "2770 Main St, #108, Frisco, Texas 75033, USA",
     "lat": 33.1554,
     "lng": -96.8286,
     "size": 0.1
   },
   {
-    "name": "FPT Los Angeles Office",
+    "name": "Los Angeles Office",
     "address": "801 Parkview Drive North, Suite 100, El Segundo, CA 90245, USA",
     "lat": 33.9203,
     "lng": -118.3917,
     "size": 0.1
   },
   {
-    "name": "FPT Arizona Office",
+    "name": "Arizona Office",
     "address": "4505 E Chandler Blvd, Phoenix, AZ 85048, USA",
     "lat": 33.3058,
     "lng": -111.986,
     "size": 0.1
   },
   {
-    "name": "FPT Washington Office",
+    "name": "Washington Office",
     "address": "901 Powell Avenue SW, Suite 111, Renton, WA 98057, USA",
     "lat": 47.4746,
     "lng": -122.2221,
     "size": 0.1
   },
   {
-    "name": "FPT Michigan Office",
+    "name": "Michigan Office",
     "address": "17197 N Laurel Park Dr, Suite 273, Livonia, MI 48152, USA",
     "lat": 42.4163,
     "lng": -83.416,
     "size": 0.1
   },
   {
-    "name": "FPT New York Office",
+    "name": "New York Office",
     "address": "295 Madison Avenue, Suite 1808, New York, NY 10017, USA",
     "lat": 40.7527,
     "lng": -73.9792,
     "size": 0.1
   },
   {
-    "name": "FPT Colorado Office",
+    "name": "Colorado Office",
     "address": "1380 Forest Park Cir #202, Lafayette, CO 80026, USA",
     "lat": 39.9869,
     "lng": -105.093,
     "size": 0.1
   },
   {
-    "name": "FPT Georgia Office",
+    "name": "Georgia Office",
     "address": "2 Concourse Parkway, Suite 100, Atlanta, GA 30328, USA",
     "lat": 33.9087,
     "lng": -84.3565,
     "size": 0.1
   },
   {
-    "name": "FPT Canada - Québec Office",
+    "name": "Canada - Québec Office",
     "address": "242 Rue de Bayeux, Boucherville, QC J4B 7T9, Canada",
     "lat": 45.5753,
     "lng": -73.4296,
     "size": 0.1
   },
   {
-    "name": "FPT Mexico - Guadalajara Office",
+    "name": "Mexico - Guadalajara Office",
     "address": "Av Adolfo López Mateos Nte 95, Italia Providencia, 44648 Guadalajara, Jalisco, Mexico",
     "lat": 20.6936,
     "lng": -103.3918,
     "size": 0.1
   },
   {
-    "name": "FPT Mexico - Mexico City Office",
+    "name": "Mexico - Mexico City Office",
     "address": "Presidente Masaryk 111, Col. Chapultepec Polanco, Mexico City, Mexico",
     "lat": 19.4333,
     "lng": -99.2,
     "size": 0.1
   },
   {
-    "name": "FPT Costa Rica Office",
+    "name": "Costa Rica Office",
     "address": "San José, Sabana Norte Calle 56 Avenida Las Americas - Delivery Center",
     "lat": 9.936,
     "lng": -84.101,
     "size": 0.1
   },
   {
-    "name": "FPT Colombia - Medellín Office",
+    "name": "Colombia - Medellín Office",
     "address": "Cra 43a # 5a -113, One Plaza Business Center, Torre Sur, Piso 2, Oficina 212, Medellín, Antioquia, Colombia",
     "lat": 6.1968,
     "lng": -75.567,
     "size": 0.1
   },
   {
-    "name": "FPT Colombia - Bogotá Office",
+    "name": "Colombia - Bogotá Office",
     "address": "Building QBO Parque 93, Cl. 93a #13-24, Localidad de Chapinero, Bogotá, Cundinamarca, Colombia",
     "lat": 4.6762,
     "lng": -74.047,
     "size": 0.1
   },
   {
-    "name": "FPT Colombia - Barranquilla Office",
+    "name": "Colombia - Barranquilla Office",
     "address": "Cl. 77b #57, Nte. Centro Historico, Barranquilla, Atlántico, Colombia",
     "lat": 10.993,
     "lng": -74.8099,
     "size": 0.1
   },
   {
-    "name": "FPT Deutschland GmbH",
+    "name": "Deutschland GmbH",
     "address": "Am Thyssenhaus 1-3 (Haus 3), 45128 Essen, Germany",
     "lat": 51.4428,
     "lng": 7.0043,
@@ -133,7 +133,7 @@
     "size": 0.1
   },
   {
-    "name": "FPT Software France - Sophia Antipolis",
+    "name": "Software France - Sophia Antipolis",
     "address": "ECOPOLIS - Sophia Antipolis, 1300 Route des Crêtes, 06560 Valbonne, France",
     "lat": 43.6276,
     "lng": 7.0503,
@@ -147,98 +147,98 @@
     "size": 0.1
   },
   {
-    "name": "FPT Slovakia - Bratislava Office",
+    "name": "Slovakia - Bratislava Office",
     "address": "Einsteinova 33, 851 01 Bratislava, Slovakia",
     "lat": 48.1306,
     "lng": 17.1046,
     "size": 0.1
   },
   {
-    "name": "FPT Slovakia - Košice Office",
+    "name": "Slovakia - Košice Office",
     "address": "Štúrova 27, 040 01 Košice, Slovakia",
     "lat": 48.7164,
     "lng": 21.2575,
     "size": 0.1
   },
   {
-    "name": "FPT Romania - Bucharest Office",
+    "name": "Romania - Bucharest Office",
     "address": "Strada George Constantinescu 2C, București 020339, Romania",
     "lat": 44.4818,
     "lng": 26.1276,
     "size": 0.1
   },
   {
-    "name": "FPT Germany - Frankfurt Office",
+    "name": "Germany - Frankfurt Office",
     "address": "Unterschweinstiege 2-14, 60549 Frankfurt am Main, Germany",
     "lat": 50.0505,
     "lng": 8.5876,
     "size": 0.1
   },
   {
-    "name": "FPT Germany - Munich Office",
+    "name": "Germany - Munich Office",
     "address": "Leopoldstraße 244, 80807 München, Germany",
     "lat": 48.1795,
     "lng": 11.5865,
     "size": 0.1
   },
   {
-    "name": "FPT United Kingdom - London Office",
+    "name": "United Kingdom - London Office",
     "address": "3rd Floor, 12 Bridewell Pl, London EC4V 6AP, United Kingdom",
     "lat": 51.5135,
     "lng": -0.1047,
     "size": 0.1
   },
   {
-    "name": "FPT France Office",
+    "name": "France Office",
     "address": "La Défense, Paris, Pháp",
     "lat": 48.8916,
     "lng": 2.2389,
     "size": 0.1
   },
   {
-    "name": "FPT Software Europe SARL",
+    "name": "Software Europe SARL",
     "address": "Aeropole, Bat 1, 5 Avenue Albert Durand, 31700 Blagnac, France",
     "lat": 43.63622,
     "lng": 1.37564,
     "size": 0.1
   },
   {
-    "name": "FPT Software Sverige AB",
+    "name": "Software Sverige AB",
     "address": "Uni3 by Geely Building, Pumpgatan 1, 417 55 Göteborg, Sweden",
     "lat": 57.7089,
     "lng": 11.9375,
     "size": 0.1
   },
   {
-    "name": "FPT Saudi Arabia Office",
+    "name": "Saudi Arabia Office",
     "address": "The Esplanade, Prince Turki Bin Abdulaziz Al Awwal, King Saud University, Riyadh, 12371, Saudi Arabia",
     "lat": 24.7136,
     "lng": 46.6753,
     "size": 0.1
   },
   {
-    "name": "FPT UAE Office",
+    "name": "UAE Office",
     "address": "1405, Fortune Tower, Jumeirah Lakes Towers, Dubai, UAE",
     "lat": 25.0773,
     "lng": 55.1394,
     "size": 0.1
   },
   {
-    "name": "FPT Software India Pvt. Ltd.",
+    "name": "Software India Pvt. Ltd.",
     "address": "11th Floor, D – Block, ILabs Centre, Plot No: 18, Software Units Layout, Madhapur, Hyderabad – 500081, India",
     "lat": 17.4483,
     "lng": 78.3915,
     "size": 0.1
   },
   {
-    "name": "FPT Myanmar",
+    "name": "Myanmar",
     "address": "60/A Pyidaungzu Yeiktha Street, Dagon Township, Yangon, Myanmar",
     "lat": 16.7982,
     "lng": 96.1561,
     "size": 0.1
   },
   {
-    "name": "FPT Software (Thailand) Limited",
+    "name": "Software (Thailand) Limited",
     "address": "35th Floor, Tower A, The Ninth Tower, 33/4, Rama 9 Road, Huai Khwang District, Bangkok 10310, Thailand",
     "lat": 13.7563,
     "lng": 100.5652,
@@ -269,45 +269,45 @@
     "email": "support@fpt.com"
   },
   {
-    "name": "FPT Software Hanoi Company Limited",
-    "address": "FPT Cau Giay Building, Duy Tan Street, Dich Vong Hau Ward, Cau Giay District, Hanoi City, Vietnam",
+    "name": "Software Hanoi Company Limited",
+    "address": "Cau Giay Building, Duy Tan Street, Dich Vong Hau Ward, Cau Giay District, Hanoi City, Vietnam",
     "lat": 21.0307,
     "lng": 105.7829
   },
   {
-    "name": "FPT Software Hanoi Company Limited",
-    "address": "FPT Tower, No.10 Pham Van Bach Street, Dich Vong Ward, Cau Giay District, Hanoi City, Vietnam",
+    "name": "Software Hanoi Company Limited",
+    "address": "Tower, No.10 Pham Van Bach Street, Dich Vong Ward, Cau Giay District, Hanoi City, Vietnam",
     "lat": 21.0301,
     "lng": 105.7808
   },
   {
-    "name": "FPT Software - Hue",
+    "name": "Software - Hue",
     "address": "5th floor, The Manor Crown Building, Xuan Phu Ward, Thua Thien Hue Province, Vietnam",
     "lat": 16.4637,
     "lng": 107.5909
   },
   {
-    "name": "FPT Software Central Region Co., Ltd",
-    "address": "FPT Complex Building, Nam Ky Khoi Nghia Street, Hoa Hai Ward, Ngu Hanh Son District, Danang City, Vietnam",
+    "name": "Software Central Region Co., Ltd",
+    "address": "Complex Building, Nam Ky Khoi Nghia Street, Hoa Hai Ward, Ngu Hanh Son District, Danang City, Vietnam",
     "lat": 16.0018,
     "lng": 108.263,
     "phone": "+84 (023) 6395 8777 / +84 (023) 6395 2332",
     "email": "fsodn.contact@fpt.com"
   },
   {
-    "name": "FPT Software Tam Ky",
+    "name": "Software Tam Ky",
     "address": "222 Huynh Thuc Khang Street, Tam Ky City, Quang Nam Province, Vietnam",
     "lat": 15.5736,
     "lng": 108.474
   },
   {
-    "name": "FPT Software Quy Nhon (AI Valley)",
-    "address": "FPT Software Building, 12 Science Avenue, Ghenh Rang ward, Quy Nhon city, Binh Dinh province",
+    "name": "Software Quy Nhon (AI Valley)",
+    "address": "Software Building, 12 Science Avenue, Ghenh Rang ward, Quy Nhon city, Binh Dinh province",
     "lat": 13.7436,
     "lng": 109.2278
   },
   {
-    "name": "FPT Software Nha Trang",
+    "name": "Software Nha Trang",
     "address": "02 To Huu, Phuoc Hai, Nha Trang, Khanh Hoa, Vietnam",
     "lat": 12.2451,
     "lng": 109.1928
@@ -337,7 +337,7 @@
     "email": "fhcm.contact@fpt.com"
   },
   {
-    "name": "FPT Software Ho Chi Minh Co., Ltd. - Can Tho Branch",
+    "name": "Software Ho Chi Minh Co., Ltd. - Can Tho Branch",
     "address": "600 Nguyen Van Cu Street, An Binh Ward, Ninh Kieu District, Can Tho City",
     "lat": 10.028,
     "lng": 105.7446,
@@ -345,13 +345,13 @@
     "email": "fhcm.contact@fpt.com"
   },
   {
-    "name": "FPT Can Tho",
+    "name": "Can Tho",
     "address": "59-59A Phan Dinh Phung Street, Ninh Kieu District, Can Tho",
     "lat": 10.034,
     "lng": 105.781
   },
   {
-    "name": "FPT Software Dalian",
+    "name": "Software Dalian",
     "address": "Room #07-06/08, 7F, No.1, Hui Xian Yuan, Dalian Hi-tech Industrial Zone, Dalian, 116025, China",
     "lat": 38.8744,
     "lng": 121.5319,
@@ -367,14 +367,14 @@
     "email": "support.china@fpt.com"
   },
   {
-    "name": "FPT Hong Kong",
+    "name": "Hong Kong",
     "address": "Room 1318-20, Hollywood Plaza, 610 Nathan Road, Mongkok, Kowloon, Hong Kong",
     "lat": 22.3206,
     "lng": 114.1699,
     "email": "LinhNP1@fpt.com"
   },
   {
-    "name": "FPT Software Indonesia - Wisma MRA",
+    "name": "Software Indonesia - Wisma MRA",
     "address": "Wisma MRA, 2nd Floor, Jl. TB Simatupang No. 19, Cilandak, Jakarta Selatan 12430, Indonesia",
     "lat": -6.2928,
     "lng": 106.7986,
@@ -382,7 +382,7 @@
     "email": "support@fpt.com"
   },
   {
-    "name": "FPT Software Indonesia - Treasury Tower",
+    "name": "Software Indonesia - Treasury Tower",
     "address": "Treasury Tower, 18th Floor, Unit K-L, District 8, SCBD Lot.28, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190, Indonesia",
     "lat": -6.2245,
     "lng": 106.8097,
@@ -411,14 +411,14 @@
     "size": 0.1
   },
   {
-    "name": "FPT Japan Training Center",
+    "name": "Japan Training Center",
     "address": "Shibadaimon Building No. 2 7F, Shibadaimon 1-12-16, Minato-ku, Tokyo 105-0012, Japan",
     "lat": 35.6572,
     "lng": 139.7516,
     "size": 0.1
   },
   {
-    "name": "FPT Japanese Language School",
+    "name": "Japanese Language School",
     "address": "Higashinippori 4-3-5, Arakawa-ku, Tokyo 116-0014, Japan",
     "lat": 35.7333,
     "lng": 139.7798,
@@ -474,14 +474,14 @@
     "size": 0.1
   },
   {
-    "name": "FPT Nearshore Japan - Naha",
+    "name": "Nearshore Japan - Naha",
     "address": "Naha Chamber of Commerce and Industry Center 6F, Kume 2-2-10, Naha City, Okinawa Prefecture 900-0033, Japan",
     "lat": 26.215,
     "lng": 127.6792,
     "size": 0.1
   },
   {
-    "name": "FPT Nearshore Japan - COI Naha",
+    "name": "Nearshore Japan - COI Naha",
     "address": "COI Naha Building 2F, Kume 2-3-15, Naha-shi, Okinawa-ken 900-0033, Japan",
     "lat": 26.2155,
     "lng": 127.6789,
@@ -495,49 +495,49 @@
     "size": 0.1
   },
   {
-    "name": "FPT Korea",
+    "name": "Korea",
     "address": "7F, Sewoo Building, 115, Yeouigongwon-ro, Yeongdeungpo-gu, Seoul, South Korea",
     "lat": 37.5255,
     "lng": 126.925,
     "size": 0.1
   },
   {
-    "name": "FPT Software Malaysia Sdn. Bhd.",
+    "name": "Software Malaysia Sdn. Bhd.",
     "address": "Lot 21-04, Level 21, Menara Hap Seng 2, Plaza Hap Seng, No. 1, Jalan P. Ramlee, 50250 Kuala Lumpur, Malaysia",
     "lat": 3.1533,
     "lng": 101.7074,
     "size": 0.1
   },
   {
-    "name": "FPT Software Malaysia Sdn. Bhd.",
+    "name": "Software Malaysia Sdn. Bhd.",
     "address": "9th Floor, Menara Hapseng 3, Jalan P. Ramlee, Kuala Lumpur, Malaysia",
     "lat": 3.153,
     "lng": 101.7075,
     "size": 0.1
   },
   {
-    "name": "FPT Manila Office",
+    "name": "Manila Office",
     "address": "Suite A, Level 14, Robinsons Summit Center, 6783 Ayala Avenue, Makati City, Philippines 1226",
     "lat": 14.5576,
     "lng": 121.0223,
     "size": 0.1
   },
   {
-    "name": "FPT Cebu Office",
+    "name": "Cebu Office",
     "address": "16th Floor, The Link Building, JM Del Mar Street, Cebu IT Park, Cebu City, Cebu, Philippines 6000",
     "lat": 10.3283,
     "lng": 123.9058,
     "size": 0.1
   },
   {
-    "name": "FPT Singapore Office",
+    "name": "Singapore Office",
     "address": "8 Kallang Avenue, #12-09 Aperia Tower 1, Singapore 339509",
     "lat": 1.3102,
     "lng": 103.8622,
     "size": 0.1
   },
   {
-    "name": "FPT Taiwan Co., Ltd",
+    "name": "Taiwan Co., Ltd",
     "address": "10F, No. 111, Sec. 2, Keelung Rd., Xinyi Dist., Taipei City 110606, Taiwan (R.O.C.)",
     "lat": 25.0305,
     "lng": 121.5673,
